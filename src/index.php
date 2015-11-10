@@ -1,5 +1,5 @@
 <?php
-require_once("functions.php");
+require_once("includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
 ?>
@@ -11,12 +11,12 @@ page_nav();
                     <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;">Prihlásenie</p></td>
                 </tr>
                 <tr>
-                    <td>E-mailová adresa:</td>
-                    <td><input type="text" name="mail" value="@"></td>
+                    <td><label for="mail">E-mailová adresa:</label></td>
+                    <td><input id="mail" type="text" value="@"></td>
                 </tr>
                 <tr>
-                    <td>Heslo:</td>
-                    <td><input type="password" name="passwd" value=""></td>
+                    <td><label for="passwd">Heslo:</label></td>
+                    <td><input id="passwd" type="password" value=""></td>
                 </tr>
                 <tr>
                     <td><input type="submit" name="submit" value="Prihlás sa"></td>
@@ -56,7 +56,12 @@ page_nav();
             </ul>
 
             <h2>Kompletné výsledky</h2>
-            <?php echo show_table(2015)?>
+            <script>
+                $(document).ready(function(){
+                        $(".result-table").load("includes/get_result_table.php?year=2015");
+                    });
+            </script>
+            <table class="result-table"><tr><td>Tabuľka sa načítava ...</td></tr></table>
 
             <h2>Ako hodnotíme?</h2>
             <p>

@@ -4,6 +4,7 @@ function page_head($title, $prefix = "")
 {
 ?>
 <!DOCTYPE html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <html lang="sk-SK">
     <head>
         <title><?php echo $title ?></title>
@@ -172,7 +173,7 @@ function show_table($year) {
 
 
 
-    $result = '<table class="table-results">
+    $result = '
 		<tr style="font-weight: bold; background-color: #ff6600; border-bottom: 1px solid black;">';
     foreach ($upper as $item) {
         $result .= '<td>'.$item.'</td>';
@@ -201,8 +202,6 @@ function show_table($year) {
             $result .= "</tr>";
         }
     }
-
-    $result .= "</table>";
 
     return $result;
 }
