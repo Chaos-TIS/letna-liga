@@ -1,29 +1,16 @@
 <?php
+session_start();
 require_once("includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
 ?>
         <h1>Letná liga FLL</h1>
 
-        <form id="login-form" action="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/auth/login" method="post" accept-charset="utf-8">
-            <table>
-                <tr>
-                    <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;">Prihlásenie</p></td>
-                </tr>
-                <tr>
-                    <td><label for="mail">E-mailová adresa:</label></td>
-                    <td><input id="mail" type="text" value="@"></td>
-                </tr>
-                <tr>
-                    <td><label for="passwd">Heslo:</label></td>
-                    <td><input id="passwd" type="password" value=""></td>
-                </tr>
-                <tr>
-                    <td><input type="submit" name="submit" value="Prihlás sa"></td>
-                    <td style="text-align: right;"><a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/auth/register"> Registruj sa </a></td>
-                    <p style="color: green;"></p>	</tr>
-            </table>
-        </form>
+        <?php if (!isset($_SESSION['loggedUser']))
+            get_login_form();
+        else
+            get_logout_button();
+        ?>
 
         <div id="content">
             <h2>Vitajte a pozrite si:</h2>

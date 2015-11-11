@@ -1,5 +1,9 @@
 <?php
 
+function __autoload($class_name) {
+    include "classes/$class_name.php";
+}
+
 function page_head($title, $prefix = "")
 {
 ?>
@@ -21,6 +25,39 @@ function page_head($title, $prefix = "")
 <?php
 }
 
+function get_login_form(){
+?>
+    <form id="login-form" action="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/auth/login" method="post" accept-charset="utf-8">
+        <table>
+            <tr>
+                <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;">Prihlásenie</p></td>
+            </tr>
+            <tr>
+                <td><label for="mail">E-mailová adresa:</label></td>
+                <td><input id="mail" type="text" value="@"></td>
+            </tr>
+            <tr>
+                <td><label for="passwd">Heslo:</label></td>
+                <td><input id="passwd" type="password" value=""></td>
+            </tr>
+            <tr>
+                <td><input type="submit" name="submit" value="Prihlásiť sa"></td>
+                <td style="text-align: right;"><a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/auth/register"> Registrácia </a></td>
+                <p style="color: green;"></p>	</tr>
+        </table>
+    </form>
+
+<?php
+}
+
+function get_logout_button(){
+    ?>
+    <form id="logout-form" action="includes/logout.php">
+        <input type="submit" name="submit" value="Odhlásiť">
+    </form>
+    <?php
+}
+
 function page_nav()
 {
     ?>
@@ -37,7 +74,7 @@ function page_footer()
     <?php
 }
 
-function otvor_db() {
+function db_connect() {
     if ($link = mysqli_connect('localhost', 'letnaliga', 'nedavajteheslodosvn')) {
         if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
@@ -57,7 +94,7 @@ function show_table($year) {
     $upper = array('Meno tímu');
     $missions = array();
 
-    if ($link = otvor_db()) {
+    if ($link = db_connect()) {
         $sql = "SELECT id, name FROM missions WHERE date_format(end,'%Y') = $year AND start < now() AND end < now() AND resulted = 1 ORDER BY end ASC";
         $result = mysqli_query($link, $sql);
         $num = 0;
@@ -74,7 +111,7 @@ function show_table($year) {
 
     $users = array();
 
-    if ($link = otvor_db()) {
+    if ($link = db_connect()) {
         $sql = "SELECT id FROM users WHERE type = '0' ORDER BY name ASC";
         $result = mysqli_query($link, $sql);
         $num = 0;
@@ -90,7 +127,7 @@ function show_table($year) {
     foreach ($users as $user) {
         array_push($solutions, array($user));
         foreach ($missions as $mission) {
-            if ($link = otvor_db()) {
+            if ($link = db_connect()) {
                 $sql = "SELECT id FROM solutions WHERE $user = uid AND $mission = mid";
                 $result = mysqli_query($link, $sql);
                 if ($row = mysqli_fetch_array($result)) {
@@ -109,7 +146,7 @@ function show_table($year) {
     foreach ($solutions as $solutionrow) {
         array_push($wins, array());
         foreach ($solutionrow as $solution) {
-            if ($link = otvor_db()) {
+            if ($link = db_connect()) {
                 $sql = "SELECT win FROM solutions WHERE $solution = id";
                 $result = mysqli_query($link, $sql);
                 if ($row = mysqli_fetch_array($result)) {
@@ -132,7 +169,7 @@ function show_table($year) {
         foreach ($solutionrow as $solution) {
             if ($num == 0) {
                 $num = 1;
-                if ($link = otvor_db()) {
+                if ($link = db_connect()) {
                     $sql = "SELECT name FROM users WHERE $solution = ID";
                     $result = mysqli_query($link, $sql);
                     while ($row = mysqli_fetch_array($result)) {
@@ -144,7 +181,7 @@ function show_table($year) {
             } else {
                 $point = 0;
                 $count = 0;
-                if ($link = otvor_db()) {
+                if ($link = db_connect()) {
                     $sql = "SELECT points FROM results WHERE $solution = SID";
                     $result = mysqli_query($link, $sql);
                     while ($row = mysqli_fetch_array($result)) {
