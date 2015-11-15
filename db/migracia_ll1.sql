@@ -8,7 +8,6 @@ RENAME TABLE    attachments TO old_attachments,
                 users TO old_users,
                 videos TO old_videos;
 
-
 CREATE TABLE users (
     user_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     mail VARCHAR(50) UNIQUE,
@@ -73,7 +72,6 @@ CREATE TABLE comments (
 
 CREATE TABLE videos (
     video_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    location_type CHAR,
     location_id INT UNSIGNED,
     link VARCHAR(11),
     FOREIGN KEY (location_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
@@ -81,7 +79,6 @@ CREATE TABLE videos (
 
 CREATE TABLE programs (
     program_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    location_type CHAR,
     location_id INT UNSIGNED,
     link VARCHAR(30),
     FOREIGN KEY (location_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
@@ -89,7 +86,6 @@ CREATE TABLE programs (
 
 CREATE TABLE images (
     image_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    location_type CHAR,
     location_id INT UNSIGNED,
     link VARCHAR(30),
     extension VARCHAR(5),
@@ -105,13 +101,13 @@ SET @rownum = 0;
 UPDATE old_users 
 SET mail = CONCAT(mail, @rownum := @rownum + 1)
 WHERE mail = 'L.etnaLigaFLL@gmail.com'
-ORDER BY id;
+ORDER BY id ASC;
 
 INSERT INTO users (mail, password)
 SELECT u.mail, u.passwd
 FROM old_users u
 WHERE u.`type` != 0
-ORDER BY u.`type` = 2, u.id ASC;
+ORDER BY u.`type` = 2 ASC, u.id ASC;
 
 SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'letnaliga' AND TABLE_NAME = 'users')-1;
 
@@ -138,7 +134,7 @@ ORDER BY id ASC;
 SET @rownum = 0;
 
 INSERT INTO assignments (context_id, text_id_name, text_id_description, `begin`, `end`)
-SELECT @rownum := @rownum+1 AS rownum, @rownum AS rownum, @rownum + @lastmission AS desc_id, `start`, `end`
+SELECT @rownum := @rownum+1 AS rownum, @rownum AS rownum2, @rownum + @lastmission AS desc_id, `start`, `end`
 FROM old_missions
 ORDER BY id ASC; 
 
@@ -153,7 +149,7 @@ ORDER BY u.id ASC;
 SET @rownum = @lastuserorg;
 
 INSERT INTO teams (user_id, name, description, sk_league)
-SELECT @rownum := @rownum + 1 as rownum, u.name, null, true
+SELECT @rownum := @rownum + 1 AS rownum, u.name, null, true
 FROM (  SELECT u.name FROM old_users u
         WHERE u.`type` = 0
         GROUP BY u.name
@@ -170,7 +166,7 @@ ORDER BY s.id ASC;
 SET @rownum = @lastmission;
 
 INSERT INTO solutions (context_id, assignment_id, text, best)
-SELECT @rownum := @rownum +1 as rownum, s.id, s.content, s.win
+SELECT @rownum := @rownum +1 AS rownum, s.id, s.content, s.win
 FROM (  SELECT a.context_id AS id, s.content, s.win
         FROM old_solutions s
         LEFT OUTER JOIN old_users o_u ON (o_u.id = s.id)
@@ -182,9 +178,16 @@ FROM (  SELECT a.context_id AS id, s.content, s.win
         ORDER BY s.id ASC) s;
 
 INSERT INTO comments (solution_id, user_id, text, points)
-SELECT s.context_id, 1, SUBSTRING_INDEX(GROUP_CONCAT(CAST(o_r.text AS CHAR)  ORDER BY o_r.id SEPARATOR '#$#$#$##'), '#$#$#$##', 1 ) as text, ROUND(AVG(o_r.points), 1) as points
+SELECT s.context_id, 1, SUBSTRING_INDEX(GROUP_CONCAT(CAST(o_r.text AS CHAR)  ORDER BY o_r.id SEPARATOR '#$#$#$##'), '#$#$#$##', 1 ) as text, ROUND(AVG(o_r.points), 1) AS points
 FROM old_results o_r
 LEFT OUTER JOIN old_solutions o_s ON (o_s.id = o_r.sid)
 LEFT OUTER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
 GROUP BY s.context_id
-ORDER BY s.context_id;
+ORDER BY s.context_id ASC;
+
+INSERT INTO videos (location_id, link)
+SELECT s.context_id, CASE (REPLACE(o_v.link, ' ', '') LIKE 'https%') WHEN TRUE THEN MID(o_v.link, 31, 11) ELSE MID(o_v.link, 30, 11) END AS link
+FROM old_videos o_v
+LEFT OUTER JOIN old_solutions o_s ON (o_s.id = o_v.sid)
+LEFT OUTER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
+ORDER BY o_v.id ASC;
