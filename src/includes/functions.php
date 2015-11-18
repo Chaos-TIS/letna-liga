@@ -8,6 +8,8 @@ function page_head($title, $prefix = "")
 {
 ?>
 <!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="css/dropdownmenu.css">
+<script type="text/javascript" src="js/dropdownmenu.js" ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <html lang="sk-SK">
     <head>
@@ -61,8 +63,43 @@ function get_logout_button(){
 function page_nav()
 {
     ?>
-        <nav>
-        </nav>
+		<div class="nav">
+			<ul id="menu" class="menu">
+				<li><span>Zadania</span>
+					<ul>
+						<li><a href="#">1. Zadanie</a></li>
+						<li><a href="#">2. Zadanie</a></li>
+						<li><a href="#">...</a></li>
+						<li><a href="#">Prehľad zadaní</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Výsledky</a></li>
+				<li><span>Archív</span>
+					<ul>
+						<li><span>2013</span></li>
+						<li><span>2014</span></li>
+						<li class="submenu">
+							<span>2015</span><ul>
+								<li class="noborder"><a href="#">Výsledky</a></li>
+								<li><a href="#">1. Zadanie</a></li>
+								<li><a href="#">2. Zadanie</a></li>
+								<li><a href="#">...</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a href="#">Užívatelia</a></li>
+				<li><a href="#">Jazyk</a>
+					<ul>
+						<li><a href="#"><img src="images/sk.png" width=33 height=22></a></li>
+						<li><a href="#"><img src="images/eng.png" width=33 height=22></a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+		var dropdown=new TINY.dropdown.init("dropdown", {id:'menu', active:'menuhover'});
+		</script>
     <?php
 }
 
@@ -70,7 +107,7 @@ function page_footer()
 {
     ?>
     </body>
-</html>
+	</html>
     <?php
 }
 
