@@ -1,4 +1,4 @@
-* {margin:0; padding:0; outline:0}
+.nav * {margin:0; padding:0; outline:0}
 .nav {height:36px; background:#b01515; z-index:1000}
 .menu a {float:left; color:#fff; text-decoration:none; width:120px; height:28px; padding-top:8px}
 .menu span {float:left; color:#fff; text-decoration:none; width:120px; height:28px; padding-top:8px}

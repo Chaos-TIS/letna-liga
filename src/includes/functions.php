@@ -1,16 +1,10 @@
 <?php
 
-function __autoload($class_name) {
-    include "classes/$class_name.php";
-}
-
-function page_head($title, $prefix = "")
+function page_head($title)
 {
+    session_start();
 ?>
 <!DOCTYPE html>
-<link rel="stylesheet" type="text/css" href="css/dropdownmenu.css">
-<script type="text/javascript" src="js/dropdownmenu.js" ></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <html lang="sk-SK">
     <head>
         <title><?php echo $title ?></title>
@@ -18,9 +12,11 @@ function page_head($title, $prefix = "")
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="keywords" content="fll, lego, letna liga">
         <meta name="author" content="Chaos">
-        <link rel="icon" href="<?php echo $prefix ?>favicon.ico" type="image/x-icon">
-        <link type="text/css" href="<?php echo $prefix ?>styles.css" rel="stylesheet">
-
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link type="text/css" href="styles.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="css/dropdownmenu.css">
+        <script type="text/javascript" src="js/dropdownmenu.js" ></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     </head>
 
     <body>
@@ -29,7 +25,7 @@ function page_head($title, $prefix = "")
 
 function get_login_form(){
 ?>
-    <form id="login-form" action="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/auth/login" method="post" accept-charset="utf-8">
+    <form id="login-form" onsubmit="return validateLogin()" method="post" accept-charset="utf-8">
         <table>
             <tr>
                 <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;">Prihlásenie</p></td>
@@ -39,15 +35,34 @@ function get_login_form(){
                 <td><input id="mail" type="text" value="@"></td>
             </tr>
             <tr>
-                <td><label for="passwd">Heslo:</label></td>
-                <td><input id="passwd" type="password" value=""></td>
+                <td><label for="password">Heslo:</label></td>
+                <td><input id="password" type="password" value=""></td>
             </tr>
             <tr>
                 <td><input type="submit" name="submit" value="Prihlásiť sa"></td>
-                <td style="text-align: right;"><a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/auth/register"> Registrácia </a></td>
-                <p style="color: green;"></p>	</tr>
+                <td style="text-align: right;"><a href="registracia.php"> Registrácia </a></td>
+            </tr>
         </table>
     </form>
+    <script>
+        function validateLogin() {
+            var login = $("#mail").val();
+            var password = $("#password").val();
+            $.ajax({cache : false,
+                    async : false,
+                    type: "POST",
+                    data : {mail : login, password : password},
+                    url : "includes/login.php"}).done(function(data) {
+                if (data) {
+                    alert(data);
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            });
+        }
+    </script>
 
 <?php
 }

@@ -17,6 +17,7 @@ CREATE TABLE users (
 CREATE TABLE organisators (
     user_id INT UNSIGNED,
     `admin` BOOLEAN,
+    validated BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
@@ -111,8 +112,8 @@ ORDER BY u.`type` = 2 ASC, u.id ASC;
 
 SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'letnaliga' AND TABLE_NAME = 'users')-1;
 
-INSERT INTO organisators (user_id, `admin`)
-SELECT u.user_id, u.user_id = 1
+INSERT INTO organisators (user_id, `admin`, validated)
+SELECT u.user_id, u.user_id = 1, TRUE
 FROM users u;
 
 INSERT INTO contexts (user_id)

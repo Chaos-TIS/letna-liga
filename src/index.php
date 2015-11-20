@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+function __autoload($class_name) {
+    include "classes/$class_name.php";
+}
+
 require_once("includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
