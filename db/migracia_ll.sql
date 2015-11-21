@@ -73,24 +73,23 @@ CREATE TABLE comments (
 
 CREATE TABLE videos (
     video_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    location_id INT UNSIGNED,
+    context_id INT UNSIGNED,
     link VARCHAR(11),
-    FOREIGN KEY (location_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
+    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE programs (
     program_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    location_id INT UNSIGNED,
-    link VARCHAR(30),
-    FOREIGN KEY (location_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
+    context_id INT UNSIGNED,
+    original_name VARCHAR(100),
+    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE images (
     image_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    location_id INT UNSIGNED,
-    link VARCHAR(30),
-    extension VARCHAR(5),
-    FOREIGN KEY (location_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
+    context_id INT UNSIGNED,
+    original_name VARCHAR(100),
+    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 /*********************************************************************************/
@@ -135,7 +134,7 @@ ORDER BY id ASC;
 SET @rownum = 0;
 
 INSERT INTO assignments (context_id, text_id_name, text_id_description, `begin`, `end`)
-SELECT @rownum := @rownum+1 AS rownum, @rownum AS rownum2, @rownum + @lastmission AS desc_id, `start`, `end`
+SELECT @rownum := @rownum+1 AS rownum, @rownum AS rownum2, @rownum + @lastmission +1 AS desc_id, `start`, `end`
 FROM old_missions
 ORDER BY id ASC; 
 
@@ -186,9 +185,65 @@ LEFT OUTER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
 GROUP BY s.context_id
 ORDER BY s.context_id ASC;
 
-INSERT INTO videos (location_id, link)
+INSERT INTO videos (context_id, link)
 SELECT s.context_id, CASE (REPLACE(o_v.link, ' ', '') LIKE 'https%') WHEN TRUE THEN MID(o_v.link, 31, 11) ELSE MID(o_v.link, 30, 11) END AS link
 FROM old_videos o_v
 LEFT OUTER JOIN old_solutions o_s ON (o_s.id = o_v.sid)
 LEFT OUTER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
 ORDER BY o_v.id ASC;
+
+/****************************************************************************************/
+INSERT INTO images (context_id, original_name) 
+SELECT a.context_id, x.file_name 
+FROM texts txt 
+INNER JOIN assignments a ON (a.text_id_name = txt.text_id) 
+INNER JOIN (
+    SELECT '2013.11_.18_.20_.18_.16_.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/2013.11_.18_.20_.18_.16_.png%' UNION
+    SELECT '8590.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/8590.jpg%' UNION
+    SELECT 'AplusB.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/AplusB.png%' UNION
+    SELECT 'bloodhound.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/bloodhound.jpg%' UNION
+    SELECT 'cern.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/cern.jpg%' UNION
+    SELECT 'dierny_stitok.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/dierny_stitok.png%' UNION
+    SELECT 'dvere.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/dvere.jpg%' UNION
+    SELECT 'fll-rotacia.zip' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/fll-rotacia.zip%' UNION
+    SELECT 'hochschornerovci.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/hochschornerovci.jpg%' UNION
+    SELECT 'hojdacka.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/hojdacka.jpg%' UNION
+    SELECT 'hroch.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/hroch.jpg%' UNION
+    SELECT 'IMAG1418.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/IMAG1418.jpg%' UNION
+    SELECT 'karty.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/karty.png%' UNION
+    SELECT 'lol.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/lol.jpg%' UNION
+    SELECT 'prevodovkas.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/prevodovkas.png%' UNION
+    SELECT 'priepast.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/priepast.jpg%' UNION
+    SELECT 'projektove_vyucovanie_fll_2014.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/projektove_vyucovanie_fll_2014.png%' UNION
+    SELECT 'robocupathome.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/robocupathome.jpg%' UNION
+    SELECT 'robotchallenge_hand.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/robotchallenge_hand.jpg%' UNION
+    SELECT 'rotacia.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/rotacia.png%' UNION
+    SELECT 'skibot.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/skibot.jpg%' UNION
+    SELECT 'slalom_trat1.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/slalom_trat1.png%' UNION
+    SELECT 'slalom_trat2.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/slalom_trat2.png%' UNION
+    SELECT 'spock.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/spock.jpg%' UNION
+    SELECT 'stastny_hroch.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/stastny_hroch.jpg%' UNION
+    SELECT 'stopar.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/stopar.png%' UNION
+    SELECT 'tilebot.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/tilebot.png%' UNION
+    SELECT 'turing.gif' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/turing.gif%' UNION
+    SELECT 'vehicles.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/vehicles.png%' UNION
+    SELECT 'vehicles1.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/vehicles1.png%' UNION
+    SELECT 'vehicles2.png' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/vehicles2.png%' UNION
+    SELECT 'vlasske-orechy.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/vlasske-orechy.jpg%' UNION
+    SELECT 'watson.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/watson.jpg%') x 
+ON (x.name = txt.sk COLLATE 'utf8_general_ci') 
+ORDER BY x.file_name;
+
+INSERT INTO images (context_id, original_name) 
+SELECT s.context_id, o_i.link
+FROM old_img o_i
+INNER JOIN old_solutions o_s ON (o_s.id = o_i.sid)
+INNER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
+ORDER BY o_i.link ASC;
+
+INSERT INTO programs (context_id, original_name) 
+SELECT s.context_id, o_a.link
+FROM old_attachments o_a
+INNER JOIN old_solutions o_s ON (o_s.id = o_a.sid)
+INNER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
+ORDER BY o_a.link ASC;
