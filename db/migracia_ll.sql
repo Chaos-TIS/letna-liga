@@ -247,3 +247,5 @@ FROM old_attachments o_a
 INNER JOIN old_solutions o_s ON (o_s.id = o_a.sid)
 INNER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
 ORDER BY o_a.link ASC;
+
+DROP TABLE old_attachments, old_img, old_missions, old_results, old_solutions, old_users, old_videos;
