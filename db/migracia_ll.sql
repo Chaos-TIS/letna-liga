@@ -115,7 +115,8 @@ SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE
 
 INSERT INTO organisators (user_id, `admin`, validated)
 SELECT u.user_id, u.user_id = 1, TRUE
-FROM users u;
+FROM users u
+ORDER BY u.user_id;
 
 INSERT INTO contexts (user_id)
 SELECT 1
@@ -158,10 +159,11 @@ SET @rownum = @lastuserorg;
 
 INSERT INTO teams (user_id, name, description, sk_league)
 SELECT @rownum := @rownum + 1 AS rownum, u.name, null, true
-FROM (  SELECT u.name FROM old_users u
+FROM (  SELECT u.name, u.id FROM old_users u
         WHERE u.`type` = 0
         GROUP BY u.name
-        ORDER BY u.id ASC) u;
+        ORDER BY u.id ASC) u
+ORDER BY u.id ASC;
 
 INSERT INTO contexts (user_id)
 SELECT t.user_id
@@ -183,7 +185,8 @@ FROM (  SELECT a.context_id AS id, s.content, s.win
         LEFT OUTER JOIN texts txt ON (txt.sk COLLATE 'utf8_general_ci' = o_m.name)
         LEFT OUTER JOIN assignments a ON (a.text_id_name = txt.text_id)
         GROUP BY s.id
-        ORDER BY s.id ASC) s;
+        ORDER BY s.id ASC) s
+ORDER BY s.id ASC;
 
 INSERT INTO comments (solution_id, user_id, text, points)
 SELECT s.context_id, 1, SUBSTRING_INDEX(GROUP_CONCAT(CAST(o_r.text AS CHAR)  ORDER BY o_r.id SEPARATOR '#$#$#$##'), '#$#$#$##', 1 ) as text, ROUND(AVG(o_r.points), 1) AS points
@@ -240,7 +243,7 @@ INNER JOIN (
     SELECT 'vlasske-orechy.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/vlasske-orechy.jpg%' UNION
     SELECT 'watson.jpg' as file_name, o_m.name FROM old_missions o_m WHERE o_m.content LIKE '%attachments/watson.jpg%') x 
 ON (x.name = txt.sk COLLATE 'utf8_general_ci') 
-ORDER BY x.file_name;
+ORDER BY x.file_name ASC, a.context_id ASC;
 
 ALTER TABLE images AUTO_INCREMENT = 1;
 
