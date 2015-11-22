@@ -127,7 +127,7 @@ function page_footer()
 }
 
 function db_connect() {
-    if ($link = mysqli_connect('localhost', 'letnaliga', 'nedavajteheslodosvn')) {
+    if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
         if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
@@ -294,5 +294,45 @@ function show_table($year) {
 
     return $result;
 }
+
+function registruj() {
+	if ($link = db_connect()) {
+	  $sql =  "INSERT INTO users(mail,password) VALUES('".$_SESSION['email']."','".$_SESSION['pass']."')";
+  	$result = mysqli_query($link,$sql); 
+		if ($result) {
+        if ($link = db_connect()) {
+	         /*$sql =  "INSERT INTO teams(user_id) SELECT u.user_id
+            FROM users u
+            WHERE LOWER(u.mail) = '".$_SESSION['email']."'";  */
+           $sql =  "INSERT INTO teams(user_id,name,description,sk_league) SELECT u.user_id ,'" .$_SESSION['uname']."','" .$_SESSION['os']."','" .$_SESSION['liga']."'
+            FROM users u
+            WHERE LOWER(u.mail) = '".$_SESSION['email']."'";  
+            
+  	       $result = mysqli_query($link,$sql);
+           if($result){
+        
+ 	    echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n";
+      ?>
+       <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
+      <?php      
+    }
+   	} else {
+			
+     	echo '<p class="chyba">Nastala chyba pri registracii.</p>' . "\n";
+      ?>
+       <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/registracia.php"> 
+      <?php
+    }
+		mysqli_close($link);
+	} else {
+		
+		echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom!</p>';
+	}
+}	}
+
+
+  
+
+
 
 ?>
