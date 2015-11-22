@@ -36,7 +36,7 @@ CREATE TABLE texts (
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE contexts (
-    context_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    context_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     user_id INT UNSIGNED,
     FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
@@ -109,6 +109,8 @@ FROM old_users u
 WHERE u.`type` != 0
 ORDER BY u.`type` = 2 ASC, u.id ASC;
 
+ALTER TABLE users AUTO_INCREMENT = 1;
+
 SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'letnaliga' AND TABLE_NAME = 'users')-1;
 
 INSERT INTO organisators (user_id, `admin`, validated)
@@ -119,12 +121,16 @@ INSERT INTO contexts (user_id)
 SELECT 1
 FROM old_missions;
 
+ALTER TABLE contexts AUTO_INCREMENT = 1;
+
 SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'letnaliga' AND TABLE_NAME = 'contexts')-1;
 
 INSERT INTO texts (sk, eng)
 SELECT name, null
 FROM old_missions
 ORDER BY id ASC;
+
+ALTER TABLE texts AUTO_INCREMENT = 1;
 
 INSERT INTO texts (sk, eng)
 SELECT content, null
@@ -145,6 +151,8 @@ LEFT OUTER JOIN old_solutions s ON (s.`uid` = u.id)
 WHERE u.`type` = 0
 GROUP BY u.name
 ORDER BY u.id ASC;
+
+ALTER TABLE users AUTO_INCREMENT = 1;
 
 SET @rownum = @lastuserorg;
 
@@ -234,18 +242,32 @@ INNER JOIN (
 ON (x.name = txt.sk COLLATE 'utf8_general_ci') 
 ORDER BY x.file_name;
 
+ALTER TABLE images AUTO_INCREMENT = 1;
+
 INSERT INTO images (context_id, original_name) 
 SELECT s.context_id, o_i.link
 FROM old_img o_i
 INNER JOIN old_solutions o_s ON (o_s.id = o_i.sid)
 INNER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
-ORDER BY o_i.link ASC;
+ORDER BY o_i.link COLLATE 'utf8_slovak_ci' ASC ;
 
 INSERT INTO programs (context_id, original_name) 
 SELECT s.context_id, o_a.link
 FROM old_attachments o_a
 INNER JOIN old_solutions o_s ON (o_s.id = o_a.sid)
 INNER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
-ORDER BY o_a.link ASC;
+ORDER BY o_a.link COLLATE 'utf8_slovak_ci' ASC;
+
+ALTER TABLE users AUTO_INCREMENT = 1;
+ALTER TABLE teams AUTO_INCREMENT = 1;
+ALTER TABLE organisators AUTO_INCREMENT = 1;
+ALTER TABLE contexts AUTO_INCREMENT = 1;
+ALTER TABLE texts AUTO_INCREMENT = 1;
+ALTER TABLE assignments AUTO_INCREMENT = 1;
+ALTER TABLE solutions AUTO_INCREMENT = 1;
+ALTER TABLE comments AUTO_INCREMENT = 1;
+ALTER TABLE images AUTO_INCREMENT = 1;
+ALTER TABLE programs AUTO_INCREMENT = 1;
+ALTER TABLE videos AUTO_INCREMENT = 1;
 
 DROP TABLE old_attachments, old_img, old_missions, old_results, old_solutions, old_users, old_videos;
