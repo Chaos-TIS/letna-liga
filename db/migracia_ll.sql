@@ -1,4 +1,5 @@
 SET NAMES 'utf8';
+SET FOREIGN_KEY_CHECKS=0;
 
 RENAME TABLE    attachments TO old_attachments,
                 img TO old_img,
@@ -111,7 +112,7 @@ ORDER BY u.`type` = 2 ASC, u.id ASC;
 
 ALTER TABLE users AUTO_INCREMENT = 1;
 
-SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'letnaliga' AND TABLE_NAME = 'users')-1;
+SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'users')-1;
 
 INSERT INTO organisators (user_id, `admin`, validated)
 SELECT u.user_id, u.user_id = 1, TRUE
@@ -124,7 +125,7 @@ FROM old_missions;
 
 ALTER TABLE contexts AUTO_INCREMENT = 1;
 
-SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'letnaliga' AND TABLE_NAME = 'contexts')-1;
+SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'contexts')-1;
 
 INSERT INTO texts (sk, eng)
 SELECT name, null
@@ -274,3 +275,4 @@ ALTER TABLE programs AUTO_INCREMENT = 1;
 ALTER TABLE videos AUTO_INCREMENT = 1;
 
 DROP TABLE old_attachments, old_img, old_missions, old_results, old_solutions, old_users, old_videos;
+SET FOREIGN_KEY_CHECKS=1;
