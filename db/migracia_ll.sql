@@ -48,6 +48,7 @@ CREATE TABLE assignments (
     text_id_description INT UNSIGNED,
     `begin` DATETIME,
     `end` DATETIME,
+    `year` INTEGER,
     FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE CASCADE,
     FOREIGN KEY (text_id_name) REFERENCES TEXTS(text_id) ON DELETE CASCADE,
     FOREIGN KEY (text_id_description) REFERENCES TEXTS(text_id) ON DELETE CASCADE
@@ -112,7 +113,7 @@ ORDER BY u.`type` = 2 ASC, u.id ASC;
 
 ALTER TABLE users AUTO_INCREMENT = 1;
 
-SET @lastuserorg = (SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'users')-1;
+SET @lastuserorg = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'users');
 
 INSERT INTO organisators (user_id, `admin`, validated)
 SELECT u.user_id, u.user_id = 1, TRUE
@@ -125,7 +126,7 @@ FROM old_missions;
 
 ALTER TABLE contexts AUTO_INCREMENT = 1;
 
-SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'contexts')-1;
+SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'contexts');
 
 INSERT INTO texts (sk, eng)
 SELECT name, null
@@ -141,8 +142,8 @@ ORDER BY id ASC;
 
 SET @rownum = 0;
 
-INSERT INTO assignments (context_id, text_id_name, text_id_description, `begin`, `end`)
-SELECT @rownum := @rownum+1 AS rownum, @rownum AS rownum2, @rownum + @lastmission +1 AS desc_id, `start`, `end`
+INSERT INTO assignments (context_id, text_id_name, text_id_description, `begin`, `end`, `year`)
+SELECT @rownum := @rownum+1 AS rownum, @rownum AS rownum2, @rownum + @lastmission AS desc_id, `start`, `end`, YEAR(`start`)
 FROM old_missions
 ORDER BY id ASC; 
 
@@ -160,7 +161,8 @@ SET @rownum = @lastuserorg;
 
 INSERT INTO teams (user_id, name, description, sk_league)
 SELECT @rownum := @rownum + 1 AS rownum, u.name, null, true
-FROM (  SELECT u.name, u.id FROM old_users u
+FROM (  SELECT u.name, u.id 
+        FROM old_users u
         WHERE u.`type` = 0
         GROUP BY u.name
         ORDER BY u.id ASC) u
@@ -273,6 +275,11 @@ ALTER TABLE comments AUTO_INCREMENT = 1;
 ALTER TABLE images AUTO_INCREMENT = 1;
 ALTER TABLE programs AUTO_INCREMENT = 1;
 ALTER TABLE videos AUTO_INCREMENT = 1;
+
+UPDATE texts txt
+INNER JOIN assignments a ON (a.text_id_description = txt.text_id)
+INNER JOIN images i ON (i.context_id = a.context_id)
+SET txt.sk = REPLACE (txt.sk, i.original_name, CONCAT_WS('/', 'assignments', i.context_id, 'images', i.image_id));
 
 DROP TABLE old_attachments, old_img, old_missions, old_results, old_solutions, old_users, old_videos;
 SET FOREIGN_KEY_CHECKS=1;
