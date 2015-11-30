@@ -8,8 +8,6 @@ require_once("includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
 ?>
-        <h1>Letná liga FLL</h1>
-
         <?php if (!isset($_SESSION['loggedUser']))
             get_login_form();
         else
