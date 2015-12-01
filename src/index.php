@@ -1,10 +1,7 @@
 <?php
 
-function __autoload($class_name) {
-    include "classes/$class_name.php";
-}
+require_once(dirname(__FILE__)."/includes/functions.php");
 
-require_once("includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
 ?>
@@ -49,7 +46,7 @@ page_nav();
             <h2 data-trans="complete-results">Kompletné výsledky</h2>
             <script>
                 $(document).ready(function(){
-                        $(".result-table").load("includes/get_result_table.php?year=2015");
+                        $(".result-table").load("includes/get_result_table.php");
                     });
             </script>
             <table class="result-table"><tr><td data-trans="table-loading">Tabuľka sa načítava ...</td></tr></table>

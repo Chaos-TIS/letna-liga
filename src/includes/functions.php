@@ -1,5 +1,9 @@
 <?php
 
+function __autoload($class_name) {
+    include(dirname(__FILE__)."/../classes/$class_name.php");
+}
+
 function page_head($title)
 {
     ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
@@ -9,10 +13,10 @@ function page_head($title)
 <html lang="sk-SK">
     <head>
         <meta charset="utf-8">
-        <title><?php echo $title ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="keywords" content="fll, lego, letna liga">
         <meta name="author" content="Chaos">
+        <title><?php echo $title ?></title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link type="text/css" href="styles.css" rel="stylesheet">
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
@@ -28,7 +32,7 @@ function page_head($title)
 
 function get_login_form(){
 ?>
-    <form id="login-form" onsubmit="return validateLogin()" method="post" accept-charset="utf-8">
+    <form id="login-form" onsubmit="validateLogin()" method="post" accept-charset="utf-8">
         <table>
             <tr>
                 <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;" data-trans="login-form">Prihlásenie</p></td>
@@ -49,19 +53,19 @@ function get_login_form(){
     </form>
     <script>
         function validateLogin() {
+            event.preventDefault();
             var login = $("#mail").val();
             var password = $("#password").val();
             $.ajax({cache : false,
-                    async : false,
+                    async : true,
                     type: "POST",
                     data : {mail : login, password : password},
                     url : "includes/login.php"}).done(function(data) {
                 if (data) {
                     alert(data);
-                    return false;
                 }
                 else{
-                    return true;
+                    location.reload();
                 }
             });
         }
@@ -186,16 +190,20 @@ function db_connect() {
 }
 
 function show_table($year) {
+    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+    if (!isset($year)){
+        $year = "(SELECT MAX(year) FROM assignments)";
+    }
     if ($link = db_connect()) {
         $sql = "SELECT q.name, a.year, q.solution_id, q.best, a.context_id assignment_id, q.points
-                FROM ASSIGNMENTS a
+                FROM assignments a
                 LEFT OUTER JOIN (
                     SELECT t.name, s.context_id solution_id, s.best, s.assignment_id, ROUND(SUM(comm.points)/COUNT(comm.points),2) points
-                    FROM SOLUTIONS s
-                    LEFT OUTER JOIN CONTEXTS c ON (c.context_id = s.context_id)
-                    LEFT OUTER JOIN USERS u ON (u.user_id = c.user_id)
-                    LEFT OUTER JOIN TEAMS t ON (t.user_id = u.user_id)
-                    LEFT OUTER JOIN COMMENTS comm ON (comm.solution_id = c.context_id)
+                    FROM solutions s
+                    LEFT OUTER JOIN contexts c ON (c.context_id = s.context_id)
+                    LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
+                    LEFT OUTER JOIN teams t ON (t.user_id = u.user_id)
+                    LEFT OUTER JOIN comments comm ON (comm.solution_id = c.context_id)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
                 WHERE a.year = $year
@@ -224,14 +232,14 @@ function show_table($year) {
             }
 
             if ($row['name'] != null){
-                $userPointsMap[$row['name']][sizeof($aid_array)-1] = array($row['points'], $row['solution_id'], $row['best']);
+                $userPointsMap[$row['name']][sizeof($aid_array)-1] = array((float)$row['points'], $row['solution_id'], $row['best']);
             }
         }
 
         $sum_array = array();
         foreach ($userPointsMap as $user => $array){
             $sum = 0;
-            for ($i = 0; $i < sizeof($array); $i++){
+            for ($i = 0; $i < sizeof($aid_array); $i++){
                 if (!is_null($array[$i])){
                     $sum += $array[$i][0];
                 }
@@ -246,16 +254,23 @@ function show_table($year) {
                          <td>Meno tímu</td>';
 
         for ($i = 1; $i < sizeof($aid_array)+1; $i++){
-            $result_table .= '<td ><a href="#">'.$i.'</a></td>';
+            $href = 'assignment.php?id='.$aid_array[$i];
+            $result_table .= '<td ><a href="'.$href.'">'.$i.'</a></td>';
         }
         $result_table .= '<td>Spolu</td></tr>';
 
         foreach ($sum_array as $user => $sum){
-            $result_table .= "<tr><td><strong>$user</strong></td>";
+            $result_table .= "<tr style='border-top: 1px solid black;'><td style='border-right: 1px solid black; font-weight: bold;'><strong>$user</strong></td>";
             for ($i = 0; $i < sizeof($aid_array); $i++){
-                $result_table .= is_null($userPointsMap[$user][$i])? "<td>-</td>" : '<td><a href="">'.$userPointsMap[$user][$i][0].'</a></td>';
+                if (is_null($userPointsMap[$user][$i])){
+                    $result_table .= "<td style=' font-weight: bold;'>-</td>";
+                }
+                else {
+                    $result_table .= '<td style="font-weight: bold; '.($userPointsMap[$user][$i][2]?"background-color: #00ff3f;":"").'"><a
+                    href="solution.php?id='.$userPointsMap[$user][$i][1].'">'.$userPointsMap[$user][$i][0].'</a></td>';
+                };
             }
-            $result_table .= '<td><strong>'.$sum_array[$user].'</strong></td>';
+            $result_table .= '<td style="border-left: 1px solid black;"><strong>'.$sum_array[$user].'</strong></td>';
             $result_table .= "</tr>";
         }
         $result_table .= "</table>";

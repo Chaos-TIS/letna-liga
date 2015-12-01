@@ -1,5 +1,6 @@
 <?php
-include 'includes/functions.php';
+require_once(dirname(__FILE__)."/includes/functions.php");
+
 page_head("Registration");
 page_nav();
 

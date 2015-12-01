@@ -1,7 +1,7 @@
 <?php
 session_start();
 //$_SESSION["id"]=1;
-require_once("includes/functions.php");
+require_once(dirname(__FILE__)."/includes/functions.php");
 page_head("Letná liga FLL - Pridanie riešenia");
 page_nav();
 

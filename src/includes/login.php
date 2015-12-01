@@ -1,13 +1,11 @@
 <?php
-function __autoload($class_name) {
-    include "../classes/$class_name.php";
-}
-
-//error_reporting(0);
-@ini_set('display_errors', 0);
+header('Content-type: text/plain; charset=utf-8');
 ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 session_start();
-require_once("functions.php");
+
+error_reporting(0);
+@ini_set('display_errors', 0);
+require_once(dirname(__FILE__)."/functions.php");
 if ($link = db_connect()) {
     $mail = strtolower($_POST['mail']);
     $password = $_POST['password'];
@@ -43,9 +41,6 @@ if ($link = db_connect()) {
     else {
         echo "Neexistuje účet zaregistrovaný na tento e-mail!";
     }
-} else {
-    echo "Nepodarilo sa spojiť s databázovým serverom!";
 }
-echo 1111;
 die;
 ?>

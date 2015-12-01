@@ -1,8 +1,6 @@
-<?php 
-function __autoload($class_name) {
-    include "classes/$class_name.php";
-}
-require_once("includes/functions.php");
+<?php
+require_once(dirname(__FILE__)."/includes/functions.php");
+
 page_head("Letná liga FLL");
 page_nav();
 if (!isset($_SESSION['loggedUser']))
