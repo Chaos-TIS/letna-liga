@@ -153,7 +153,7 @@ FROM old_users u
 LEFT OUTER JOIN old_solutions s ON (s.`uid` = u.id)
 WHERE u.`type` = 0
 GROUP BY u.name
-ORDER BY u.id ASC;
+ORDER BY MIN(u.id) ASC;
 
 ALTER TABLE users AUTO_INCREMENT = 1;
 
@@ -161,38 +161,36 @@ SET @rownum = @lastuserorg;
 
 INSERT INTO teams (user_id, name, description, sk_league)
 SELECT @rownum := @rownum + 1 AS rownum, u.name, null, true
-FROM (  SELECT u.name, u.id 
+FROM (  SELECT u.name, MIN(u.id) id
         FROM old_users u
         WHERE u.`type` = 0
-        GROUP BY u.name
-        ORDER BY u.id ASC) u
+        GROUP BY u.name) u
 ORDER BY u.id ASC;
 
 INSERT INTO contexts (user_id)
 SELECT t.user_id
-FROM old_solutions s
-LEFT OUTER JOIN old_users o_u ON (o_u.id = s.uid)
+FROM old_solutions o_s
+LEFT OUTER JOIN old_users o_u ON (o_u.id = o_s.uid)
 LEFT OUTER JOIN teams t ON (t.name COLLATE 'utf8_general_ci' = o_u.name)
-GROUP BY s.id
-ORDER BY s.id ASC;
+GROUP BY o_s.id
+ORDER BY o_s.id ASC;
 
 SET @rownum = @lastmission;
 
 INSERT INTO solutions (context_id, assignment_id, text, best)
-SELECT @rownum := @rownum +1 AS rownum, s.id, s.content, s.win
-FROM (  SELECT a.context_id AS id, s.content, s.win
-        FROM old_solutions s
-        LEFT OUTER JOIN old_users o_u ON (o_u.id = s.id)
+SELECT @rownum := @rownum +1 AS rownum, s.assignment_id, s.content, s.win
+FROM (  SELECT a.context_id AS assignment_id, o_s.content, o_s.win, o_s.id
+        FROM old_solutions o_s
+        LEFT OUTER JOIN old_users o_u ON (o_u.id = o_s.id)
         LEFT OUTER JOIN teams t ON (t.name COLLATE 'utf8_general_ci' = o_u.name)
-        LEFT OUTER JOIN old_missions o_m ON (o_m.id = s.`mid`)
+        LEFT OUTER JOIN old_missions o_m ON (o_m.id = o_s.`mid`)
         LEFT OUTER JOIN texts txt ON (txt.sk COLLATE 'utf8_general_ci' = o_m.name)
         LEFT OUTER JOIN assignments a ON (a.text_id_name = txt.text_id)
-        GROUP BY s.id
-        ORDER BY s.id ASC) s
+        GROUP BY o_s.id) s
 ORDER BY s.id ASC;
 
 INSERT INTO comments (solution_id, user_id, text, points)
-SELECT s.context_id, 1, SUBSTRING_INDEX(GROUP_CONCAT(CAST(o_r.text AS CHAR)  ORDER BY o_r.id SEPARATOR '#$#$#$##'), '#$#$#$##', 1 ) as text, ROUND(AVG(o_r.points), 1) AS points
+SELECT s.context_id, 1, SUBSTRING_INDEX(GROUP_CONCAT(CAST(o_r.text AS CHAR)  ORDER BY o_r.id SEPARATOR '#$#$#$##'), '#$#$#$##', 1 ) as text, ROUND(AVG(o_r.points), 2) AS points
 FROM old_results o_r
 LEFT OUTER JOIN old_solutions o_s ON (o_s.id = o_r.sid)
 LEFT OUTER JOIN solutions s ON (s.text COLLATE 'utf8_general_ci' = o_s.content)
