@@ -2,7 +2,7 @@
 require_once("includes/functions.php");
 
 class Assignment extends Context {
-    private $name_sk
+    private $name_sk;
     private $name_eng;
 	private $text_sk;
 	private $text_eng;

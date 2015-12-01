@@ -2,7 +2,7 @@
 require_once("includes/functions.php");
 
 class Comment {
-    private $id
+    private $id;
     private $author;
 	private $text;
 	private $solution;
