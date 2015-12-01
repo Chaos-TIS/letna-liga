@@ -3,8 +3,9 @@ function __autoload($class_name) {
     include "../classes/$class_name.php";
 }
 
-error_reporting(0);
+//error_reporting(0);
 @ini_set('display_errors', 0);
+ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 session_start();
 require_once("functions.php");
 if ($link = db_connect()) {
@@ -45,5 +46,6 @@ if ($link = db_connect()) {
 } else {
     echo "Nepodarilo sa spojiť s databázovým serverom!";
 }
+echo 1111;
 die;
 ?>

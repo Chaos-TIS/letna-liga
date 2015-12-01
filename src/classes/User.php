@@ -46,7 +46,6 @@ abstract class User
                 return $user;
             }
         }
-        echo "NO";
         return null;
     }
 
