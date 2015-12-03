@@ -47,7 +47,29 @@ class Solution extends Context {
 	}		
 	
 	public function getEditingHtml(){
-	
+	?>
+	<div id="content">
+		
+		<form name="form1" enctype="multipart/form-data" method="POST" action="addSolution.php">
+			<h2> Popis riešenia </h2>
+			<textarea name="textPopis" cols="80" rows="10" ><?php echo $solution->getTxt() ?></textarea>
+			
+			<h2> Obrázky k riešeniu </h2>
+			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
+			Vyber Obrázok: <input type="file" name="uploadedImages[]"  multiple />
+			
+			<h2> Videá k riešeniu </h2>
+			<textarea name="textVideo" cols="80" rows="3" ></textarea>
+			
+			<h2> Program </h2>
+			Vyber súbor: <input type="file" name="uploadedFiles[]" multiple />
+			
+			<br>
+			<input type="submit" value="OK" id="upload" />
+		</form>
+
+	</div>
+	<?php
 	}
 	
 	public function getPreviewHtml(){
@@ -69,5 +91,7 @@ class Solution extends Context {
 	public function save(){
 	
 	}
+	
+	
 }
 ?>

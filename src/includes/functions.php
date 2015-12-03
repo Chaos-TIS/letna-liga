@@ -174,9 +174,35 @@ function page_footer()
     <?php
 }
 
+function checkUploadImage($ext, $typ, $vel)
+{
+	if (( (($ext == "jpg") && ($typ == "image/jpeg")) ||
+	     (($ext == "gif") && ($typ == "image/gif"))   ||
+	     (($ext == "png") && ($typ == "image/png")) ) && ($vel < 10000000))
+	{
+		return True;
+	}
+	else
+	{
+		return False;
+	}
+}
+
+function checkUploadFile($vel)
+{
+	if ($vel < 10000000)
+	{
+		return True;
+	}
+	else
+	{
+		return False;
+	}
+}
+
 function db_connect() {
-    if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
-        if (mysqli_select_db($link, 'letnaliga')) {
+    if ($link = mysqli_connect('localhost', 'root', 'vertrigo')) {
+        if (mysqli_select_db($link, 'letna_liga_test2')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
         } else {
@@ -187,6 +213,14 @@ function db_connect() {
         echo "Nepodarilo sa spojiť s databázovým serverom!";
         return false;
     }
+}
+
+function new_solution($conn, $uid, $aid) {
+	mysqli_query($conn,"INSERT INTO contexts (user_id) VALUES (".$uid.")");
+	$cid = mysqli_insert_id($conn);
+	mysqli_query($conn,"INSERT INTO solutions (context_id,assignment_id) VALUES (".$cid.",".$aid.")");
+	mysqli_query($conn,"INSERT INTO programs (location_id) VALUES (".$cid.")");
+	return $cid;
 }
 
 function show_table($year) {
