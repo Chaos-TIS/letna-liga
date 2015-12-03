@@ -69,7 +69,7 @@ abstract class Context{
 		if ($fileCount == 1  && pathinfo($subory["name"][0], PATHINFO_EXTENSION) == "zip") {
 			if (checkUploadFile($subory["size"][0]))
 			{
-				$target_file = "files/".$this->id.".zip";
+				$target_file = dirname(__FILE__)."/../files/".$this->id.".zip";
 				if (move_uploaded_file($subory["tmp_name"][0], $target_file)) {
 					echo "[OK] Nahratie súboru <br>";
 				} else {
@@ -82,7 +82,7 @@ abstract class Context{
 			$ok = True;
 			$vel = 0;
 			$zip = new ZipArchive;
-			if ($zip->open("files/".$this->id.".zip",ZipArchive::OVERWRITE)) {		
+			if ($zip->open(dirname(__FILE__)."/../files/".$this->id.".zip",ZipArchive::OVERWRITE)) {		
 				for ($i=0; $i<$fileCount; $i++) {
 					$subor = $subory["name"][$i];
 					$vel += $subory["size"][$i];
@@ -112,7 +112,7 @@ abstract class Context{
 			if (checkUploadImage($ext,$obrazky["type"][$i],$obrazky["size"][$i]))
 			{
 				if (mysqli_query($conn,"INSERT INTO images (location_id) VALUES (".$this->id.")")) {
-					$target_file = "images/".mysqli_insert_id($conn).".".$ext;
+					$target_file = dirname(__FILE__)."/../images/".mysqli_insert_id($conn).".".$ext;
 					if (move_uploaded_file($obrazky["tmp_name"][$i], $target_file)) {
 						echo "[OK] Nahratie Obrázka: ".$subor."<br>";
 					} else {

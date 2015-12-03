@@ -37,6 +37,14 @@ class Solution extends Context {
 		}
     }
 	
+	public function getTxt() {
+		return $this->text;
+	}
+	
+	public function setTxt($text) {
+		$this->text = $text;
+	}
+	
 	public function setComments($comments){
 		$this->comments = $comments;
 		$points = 0.0;

@@ -201,8 +201,8 @@ function checkUploadFile($vel)
 }
 
 function db_connect() {
-    if ($link = mysqli_connect('localhost', 'root', 'vertrigo')) {
-        if (mysqli_select_db($link, 'letna_liga_test2')) {
+    if ($link = mysqli_connect('localhost', '...', '...')) {
+        if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
         } else {
