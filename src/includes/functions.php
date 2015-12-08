@@ -315,74 +315,57 @@ function show_table($year) {
 
 }
 
-function registruj() {
+function registruj() 
+{
   if ($link = db_connect())
   { 
-    $sql = "SELECT u.mail
-    FROM users as u 
-    WHERE u.mail = '".$_SESSION['email']."'";
-    $result = mysqli_query($link,$sql);
-    if (mysqli_num_rows($result) == 0)
-    { $sql =  "INSERT INTO users(mail,password) VALUES('".$_SESSION['email']."','".$_SESSION['pass']."')";
-    	$result = mysqli_query($link,$sql); 
-      if ($result)
-      {
+    $sql =  "INSERT INTO users(mail,password) VALUES('".$_SESSION['email']."','".$_SESSION['pass']."')";
+    $result = mysqli_query($link,$sql); 
+    if ($result)
+    {
         if ($_POST["type"] == 0 )
-        {
-          if ($link = db_connect()) 
-          {
+        {  
             $sql =  "INSERT INTO teams(user_id,name,description,sk_league) SELECT u.user_id ,'" .$_SESSION['uname']."','" .$_SESSION['os']."','" .$_SESSION['liga']."'
             FROM users u
             WHERE LOWER(u.mail) = '".$_SESSION['email']."'";    
-    	      $result = mysqli_query($link,$sql);
+            $result = mysqli_query($link,$sql);
             if($result)
             {
-              echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
-              ?>
-              <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
-              <?php      
+                echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
+                ?>
+                <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
+                <?php      
             }
-     	    }
-        } else
-        { 
-          if ($link = db_connect()) 
-          {
+        }
+        else
+        {
             $sql =  "INSERT INTO organisators(user_id,admin,validated) SELECT u.user_id ,0,0
             FROM users u
-            WHERE LOWER(u.mail) = '".$_SESSION['email']."'";      
-    	      $result = mysqli_query($link,$sql);
+            WHERE LOWER(u.mail) = '".$_SESSION['email']."'";
+            $result = mysqli_query($link,$sql);
             if($result)
             {
-   	          echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
-              ?>
-              <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
-              <?php      
+                echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
+                ?>
+                <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
+                <?php
             }
-          }
         }
-      } else 
-      {	
+    }
+    else
+    {
         echo '<p class="chyba">Nastala chyba pri registracii.</p>' . "\n"; 
         ?>
         <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/registracia.php"> 
         <?php
-      }
-  		  
-    } else
-    {
-      echo '<p class="chyba">Zadaný mail sa nachádza v Databáze.</p>' . "\n";
-      ?>
-        <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/registracia.php"> 
-        <?php
-      
-    } 
-    //mysqli_close($link); 
-  }else 
-  {
-    echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom!</p>';
-  }
+    }
 }
+else
+    {
+        echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom!</p>';
+    }
 
+}
 
 
 ?>
