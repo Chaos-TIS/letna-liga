@@ -12,16 +12,13 @@ if (!isset($_SESSION['loggedUser']))
 <?php
 
 $id = (integer)$_GET["id"] ;
-$rok = $_GET["r"];
 if($link = db_connect()){
-  $sql = "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = ".$rok." ORDER BY begin ASC";
+  $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE $id = c.context_id";
   $result = mysqli_query($link, $sql);
 	if($result){
   	 $por=1 ;
-  	while ($row = mysqli_fetch_assoc($result)) {
-  	   
-  	   if($por==$id)  {  
-  	        $assignmentid = $row['context_id'];
+  	 if($row = mysqli_fetch_array($result)){
+  	    $assignmentid = $row['context_id'];
   	        $name =  $row['text_id_name'];
   	        $deadline=$row['end']; 
             $sql2 = "SELECT * FROM texts";
@@ -43,8 +40,8 @@ if($link = db_connect()){
                 }
               }
             }
-        }
-  	    $por=$por+1;
+  	        
+        
      }
     	
   }
@@ -78,6 +75,7 @@ if($link = db_connect()){
      }
     }   
   }
+
 ?>
 </ul>  
 </div> 

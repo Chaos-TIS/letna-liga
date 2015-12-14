@@ -91,15 +91,15 @@ function page_nav()
 					<ul>
 					<?php
 					if ($link = db_connect()) {
-          $sql =  "SELECT COUNT(*) pocet FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";
-          $result = mysqli_query($link,$sql);
-            if($row = mysqli_fetch_array($result)){
-              $pocet = $row['pocet']  ;
- 	          }
-   	      }
-          for($i=1;$i<$pocet+1;$i++){
-          ?> <li><a href="assignment.php?r=2015&id=<?php echo $i ?>"> <?php echo $i ?>. Zadanie</a></li>   <?php
-          } ?>
+            $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";
+            $result = mysqli_query($link,$sql);
+            $i=1;
+            while ($row = mysqli_fetch_assoc($result)) {
+              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. Zadanie</a></li>  <?php
+              $i++;
+            }     
+          }
+          ?>
 						<li><a href="#">Prehľad zadaní</a></li>
 					</ul>
 				</li>
@@ -111,15 +111,15 @@ function page_nav()
 								<li class="noborder"><a href="#">Výsledky</a></li>
 								<?php
 								if ($link = db_connect()) {
-                $sql =  "SELECT COUNT(*) pocet FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2013 ORDER BY begin ASC";
-                $result = mysqli_query($link,$sql);
-                  if($row = mysqli_fetch_array($result)){
-                    $pocet = $row['pocet']  ;
-       	          }
-         	      }
-								for($i=1;$i<$pocet+1;$i++){
-                ?> <li><a href="assignment.php?r=2013&id=<?php echo $i ?>"> <?php echo $i ?>. Zadanie</a></li>   <?php
-                } ?>
+                  $sql =  "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2013 ORDER BY begin ASC";
+                  $result = mysqli_query($link,$sql);
+                  $i=1;
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. Zadanie</a></li>  <?php
+                    $i++;
+                  }     
+                }
+                ?>
 							</ul>
               
               </li>
@@ -128,25 +128,32 @@ function page_nav()
 								<li class="noborder"><a href="#">Výsledky</a></li>
 								<?php
 								if ($link = db_connect()) {
-                $sql =  "SELECT COUNT(*) pocet FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2014 ORDER BY begin ASC";
-                $result = mysqli_query($link,$sql);
-                  if($row = mysqli_fetch_array($result)){
-                    $pocet = $row['pocet']  ;
-       	          }
-         	      }
-								for($i=1;$i<$pocet+1;$i++){
-                ?> <li><a href="assignment.php?r=2014&id=<?php echo $i ?>"> <?php echo $i ?>. Zadanie</a></li>   <?php
-                } ?>
+                  $sql =  "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2014 ORDER BY begin ASC";
+                  $result = mysqli_query($link,$sql);
+                  $i=1;
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. Zadanie</a></li>  <?php
+                    $i++;
+                  }     
+                }
+                ?>
 							</ul>
               
               </li>
 						<li class="submenu">
 							<span>2015</span><ul>
-								<li class="noborder"><a href="#">Výsledky</a></li>
+								<li class="noborder"><a href="#">Výsledky</a></li>  
 								<?php
-								for($i=1;$i<$pocet+1;$i++){
-                ?> <li><a href="assignment.php?r=2015&id=<?php echo $i ?>"> <?php echo $i ?>. Zadanie</a></li>   <?php
-                } ?>
+      					if ($link = db_connect()) {
+                  $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";
+                  $result = mysqli_query($link,$sql);
+                  $i=1;
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. Zadanie</a></li>  <?php
+                    $i++;
+                  }     
+                }
+                ?>
 							</ul>
 						</li>
 					</ul>
@@ -201,7 +208,7 @@ function checkUploadFile($vel)
 }
 
 function db_connect() {
-    if ($link = mysqli_connect('localhost', '...', '...')) {
+    if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
         if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
