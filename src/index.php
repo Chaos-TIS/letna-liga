@@ -5,8 +5,6 @@ require_once(dirname(__FILE__)."/includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
 ?>
-        <h1 data-trans="main-header">Letná liga FLL</h1>
-
         <?php if (!isset($_SESSION['loggedUser']))
             get_login_form();
         else
@@ -46,19 +44,23 @@ page_nav();
             <h2 data-trans="complete-results">Kompletné výsledky</h2>
             <script>
                 $(document).ready(function(){
-                        $(".result-table").load("includes/get_result_table.php");
+                        $("#results").load("includes/get_result_table.php");
                     });
             </script>
-            <table class="result-table"><tr><td data-trans="table-loading">Tabuľka sa načítava ...</td></tr></table>
+            <p id="results"><span  data-trans="table-loading">Tabuľka sa načítava ...</span></p>
 
             <h2 data-trans="intro-ul5">Ako hodnotíme?</h2>
             <p data-trans="intro-ul5">
             Vaše riešenia si dôkladne prezrú títo štyria ľudia: Mišo a Ľubo - študenti informatiky FMFI UK, Miška - doktorandka didaktiky informatiky na FMFI UK a Rišo - líder Robotika.SK:
             </p>
-                <div class="jury-img"><img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/lubos_miklosovic.jpg"><p>Luboš Miklošovič</p></div>
-                <div class="jury-img"><img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michal_fikar.jpg"><p>Michal Fikar</p></div>
-                <div class="jury-img"><img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michaela_veselovska.jpg"><p>Michaela Veselovská</p></div>
-                <div class="jury-img"><img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/richard_balogh.jpg"><p>Richard Balogh</p></div>
+                <div class="jury-img">
+                    <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/lubos_miklosovic.jpg"><p>Luboš Miklošovič</p>
+                    <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michal_fikar.jpg"><p>Michal Fikar</p>
+                </div>
+                <div class="jury-img">
+                    <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michaela_veselovska.jpg"><p>Michaela Veselovská</p>
+                    <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/richard_balogh.jpg"><p>Richard Balogh</p>
+                </div>
             <p data-trans="intro-ul5">
             Každý z nich nezávisle od ostatných pridelí 0-3 body podľa toho, či riešenie je kompletné (obsahuje obrázky, video, program, dobrý popis a robot robí to, čo má) a nakoľko ich zaujme. Do tabuľky sa vám započíta aritmetický priemer.
             </p>

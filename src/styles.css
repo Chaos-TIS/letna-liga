@@ -30,7 +30,7 @@ a:hover {
 	text-decoration: none;
 }
 
-p { 
+p, .result-table {
 	margin-bottom: 1em;
 	clear: both;
 }
@@ -111,6 +111,7 @@ input, button, textarea {
 #login-form, #logout-form {
 	float: right;
 	margin-right: 20px;
+	margin-top: 10px;
 }
 
 table {
@@ -126,8 +127,17 @@ table {
 	padding: 5px;
 }
 
+.result-table td a {
+	display: block;
+	margin: -5px;
+	padding: 5px;
+}
+
 .jury-img {
-	float: left;
-	margin-left: 20px;
+	text-align: center;
+	display: inline-block;
+}
+
+.center {
 	text-align: center;
 }

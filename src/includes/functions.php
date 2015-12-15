@@ -26,7 +26,7 @@ function page_head($title)
     </head>
 
     <body>
-    <h1>Letná liga FLL</h1>
+    <a href="."><h1 data-trans="main-header">Letná liga FLL</h1></a>
 <?php
 }
 
@@ -77,6 +77,7 @@ function get_login_form(){
 function get_logout_button(){
     ?>
     <form id="logout-form" action="includes/logout.php">
+        <span>Prihlásený <?php echo $_SESSION['loggedUser']->mail;?></span>
         <input type="submit" name="submit" value="Odhlásiť">
     </form>
     <?php
@@ -230,10 +231,13 @@ function new_solution($conn, $uid, $aid) {
 	return $cid;
 }
 
-function show_table($year) {
+function show_table($sk_league, $year) {
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
     if (!isset($year)){
         $year = "(SELECT MAX(year) FROM assignments)";
+    }
+    if ($year <= 2015 && !$sk_league) {
+        return;
     }
     if ($link = db_connect()) {
         $sql = "SELECT q.name, a.year, q.solution_id, q.best, a.context_id assignment_id, q.points
@@ -245,6 +249,7 @@ function show_table($year) {
                     LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
                     LEFT OUTER JOIN teams t ON (t.user_id = u.user_id)
                     LEFT OUTER JOIN comments comm ON (comm.solution_id = c.context_id)
+                   	WHERE t.sk_league IN (1, $sk_league)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
                 WHERE a.year = $year
@@ -256,8 +261,12 @@ function show_table($year) {
         $result = mysqli_query($link, $sql);
         $userPointsMap = array();
         $aid_array = array();
+
+        if (!$result)
+            return;
         while ($row = mysqli_fetch_array($result)) {
-            if (!sizeof($aid_array) || $row['assignment_id'] != end(array_values($aid_array))){
+            $end_array = array_values($aid_array);
+            if (!sizeof($aid_array) || $row['assignment_id'] != end($end_array)){
                 array_push($aid_array, $row['assignment_id']);
                 foreach ($userPointsMap as $user => $array) {
                     array_push($array, null);
@@ -290,13 +299,14 @@ function show_table($year) {
 
         arsort($sum_array);
 
-        $result_table = '<table>
+        $result_table = '<p class="center">'.($sk_league ? "Slovenská liga:" : "Open liga:").'</p>';
+        $result_table .= '<table class="result-table">
                          <tr style="font-weight: bold; background-color: #ff6600; border-bottom: 1px solid black;">
                          <td>Meno tímu</td>';
 
         for ($i = 1; $i < sizeof($aid_array)+1; $i++){
             $href = 'assignment.php?id='.$aid_array[$i];
-            $result_table .= '<td ><a href="'.$href.'">'.$i.'</a></td>';
+            $result_table .= '<td><a style="color: black;" href="'.$href.'">'.$i.'</a></td>';
         }
         $result_table .= '<td>Spolu</td></tr>';
 
@@ -307,7 +317,7 @@ function show_table($year) {
                     $result_table .= "<td style=' font-weight: bold;'>-</td>";
                 }
                 else {
-                    $result_table .= '<td style="font-weight: bold; '.($userPointsMap[$user][$i][2]?"background-color: #00ff3f;":"").'"><a
+                    $result_table .= '<td style="font-weight: bold; '.($userPointsMap[$user][$i][2]?"background-color: #6CF952;":"").'"><a
                     href="solution.php?id='.$userPointsMap[$user][$i][1].'">'.$userPointsMap[$user][$i][0].'</a></td>';
                 };
             }

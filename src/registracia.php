@@ -121,6 +121,18 @@ function form()
   </tr>
   </table>
   </form>
+
+  <script>
+    $("[name=type]").change(function (){
+      var disabled = $("[name=type]:checked").val() == 1;
+      $("#uname").attr("disabled", disabled);
+      $("#os").attr("disabled", disabled);
+      $("[name=liga]").attr("disabled", disabled);
+    });
+    $(document).ready(function(){
+      $("[name=type]").change();
+    });
+  </script>
 <?php
 }
 ?>
