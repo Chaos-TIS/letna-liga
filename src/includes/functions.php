@@ -350,7 +350,7 @@ function registruj()
             {
                 echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
                 ?>
-                <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
+                <meta http-equiv="refresh" content="4;url=index.php"> 
                 <?php      
             }
         }
@@ -364,7 +364,7 @@ function registruj()
             {
                 echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
                 ?>
-                <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/index.php"> 
+                <meta http-equiv="refresh" content="4;url=index.php"> 
                 <?php
             }
         }
@@ -373,7 +373,7 @@ function registruj()
     {
         echo '<p class="chyba">Nastala chyba pri registracii.</p>' . "\n"; 
         ?>
-        <meta http-equiv="refresh" content="4;url=http://localhost:8080/NLL/registracia.php"> 
+        <meta http-equiv="refresh" content="4;url=registracia.php"> 
         <?php
     }
 }
