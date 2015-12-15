@@ -19,7 +19,7 @@ CREATE TABLE organisators (
     user_id INT UNSIGNED,
     `admin` BOOLEAN,
     validated BOOLEAN,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE teams (
@@ -27,7 +27,7 @@ CREATE TABLE teams (
     name VARCHAR(30) UNIQUE,
     description TEXT,
     sk_league BOOLEAN,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE texts (
@@ -39,7 +39,7 @@ CREATE TABLE texts (
 CREATE TABLE contexts (
     context_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     user_id INT UNSIGNED,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE assignments (
@@ -49,9 +49,9 @@ CREATE TABLE assignments (
     `begin` DATETIME,
     `end` DATETIME,
     `year` INTEGER,
-    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE CASCADE,
-    FOREIGN KEY (text_id_name) REFERENCES TEXTS(text_id) ON DELETE CASCADE,
-    FOREIGN KEY (text_id_description) REFERENCES TEXTS(text_id) ON DELETE CASCADE
+    FOREIGN KEY (context_id) REFERENCES contexts(context_id) ON DELETE CASCADE,
+    FOREIGN KEY (text_id_name) REFERENCES texts(text_id) ON DELETE CASCADE,
+    FOREIGN KEY (text_id_description) REFERENCES texts(text_id) ON DELETE CASCADE
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE solutions (
@@ -59,8 +59,8 @@ CREATE TABLE solutions (
     assignment_id INT UNSIGNED,
     text TEXT,
     best BOOLEAN,
-    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE CASCADE,
-    FOREIGN KEY (assignment_id) REFERENCES ASSIGNMENTS(context_id) ON DELETE SET NULL
+    FOREIGN KEY (context_id) REFERENCES contexts(context_id) ON DELETE CASCADE,
+    FOREIGN KEY (assignment_id) REFERENCES assignments(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE comments (
@@ -69,29 +69,29 @@ CREATE TABLE comments (
     user_id INT UNSIGNED,
     text TEXT,
     points FLOAT,
-    FOREIGN KEY (solution_id) REFERENCES SOLUTIONS(context_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE SET NULL
+    FOREIGN KEY (solution_id) REFERENCES solutions(context_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE videos (
     video_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     context_id INT UNSIGNED,
     link VARCHAR(11),
-    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
+    FOREIGN KEY (context_id) REFERENCES contexts(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE programs (
     program_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     context_id INT UNSIGNED,
     original_name VARCHAR(100),
-    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
+    FOREIGN KEY (context_id) REFERENCES contexts(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 CREATE TABLE images (
     image_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     context_id INT UNSIGNED,
     original_name VARCHAR(100),
-    FOREIGN KEY (context_id) REFERENCES CONTEXTS(context_id) ON DELETE SET NULL
+    FOREIGN KEY (context_id) REFERENCES contexts(context_id) ON DELETE SET NULL
 ) CHARACTER SET utf8 COLLATE utf8_slovak_ci;
 
 /*********************************************************************************/
@@ -113,7 +113,7 @@ ORDER BY u.`type` = 2 ASC, u.id ASC;
 
 ALTER TABLE users AUTO_INCREMENT = 1;
 
-SET @lastuserorg = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'users');
+SET @lastuserorg = (SELECT `AUTO_INCREMENT`-1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'users');
 
 INSERT INTO organisators (user_id, `admin`, validated)
 SELECT u.user_id, u.user_id = 1, TRUE
@@ -126,7 +126,7 @@ FROM old_missions;
 
 ALTER TABLE contexts AUTO_INCREMENT = 1;
 
-SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'contexts');
+SET @lastmission = (SELECT `AUTO_INCREMENT`-1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE() FROM DUAL) AND TABLE_NAME = 'contexts');
 
 INSERT INTO texts (sk, eng)
 SELECT name, null
@@ -274,10 +274,34 @@ ALTER TABLE images AUTO_INCREMENT = 1;
 ALTER TABLE programs AUTO_INCREMENT = 1;
 ALTER TABLE videos AUTO_INCREMENT = 1;
 
-UPDATE texts txt
-INNER JOIN assignments a ON (a.text_id_description = txt.text_id)
-INNER JOIN images i ON (i.context_id = a.context_id)
-SET txt.sk = REPLACE (txt.sk, i.original_name, CONCAT_WS('/', 'assignments', i.context_id, 'images', i.image_id));
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, '8590.jpg', CONCAT_WS('/', 'assignments', 16, 'images', 1)) WHERE txt.text_id = 46;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'AplusB.png', CONCAT_WS('/', 'assignments', 14, 'images', 2)) WHERE txt.text_id = 44;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'bloodhound.jpg', CONCAT_WS('/', 'assignments', 19, 'images', 3)) WHERE txt.text_id = 49;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'cern.jpg', CONCAT_WS('/', 'assignments', 24, 'images', 4)) WHERE txt.text_id = 54;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'dierny_stitok.png', CONCAT_WS('/', 'assignments', 30, 'images', 5)) WHERE txt.text_id = 60;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'dvere.jpg', CONCAT_WS('/', 'assignments', 17, 'images', 6)) WHERE txt.text_id = 47;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'hochschornerovci.jpg', CONCAT_WS('/', 'assignments', 27, 'images', 7)) WHERE txt.text_id = 57;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'hojdacka.jpg', CONCAT_WS('/', 'assignments', 21, 'images', 8)) WHERE txt.text_id = 51;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'hroch.jpg', CONCAT_WS('/', 'assignments', 12, 'images', 9)) WHERE txt.text_id = 42;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'karty.png', CONCAT_WS('/', 'assignments', 17, 'images', 10)) WHERE txt.text_id = 47;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'prevodovkas.png', CONCAT_WS('/', 'assignments', 29, 'images', 11)) WHERE txt.text_id = 59;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'priepast.jpg', CONCAT_WS('/', 'assignments', 20, 'images', 12)) WHERE txt.text_id = 50;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'projektove_vyucovanie_fll_2014.png', CONCAT_WS('/', 'assignments', 23, 'images', 13)) WHERE txt.text_id = 53;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'robocupathome.jpg', CONCAT_WS('/', 'assignments', 26, 'images', 14)) WHERE txt.text_id = 56;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'robotchallenge_hand.jpg', CONCAT_WS('/', 'assignments', 25, 'images', 15)) WHERE txt.text_id = 55;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'rotacia.png', CONCAT_WS('/', 'assignments', 18, 'images', 16)) WHERE txt.text_id = 48;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'skibot.jpg', CONCAT_WS('/', 'assignments', 11, 'images', 17)) WHERE txt.text_id = 41;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'slalom_trat1.png', CONCAT_WS('/', 'assignments', 27, 'images', 18)) WHERE txt.text_id = 57;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'slalom_trat2.png', CONCAT_WS('/', 'assignments', 27, 'images', 19)) WHERE txt.text_id = 57;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'spock.jpg', CONCAT_WS('/', 'assignments', 22, 'images', 20)) WHERE txt.text_id = 52;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'stastny_hroch.jpg', CONCAT_WS('/', 'assignments', 12, 'images', 21)) WHERE txt.text_id = 42;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'stopar.png', CONCAT_WS('/', 'assignments', 19, 'images', 22)) WHERE txt.text_id = 49;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'tilebot.png', CONCAT_WS('/', 'assignments', 13, 'images', 23)) WHERE txt.text_id = 43;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'turing.gif', CONCAT_WS('/', 'assignments', 21, 'images', 24)) WHERE txt.text_id = 51;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'vehicles.png', CONCAT_WS('/', 'assignments', 16, 'images', 25)) WHERE txt.text_id = 46;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'vehicles2.png', CONCAT_WS('/', 'assignments', 16, 'images', 26)) WHERE txt.text_id = 46;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'vlasske-orechy.jpg', CONCAT_WS('/', 'assignments', 28, 'images', 27)) WHERE txt.text_id = 58;
+UPDATE texts txt SET txt.sk = REPLACE(txt.sk, 'watson.jpg', CONCAT_WS('/', 'assignments', 21, 'images', 28)) WHERE txt.text_id = 51;
 
 DROP TABLE old_attachments, old_img, old_missions, old_results, old_solutions, old_users, old_videos;
 SET FOREIGN_KEY_CHECKS=1;
