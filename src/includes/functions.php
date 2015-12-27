@@ -332,56 +332,90 @@ function show_table($sk_league, $year) {
 
 }
 
-function registruj() 
-{
-  if ($link = db_connect())
-  { 
-    $sql =  "INSERT INTO users(mail,password) VALUES('".$_SESSION['email']."','".$_SESSION['pass']."')";
-    $result = mysqli_query($link,$sql); 
-    if ($result)
+class Reg{
+    var $error_message;
+    var $message;
+    function registruj($email,$pass,$type,$name="",$os="",$liga="") 
     {
-        if ($_POST["type"] == 0 )
-        {  
-            $sql =  "INSERT INTO teams(user_id,name,description,sk_league) SELECT u.user_id ,'" .$_SESSION['uname']."','" .$_SESSION['os']."','" .$_SESSION['liga']."'
-            FROM users u
-            WHERE LOWER(u.mail) = '".$_SESSION['email']."'";    
-            $result = mysqli_query($link,$sql);
-            if($result)
+      if ($link = db_connect())
+      { 
+        $sql =  "INSERT INTO users(mail,password) VALUES('".$email."','".$pass."')";
+        $result = mysqli_query($link,$sql); 
+        if ($result)
+        {
+            if ($type == 0 )
+            {  
+                $sql =  "INSERT INTO teams(user_id,name,description,sk_league) SELECT u.user_id ,'" .$name."','" .$os."','" .$liga."'
+                FROM users u
+                WHERE LOWER(u.mail) = '".$email."'";    
+                $result = mysqli_query($link,$sql);
+                if($result)
+                {
+                    $this->Handle("Bol ste uspesne zaregistrovany."); 
+                    ?>
+                    <meta http-equiv="refresh" content="4;url=index.php"> 
+                    <?php      
+                }
+            }
+            else
             {
-                echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
-                ?>
-                <meta http-equiv="refresh" content="4;url=index.php"> 
-                <?php      
+                $sql =  "INSERT INTO organisators(user_id,admin,validated) SELECT u.user_id ,0,0
+                FROM users u
+                WHERE LOWER(u.mail) = '".$email."'";
+                $result = mysqli_query($link,$sql);
+                if($result)
+                { 
+                    $this->Handle("Bol ste uspesne zaregistrovany."); 
+                    ?>
+                    <meta http-equiv="refresh" content="4;url=index.php"> 
+                    <?php
+                }
             }
         }
         else
         {
-            $sql =  "INSERT INTO organisators(user_id,admin,validated) SELECT u.user_id ,0,0
-            FROM users u
-            WHERE LOWER(u.mail) = '".$_SESSION['email']."'";
-            $result = mysqli_query($link,$sql);
-            if($result)
-            {
-                echo '<p>Bol ste uspesne zaregistrovany.</p>'. "\n"; 
-                ?>
-                <meta http-equiv="refresh" content="4;url=index.php"> 
-                <?php
-            }
+            $this->HandleError("Nastala chyba pri registracii."); 
+            ?>
+            <meta http-equiv="refresh" content="4;url=registracia.php"> 
+            <?php
         }
     }
     else
-    {
-        echo '<p class="chyba">Nastala chyba pri registracii.</p>' . "\n"; 
-        ?>
-        <meta http-equiv="refresh" content="4;url=registracia.php"> 
-        <?php
-    }
-}
-else
-    {
-        echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom!</p>';
+        {
+            $this->HandleError("NEpodarilo sa spojiť s databázovým serverom!");
+        }
+
     }
 
+    function GetErrorMessage()
+    {
+        if(empty($this->error_message))
+        {
+            return '';
+        }
+        $errormsg = nl2br(htmlentities($this->error_message,ENT_COMPAT,"UTF-8"));
+        return $errormsg;
+    } 
+
+    function GetMessage()
+    {
+        if(empty($this->message))
+        {
+            return '';
+        }
+        $msg = nl2br(htmlentities($this->message,ENT_COMPAT,"UTF-8"));
+        return $msg;
+    }       
+    
+    function HandleError($err)
+    {
+        $this->error_message .= $err."\r\n";
+    }
+
+    function Handle($msg)
+    {
+        $this->message .= $msg."\r\n";
+    }
 }
 
 

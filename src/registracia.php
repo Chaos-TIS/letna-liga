@@ -3,66 +3,70 @@ include 'includes/functions_reg.php';
 page_head("Registration");
 page_nav();
 session_unset();
+$val = new Validate();
+$reg = new Reg();
 if (isset($_POST["type"]) && $_POST["type"] == 0){
-  if( isset($_POST["uname"])&& 
-      isset($_POST["email"])&& validate_mail($_POST["email"]) &&
-      isset($_POST["pass"])&&  required_pass($_POST["pass"]) &&
-      isset($_POST["pass2"])&& required_pass($_POST["pass2"]) &&
+  if( isset($_POST["uname"])&& $val->validate_name($_POST["uname"]) &&
+      isset($_POST["email"])&& $val->validate_mail($_POST["email"]) &&
+      isset($_POST["pass"])&&  $val->required_pass($_POST["pass"]) &&
+      isset($_POST["pass2"])&& $val->required_pass($_POST["pass2"]) &&
       isset($_POST["os"])&&
       isset($_POST["type"])&&
       isset($_POST["liga"]))
   {
     $_SESSION['uname'] = addslashes($_POST["uname"]);
-  	$_SESSION['email'] = strtolower(addslashes($_POST["email"]));   
-  	$_SESSION['pass']  = md5(addslashes($_POST["pass"]));
+    $_SESSION['email'] = strtolower(addslashes($_POST["email"]));   
+    $_SESSION['pass']  = md5(addslashes($_POST["pass"]));
     $_SESSION['pass2'] = md5(addslashes($_POST["pass2"]));
     $_SESSION['os']    = addslashes($_POST["os"]);
     $_SESSION['type']  = addslashes($_POST["type"]);
     $_SESSION['liga']  = addslashes($_POST["liga"]); 
     if($_SESSION['type']==0){
-      if(meno($_SESSION['uname'])&& email($_SESSION['email']) && validate_pass($_SESSION['pass'],$_SESSION['pass2'])){
-        registruj();
+      if($val->meno($_SESSION['uname'])&& $val->email($_SESSION['email']) && $val->validate_pass($_SESSION['pass'],$_SESSION['pass2'])){
+        $reg->registruj($_SESSION['email'],$_SESSION['pass'],$_SESSION['type'],$_SESSION['uname'],$_SESSION['os'],$_SESSION['liga']);
         session_unset();
         session_destroy();
       }
     }
   }
 }else{
-  if( isset($_POST["email"])&& validate_mail($_POST["email"]) &&
-      isset($_POST["pass"])&&  required_pass($_POST["pass"]) &&
-      isset($_POST["pass2"])&& required_pass($_POST["pass2"]) &&
+  if( isset($_POST["email"])&& $val->validate_mail($_POST["email"]) &&
+      isset($_POST["pass"])&&  $val->required_pass($_POST["pass"]) &&
+      isset($_POST["pass2"])&& $val->required_pass($_POST["pass2"]) &&
       isset($_POST["type"]))
   {
     $_SESSION['email'] = strtolower(addslashes($_POST["email"]));   
     $_SESSION['pass']  = md5(addslashes($_POST["pass"]));
     $_SESSION['pass2'] = md5(addslashes($_POST["pass2"]));
     $_SESSION['type']  = addslashes($_POST["type"]); 
-    if(email($_SESSION['email']) && validate_pass($_SESSION['pass'],$_SESSION['pass2'])){
-        registruj();
+    if($val->email($_SESSION['email']) && $val->validate_pass($_SESSION['pass'],$_SESSION['pass2'])){
+        $reg->registruj($_SESSION['email'],$_SESSION['pass'],$_SESSION['type']);
         session_unset();
         session_destroy();
     }
   }
 }
-form();
-page_footer()
-?>
-
-<?php
-function form() 
-{
-
-  if (!isset($_SESSION['loggedUser']))
+if (!isset($_SESSION['loggedUser']))
   get_login_form();
   else
   get_logout_button();
 ?>
+
 </br>
 <form method="post">
-  <table align="center" width="40%" border="0">
+  <table align="center" width="60%" border="0" id="display">
+  <tr>
+  <td><span class='error1'style="color: green; text-align: center;font-size:30px;font-family:calibri"><?php echo $reg->GetMessage(); ?></span></td>
+  </tr>
+  <tr>
+  <td><span class='error2'style="color: red; text-align: center;font-size:30px;font-family:calibri"><?php echo $reg->GetErrorMessage(); ?></span></td>
+  </tr>
   <tr>
   <td><input type="radio" checked name="type" value=0<?php if (isset($_POST['type']) && $_POST["type"]==0) echo ' checked'; ?>>Súťažný tím</td>
   <td><input type="radio" name="type" value=1<?php if (isset($_POST['type']) && $_POST["type"]==1) echo ' checked'; ?>>Rozhodca</td>
+  </tr>
+  <tr>
+  <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
   <td>Meno:</td>
@@ -105,6 +109,8 @@ function form()
       $("[name=type]").change();
     });
   </script>
+
 <?php
-}
+page_footer()
 ?>
+
