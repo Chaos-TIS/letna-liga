@@ -159,7 +159,12 @@ function page_nav()
 						</li>
 					</ul>
 				</li>
-				<li><a href="#">Užívatelia</a></li>
+				<li><a href="#">Užívatelia</a>
+                    <ul>
+                        <li><a href="spravaUctov.php?id=0">Tímy</a></li>
+                        <li><a href="spravaUctov.php?id=1">Rozhodcovia</a></li>
+                    </ul>
+                </li>
 				<li><a href="#">Jazyk</a>
 					<ul>
 						<li><a href="#" onclick="dict.translate(dict.SK)"><img src="images/sk.png" width=33 height=22></a></li>
@@ -332,92 +337,82 @@ function show_table($sk_league, $year) {
 
 }
 
-class Reg{
-    var $error_message;
-    var $message;
-    function registruj($email,$pass,$type,$name="",$os="",$liga="") 
-    {
-      if ($link = db_connect())
-      { 
-        $sql =  "INSERT INTO users(mail,password) VALUES('".$email."','".$pass."')";
-        $result = mysqli_query($link,$sql); 
-        if ($result)
-        {
-            if ($type == 0 )
-            {  
-                $sql =  "INSERT INTO teams(user_id,name,description,sk_league) SELECT u.user_id ,'" .$name."','" .$os."','" .$liga."'
-                FROM users u
-                WHERE LOWER(u.mail) = '".$email."'";    
-                $result = mysqli_query($link,$sql);
-                if($result)
-                {
-                    $this->Handle("Bol ste uspesne zaregistrovany."); 
-                    ?>
-                    <meta http-equiv="refresh" content="4;url=index.php"> 
-                    <?php      
-                }
-            }
-            else
-            {
-                $sql =  "INSERT INTO organisators(user_id,admin,validated) SELECT u.user_id ,0,0
-                FROM users u
-                WHERE LOWER(u.mail) = '".$email."'";
-                $result = mysqli_query($link,$sql);
-                if($result)
-                { 
-                    $this->Handle("Bol ste uspesne zaregistrovany."); 
-                    ?>
-                    <meta http-equiv="refresh" content="4;url=index.php"> 
-                    <?php
-                }
-            }
-        }
-        else
-        {
-            $this->HandleError("Nastala chyba pri registracii."); 
-            ?>
-            <meta http-equiv="refresh" content="4;url=registracia.php"> 
+
+
+function sprava_uctov() {
+
+    if ($link = db_connect()) {
+        $sql="SELECT * FROM teams WHERE user_id>0 ORDER BY name ASC"; // definuj dopyt
+    $result = mysqli_query($link, $sql); // vykonaj dopyt
+    if ($result) {
+            // dopyt sa podarilo vykonať
+            echo '<p>'; 
+        ?>
+            <form method="post">
             <?php
-        }
+            echo "<table text-align = 'center' border = '0'>"; 
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";           
+                echo "<td><a href='editAcc.php?id={$row['user_id']}'>{$row['name']}</a></td>";
+                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'>Odstrániť</button><br></td>\n";
+                echo "</tr>";
+            } 
+            echo "</table>"; 
+            ?>
+</form>
+<?php  
+            echo '</p>'; 
+            mysqli_free_result($result); 
+    } else {
+            // NEpodarilo sa vykonať dopyt!
+        echo '<p class="chyba">Nastala chyba pri získavaní údajov z DB.</p>' . "\n";
     }
-    else
-        {
-            $this->HandleError("NEpodarilo sa spojiť s databázovým serverom!");
-        }
-
-    }
-
-    function GetErrorMessage()
-    {
-        if(empty($this->error_message))
-        {
-            return '';
-        }
-        $errormsg = nl2br(htmlentities($this->error_message,ENT_COMPAT,"UTF-8"));
-        return $errormsg;
-    } 
-
-    function GetMessage()
-    {
-        if(empty($this->message))
-        {
-            return '';
-        }
-        $msg = nl2br(htmlentities($this->message,ENT_COMPAT,"UTF-8"));
-        return $msg;
-    }       
-    
-    function HandleError($err)
-    {
-        $this->error_message .= $err."\r\n";
-    }
-
-    function Handle($msg)
-    {
-        $this->message .= $msg."\r\n";
+    mysqli_close($link);
+    } else {
+        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
+        echo '<p class="chyba">Nepodarilo sa spojiť s databázovým serverom</p>';
     }
 }
 
+function sprava_uctov_jury() {
+
+    if ($link = db_connect()) {
+        $sql="SELECT * FROM organisators o INNER JOIN users u ON o.user_id = u.user_id WHERE o.user_id>0 ORDER BY u.mail ASC"; // definuj dopyt
+    $result = mysqli_query($link, $sql); // vykonaj dopyt
+    if ($result) {
+            // dopyt sa podarilo vykonať
+            echo '<p>'; 
+        ?>
+            <form method="post">
+            <?php
+            echo "<table text-align = 'center' border = '0'>"; 
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";           
+                echo "<td><a href='editAccJury.php?id={$row['user_id']}'>{$row['mail']}</a></td>";
+                if ($row['validated']==0) {
+                    echo "<td><button type='submit' name='active' value='{$row['user_id']}'>Potvrdiť</button><br></td>";
+                }else{
+                    echo "<td><br></td>";
+                }
+                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'>Odstrániť</button><br></td>\n";
+                echo "</tr>";
+            } 
+            echo "</table>"; 
+            ?>
+</form>
+<?php  
+            echo '</p>'; 
+            mysqli_free_result($result); 
+    } else {
+            // NEpodarilo sa vykonať dopyt!
+        echo '<p class="chyba">Nastala chyba pri získavaní údajov z DB.</p>' . "\n";
+    }
+    mysqli_close($link);
+    } else {
+        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
+        echo '<p class="chyba">Nepodarilo sa spojiť s databázovým serverom</p>';
+    }
+}
 
 
 

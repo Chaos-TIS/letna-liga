@@ -69,8 +69,8 @@ if (!isset($_SESSION['loggedUser']))
   <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td>Meno:</td>
-  <td><input type="text" name="uname" id="uname" value="<?php if (isset($_POST["uname"])) echo $_POST["uname"];?>" placeholder="Meno"  /></td>
+  <td>Meno tímu:</td>
+  <td><input type="text" name="uname" id="uname" value="<?php if (isset($_POST["uname"])) echo $_POST["uname"];?>" placeholder="Meno tímu"  /></td>
   </tr>
   <tr>
   <td>Email:</td>
@@ -104,6 +104,11 @@ if (!isset($_SESSION['loggedUser']))
       $("#uname").attr("disabled", disabled);
       $("#os").attr("disabled", disabled);
       $("[name=liga]").attr("disabled", disabled);
+      if(disabled){
+      $('#uname').attr('placeholder','Nevyplnat');
+    }else{
+      $('#uname').attr('placeholder','Meno tímu');
+    }
     });
     $(document).ready(function(){
       $("[name=type]").change();
