@@ -11,11 +11,11 @@ class Assignment extends Context {
 	private $solutions;
 
     public function __construct($conn, $id) {
-		$sql_get_assignment = "SELECT * FROM assignments WHERE context_id = ".$id;
+		$sql_get_assignment = "SELECT * FROM assignments a, contexts c WHERE c.context_id = a.context_id AND c.context_id = ".$id;
 		$assignment = mysqli_query($conn,$sql_get_assignment);
 		if ($assignment != false) {
 			$assignment_pole = mysqli_fetch_array($assignment);
-			parent::__construct($assignment_pole['context_id'], new Organisator($conn, $assignment_pole['user_id']));
+			parent::__construct($conn, $assignment_pole['context_id'], new Organisator($conn, $assignment_pole['user_id']));
 			
 			$this->timeOfPublishing = $assignment_pole['begin'];
 			$this->deadline 		= $assignment_pole['end'];
@@ -33,20 +33,21 @@ class Assignment extends Context {
 			if ($text != false) {
 				$text_pole = mysqli_fetch_array($text);				
 				$this->text_sk 	= $text_pole['sk'];
-				$this->text_eng = $text_pole['eng']
+				$this->text_eng = $text_pole['eng'];
 			}
 			
 			$this->setSolutions($conn);
+		}
     }
 	
 	public function setSolutions($conn) {
-		$this->solutions = [] // TODO
-		$sql_get_solutions = "SELECT c.user_id, c.context_id FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+		$this->solutions = [];
+		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id' FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
 		$solutions = mysqli_query($conn,$sql_get_solutions);
 		if ($solutions != false) {
 			$solutions_pole = mysqli_fetch_array($solutions);
-			for ($i = 0 ; i < count($solutions_pole['user_id']) ; i++) {
-				$this->solutions.append(new Solution($conn, $solutions_pole['context_id_id'], new Team($solutions_pole['user_id']), $this));
+			for ($i = 0 ; $i < count($solutions_pole['user_id']) ; $i++) {
+				$this->solutions[] = new Solution($conn, $solutions_pole['context_id'], Team::getFromDatabaseByID($conn, $solutions_pole['user_id']), $this);
 			}
 		
 		}
@@ -74,12 +75,15 @@ class Assignment extends Context {
 	}
 	
 	public function isAfterDeadline(){
-		return $this->deadline >= "systemovy čas";
+		$deadline = strtotime($this->deadline);
+		$cur_time = strtotime(date("c"));
+		return $deadline < $cur_time;//!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	
 	public function save(){
 	
 	}
+	
 	
 	
 }

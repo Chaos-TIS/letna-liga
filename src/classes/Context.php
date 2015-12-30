@@ -16,126 +16,87 @@ abstract class Context{
 		return $this->attachments;
 	}
 	
+	public function getId() {
+		return $this->id;
+	}
+	
 	public function setAttachments($conn) {
-		$this->attachments = [];//TODO
-		
-		$sql_get_images = "SELECT * FROM images WHERE location_id = ".$this->id;
+		$this->attachments = [];
+		$sql_get_images = "SELECT * FROM images WHERE context_id = ".$this->id;
 		$images = mysqli_query($conn,$sql_get_images);	
 		if ($images != false) {
-			$images_pole = mysqli_fetch_array($images);
-			
-			for ($i = 0 ; i < count($images_pole['image_id']) ; i++) {
-				$this->attachments.append(new Image([$images_pole['image_id'][$i],
-												   $this,
-												   [$images_pole['original_name'][$i],
-												   [$images_pole['extension'][$i]
-												  )
-										 );
+			while($images_pole = mysqli_fetch_array($images)) {
+				$this->attachments[] = new Image($images_pole['image_id'],
+												   $this->id,
+												   $images_pole['original_name']
+												  );
 			}
 		}
-		
-		$sql_get_programs = "SELECT * FROM programs WHERE location_id = ".$this->id;
+		$sql_get_programs = "SELECT * FROM programs WHERE context_id = ".$this->id;
 		$programs = mysqli_query($conn,$sql_get_programs);	
-		if ($programs != false) {
-			$programs_pole = mysqli_fetch_array($programs);
-			
-			for ($i = 0 ; i < count($programs_pole['program_id']) ; i++) {
-				$this->attachments.append(new Program([$programs_pole['program_id'][$i],
-													  $this,
-													  [$programs_pole['location_id'][$i]
-													 )
-										 );
+		if ($programs != false) {			
+			while($programs_pole = mysqli_fetch_array($programs)) {
+				$this->attachments[] = new Program($programs_pole['program_id'],
+													  $this->id,
+													  $programs_pole['original_name']
+													 );
 			}
 		}
-		
-		$sql_get_videos = "SELECT * FROM videos WHERE location_id = ".$this->id;
+		$sql_get_videos = "SELECT * FROM videos WHERE context_id = ".$this->id;
 		$videos = mysqli_query($conn,$sql_get_videos);	
 		if ($videos != false) {
-			$videos_pole = mysqli_fetch_array($videos);
-			
-			for ($i = 0 ; i < count($videos_pole['video_id']) ; i++) {
-				$this->attachments.append(new Video([$videos_pole['video_id'][$i],
-												   $this,
-												   [$videos_pole['location_id'][$i],
-												   [$videos_pole['link'][$i]
-												  )
-										 );
+			while($videos_pole = mysqli_fetch_array($videos)) {
+				$this->attachments[] = new Video($videos_pole['video_id'],
+												   $this->id,
+												   $videos_pole['link']
+												  );
 			}
 		}
 	}
 	
-	public function uploadProgram($conn, $subory) {
-		$fileCount = count($subory["name"]);
-		if ($fileCount == 1  && pathinfo($subory["name"][0], PATHINFO_EXTENSION) == "zip") {
-			if (checkUploadFile($subory["size"][0]))
-			{
-				$target_file = dirname(__FILE__)."/../files/".$this->id.".zip";
-				if (move_uploaded_file($subory["tmp_name"][0], $target_file)) {
-					echo "[OK] Nahratie súboru <br>";
-				} else {
-					echo "[ERROR] Nahranie súborov: Problém s uložením na server: <br>";
-				}
-			} else {
-				echo "[ERROR] Nahranie súborov: Celková veľkosť súborov je viac ako 10MB <br>";
-			}
-		} else {
-			$ok = True;
-			$vel = 0;
-			$zip = new ZipArchive;
-			if ($zip->open(dirname(__FILE__)."/../files/".$this->id.".zip",ZipArchive::OVERWRITE)) {		
-				for ($i=0; $i<$fileCount; $i++) {
-					$subor = $subory["name"][$i];
-					$vel += $subory["size"][$i];
-					if (!checkUploadFile($subory["size"][$i]))
-					{
-						$ok = False;
-						break;
-					}
-				}
-				if ($ok && ($vel < 10000000)) {
-					for ($i=0; $i<$fileCount; $i++) {
-						$zip->addFile($subory['tmp_name'][$i],$subory['name'][$i]);
-					}
-					echo "[OK] Nahranie súborov <br>";
-				} else {
-					echo "[ERROR] Nahranie súborov: Celková veľkosť súborov je viac ako 10MB <br>";
-				}
-				$zip->close();
-			}
+	public function uploadFiles1($conn, $files, $kde) {
+		$fileCount = count($files["name"]);
+		if ($fileCount + count($this->attachments) > 100) {
+			echo "[ERROR] Počet príloh presiahol maximálny povolený počet (100).";
+			return;
 		}
-	}
-	
-	public function uploadImage($conn, $obrazky) {
-		for ($i = 0; $i < count($obrazky); $i++) {
-			$subor = $obrazky["name"][$i];
-			$ext = pathinfo($obrazky["name"][$i], PATHINFO_EXTENSION);
-			if (checkUploadImage($ext,$obrazky["type"][$i],$obrazky["size"][$i]))
+		for ($i = 0; $i < $fileCount; $i++) {
+			$subor = $files["name"][$i];
+			$ext = pathinfo($subor, PATHINFO_EXTENSION);
+			if (checkUploadFile($ext,$files["size"][$i]))
 			{
-				if (mysqli_query($conn,"INSERT INTO images (location_id) VALUES (".$this->id.")")) {
-					$target_file = dirname(__FILE__)."/../images/".mysqli_insert_id($conn).".".$ext;
-					if (move_uploaded_file($obrazky["tmp_name"][$i], $target_file)) {
-						echo "[OK] Nahratie Obrázka: ".$subor."<br>";
+				$typ = "program";
+				if ($ext == "jpg" or $ext == "png" or $ext == "gif") {
+					$typ = "image";
+				}
+				if (mysqli_query($conn,"INSERT INTO ".$typ."s (context_id, original_name) VALUES (".$this->id.",\"".$subor."\")")) {
+					$target_file = $kde.$typ."s/".mysqli_insert_id($conn).".".$ext;
+					if (!file_exists($kde)) {
+						mkdir($kde, 0777, true);
+					}
+					if (move_uploaded_file($files["tmp_name"][$i], $target_file)) {
+						echo "[OK] Nahratie Súboru: ".$subor."<br>";
 					} else {
-						mysqli_query($conn,"DELETE FROM images WHERE image_id = ".mysqli_insert_id($conn));
+						mysqli_query($conn,"DELETE FROM ".$typ."s WHERE ".$typ."_id = ".mysqli_insert_id($conn));
 						echo "[ERROR] Problém s uložením na server: ".$subor."<br>";
 					}
 				} else {
 					echo "[ERROR] Problém s uložením do databázy: ".$subor." ".mysqli_error($conn)."<br>";
 				}		
 			} else {
-				echo "[ERROR] Nahratie Obrázka: ".$subor." Nahrať je možné len súbory s príponou jpg, png alebo gif s veľkosťou menšou ako 10MB <br>";
+				echo "[ERROR] Nahratie Súboru: ".$subor." Nahrať je možné len súbory menšie ako 10MB <br>";
 			}
 		}
 	}
 	
 	public function uploadVideo($conn, $videa) {
-		mysqli_query($conn,"DELETE FROM videos WHERE location_id = ".$zaznam["context_id"]);
+		mysqli_query($conn,"DELETE FROM videos WHERE location_id = ".$this->id);
 		$pattern = '/[;," "\n]/';
 		$pole = preg_split($pattern, $videa);
 		for ($i = 0; $i < count($pole); $i++) {
 			if (strlen($pole[$i]) > 11) {
 				$video = substr(trim($pole[$i]), -11);
-				if (mysqli_query($conn,"INSERT INTO videos (location_id,link) VALUES (".$this->id.",\"".$video."\")")) {
+				if (mysqli_query($conn,"INSERT INTO videos (context_id,link) VALUES (".$this->id.",\"".$video."\")")) {
 					echo "[OK] Video ".$video." <br>";
 				} else {
 					echo "[ERROR] Video: chyba pri vkladaní do databázy ".$video." <br>".mysqli_error($conn);
