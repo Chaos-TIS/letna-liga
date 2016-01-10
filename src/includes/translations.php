@@ -140,7 +140,7 @@ switch ($_POST['key']){
             </ul>
 
             <br>
-            <p><i>Note: The Summet league is not a direct part of FLL, it should be considered as a pre-competition training brought by <a href="http://robotika.sk/"
+            <p><i>Note: The summer league is not a direct part of FLL, it should be considered as a pre-competition training brought by <a href="http://robotika.sk/"
                                                                                                                                            target="_top">Robotika.SK</a></i></p>
         <?php
                 break;

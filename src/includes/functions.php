@@ -113,12 +113,12 @@ function page_nav()
 						<li><a href="#" data-trans="assignments-overview"></a></li>
 					</ul>
 				</li>
-				<li><a href="#" data-trans="results"></a></li>
+				<li><a href="results.php" data-trans="results"></a></li>
 				<li><span data-trans="archive"></span>
 					<ul>
 						<li class="submenu">
               <span>2013</span> <ul>
-								<li class="noborder"><a href="#" data-trans="results"></a></li>
+								<li class="noborder"><a href="results.php?year=2013" data-trans="results"></a></li>
 								<?php
 								if ($link = db_connect()) {
                   $sql =  "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2013 ORDER BY begin ASC";
@@ -135,7 +135,7 @@ function page_nav()
               </li>
 						<li class="submenu">
               <span>2014</span> <ul>
-								<li class="noborder"><a href="#" data-trans="results"></a></li>
+								<li class="noborder"><a href="results.php?year=2014" data-trans="results"></a></li>
 								<?php
 								if ($link = db_connect()) {
                   $sql =  "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2014 ORDER BY begin ASC";
@@ -152,7 +152,7 @@ function page_nav()
               </li>
 						<li class="submenu">
 							<span>2015</span><ul>
-								<li class="noborder"><a href="#" data-trans="results"></a></li>
+								<li class="noborder"><a href="results.php?year=2015" data-trans="results"></a></li>
 								<?php
       					if ($link = db_connect()) {
                   $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";

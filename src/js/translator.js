@@ -163,5 +163,5 @@ dict.set('language', ['Jazyk', 'Language']);
 
 
 /*-------------------------------------RESULT TABLE---------------------------------------*/
-dict.set('table-loading', ['Tabuľka sa načítava', '']);
+dict.set('table-loading', ['Tabuľka sa načítava', 'The table is loading']);
 
