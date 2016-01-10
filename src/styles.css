@@ -118,11 +118,7 @@ table {
 	border: 2px solid black;
 }
 
-td {
-	border: 1px solid black;
-}
-
-th {
+.result-table td, .result-table th {
 	border: 1px solid black;
 }
 

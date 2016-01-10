@@ -54,34 +54,34 @@ if (!isset($_SESSION['loggedUser']))
   <td><span class='error2'style="color: red; text-align: center;font-size:30px;font-family:calibri"><?php echo $edit->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td>Meno tímu:</td>
-  <td><input type="text" name="uname" id="uname" value="<?php if (isset($udaje["name"])) echo $udaje["name"];?>" placeholder="Meno tímu"  /></td>
+  <td data-trans="edit-team-form"></td>
+  <td><input type="text" name="uname" id="uname" value="<?php if (isset($udaje["name"])) echo $udaje["name"];?>" data-trans="edit-team-form"/></td>
   </tr>
   <tr>
   <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td>Email:</td>
-  <td><input type="email" name="email" value="<?php if (isset($udaje["mail"])) echo $udaje["mail"];?>" placeholder="Email" /></td>
+  <td data-trans="edit-team-form"></td>
+  <td><input type="email" name="email" value="<?php if (isset($udaje["mail"])) echo $udaje["mail"];?>" data-trans="edit-team-form"/></td>
   </tr>
   <tr>
-  <td>Heslo:</td>
-  <td><input type="password" name="pass"  placeholder="Heslo"  /></td>
+  <td data-trans="edit-team-form"></td>
+  <td><input type="password" name="pass" data-trans="edit-team-form"/></td>
   </tr>
   <tr>
-  <td>Zopakuj heslo:</td>
-  <td><input type="password" name="pass2" placeholder="Zopakuj heslo"  /></td>
+  <td data-trans="edit-team-form"></td>
+  <td><input type="password" name="pass2" data-trans="edit-team-form"/></td>
   </tr>
   <tr>
-  <td>Napíš nám niečo o sebe:</td>
+  <td data-trans="edit-team-form"></td>
   <td><textarea cols="25" rows="3" name="os" id="os" ><?php if (isset($udaje["description"])) echo $udaje["description"];?></textarea></td>
   </tr>
   <tr>
-  <td><input type="radio" checked name="liga" value=1<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==1) echo ' checked'; ?>>Slovak league</td>
-  <td><input type="radio" name="liga" value=0<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==0) echo ' checked'; ?>>Open league</td>
+  <td><input type="radio" checked name="liga" value=1<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==1) echo ' checked'; ?>><span data-trans="edit-team-form"></span></td>
+  <td><input type="radio" name="liga" value=0<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==0) echo ' checked'; ?>><span data-trans="edit-team-form"></span></td>
   </tr>
   <tr>
-  <td><input type="submit" name="save" value="Uložiť"></td>
+  <td><input type="submit" name="save" data-trans="edit-team-form"></td>
   </tr>
   </table>
   </form>

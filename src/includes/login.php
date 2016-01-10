@@ -26,7 +26,7 @@ if ($link = db_connect()) {
                         $_SESSION['loggedUser'] = new Jury($row['id'], $row['mail'], $row['validated']);
                     }
                     else {
-                        echo "Tento rozhodcovský účet ešte nebol potvrdený!";
+                        echo phpTranslate('jury-acc-not-validated', $_SESSION['lang']);
                     }
                 }
                 else {
@@ -35,11 +35,11 @@ if ($link = db_connect()) {
             }
         }
         else {
-            echo "Zadali ste nesprávne heslo!";
+            echo phpTranslate('wrong-password', $_SESSION['lang']);
         }
     }
     else {
-        echo "Neexistuje účet zaregistrovaný na tento e-mail!";
+        echo phpTranslate('non-existent-acc', $_SESSION['lang']);
     }
 }
 die;

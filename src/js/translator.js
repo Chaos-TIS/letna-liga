@@ -1,6 +1,8 @@
 var dict = {
+    COOKIE_KEY_LANG : "lang",
     SK : 0,
     ENG : 1,
+    DEFAULT_LANGUAGE : 1,
     dictionary : {},
 
     set : function(key, value){
@@ -9,13 +11,54 @@ var dict = {
 
     get : function(key, toLanguageCode, index){
         var result = dict.dictionary[key];
+        if (typeof result == "undefined"){
+            return dict.translateFromPHP(key, toLanguageCode);
+        }
         if ($.isArray(result[0])){
             return result[index % result.length][toLanguageCode];
         }
         return result[toLanguageCode];
     },
 
+    translateFromPHP : function(key, toLanguageCode) {
+        return $.ajax({
+            cache: true,
+            async: false,
+            type: "POST",
+            data: {key: key, lang: toLanguageCode},
+            url: "includes/translations.php"
+        }).responseText;
+    },
+
+    setSessionLanguage : function (languageCode){
+        $.ajax({
+            async: true,
+            type: "POST",
+            data: {lang: languageCode},
+            url: "includes/setSessionLanguage.php"
+        })
+    },
+
     translate : function(toLanguageCode){
+        if (typeof toLanguageCode == "undefined") {
+            var cookies = document.cookie.split(';');
+            for(var i = 0; i < cookies.length; i++) {
+                var cookie = $.trim(cookies[i]);
+                if (cookie.indexOf(dict.COOKIE_KEY_LANG) == 0) {
+                    toLanguageCode = parseInt(cookie.substring(dict.COOKIE_KEY_LANG.length+1));
+                    break;
+                }
+            }
+            if (typeof toLanguageCode == "undefined"){
+                toLanguageCode = dict.DEFAULT_LANGUAGE;
+            }
+        }
+        else {
+            document.cookie = dict.COOKIE_KEY_LANG+"="+toLanguageCode;
+        }
+
+        dict.setSessionLanguage(toLanguageCode);
+
         var translated = [];
         $("[data-trans]").each(function() {
             var tag = $(this).attr("data-trans");
@@ -24,8 +67,14 @@ var dict = {
                 $("[data-trans="+tag+"]").html(function(index, originalText){
                     var translation = dict.get(tag, toLanguageCode, index);
                     if ($(this).prop("tagName") === "INPUT"){
-                        $(this).val(translation);
-                        return originalText;
+                        if ($(this).attr("type") === "submit") {
+                            $(this).val(translation);
+                            return originalText;
+                        }
+                        if ($(this).attr("type") !== "radio") {
+                            $(this).attr("placeholder", translation);
+                            return originalText;
+                        }
                     }
                     return translation;
                 });
@@ -34,53 +83,85 @@ var dict = {
     }
 };
 
+dict.set('main-header', ['Letná liga FLL', 'Summer league FLL']);
+dict.set('delete', ['Odstrániť', 'Delete']);
+dict.set('validate', ['Potvrdiť', 'Validate']);
+
+dict.set('logged-in', ['Prihlásený', 'Account']);
+dict.set('logout', ['Odhlásiť', 'Logout']);
+
+dict.set('assignment-page', [
+    ['Riešenie možno odovzdávať do:', 'Deadline of this assingment is:'],
+    ['Riešenia:', 'Solutions:']]);
+
 /*--------------------------------------LOGIN FORM----------------------------------------*/
 dict.set('login-form', [['Prihlásenie', 'Login form'],
                         ['E-mailová adresa:', 'E-mail address:'],
                         ['Heslo:', 'Password:'],
+                        ['Heslo', 'Password'],
                         ['Prihlásiť sa', 'Log in'],
                         ['Registrácia', 'Registration']
-
 ]);
 
-/*--------------------------------------INTRO PAGE----------------------------------------*/
-dict.set('main-header', ['Letná liga FLL', 'Summer league FLL']);
+/*----------------------------------REGISTRATION FORM-------------------------------------*/
+dict.set('reg-form', [
+    ['Súťažný tím', 'Competing team'],
+    ['Rozhodca', 'Jury'],
+    ['Meno tímu:', 'Team name:'],
+    ['Meno tímu', 'Team name'],
+    ['Email:', 'Email:'],
+    ['Email', 'Email'],
+    ['Heslo:', 'Password:'],
+    ['Heslo', 'Password'],
+    ['Zopakuj heslo:', 'Repeat password:'],
+    ['Zopakuj heslo', 'Repeat password'],
+    ['Napíš nám niečo o sebe:', 'Write us something about yourself:'],
+    ['Slovenská liga', 'Slovak league'],
+    ['Open liga', 'Open league'],
+    ['Registrovať', 'Register']
+]);
 
-dict.set('intro-ul1', [ ['Vitajte a pozrite si:', ''],
-                        ['Zadania a riešenia letnej ligy', '']]);
+/*----------------------------------EDIT TEAM ACCOUNT-------------------------------------*/
+dict.set('edit-team-form', [
+    ['Meno tímu:', 'Team name:'],
+    ['Meno tímu', 'Team name'],
+    ['Email:', 'Email:'],
+    ['Email', 'Email'],
+    ['Heslo:', 'Password:'],
+    ['Heslo', 'Password'],
+    ['Zopakuj heslo:', 'Repeat password:'],
+    ['Zopakuj heslo', 'Repeat password'],
+    ['Napíš nám niečo o sebe:', 'Write us something about yourself:'],
+    ['Slovenská liga', 'Slovak league'],
+    ['Open liga', 'Open league'],
+    ['Uložiť', 'Save']
+]);
 
-dict.set('intro-ul2', [ ['Oznamy:', ''],
-                        ['<i>Letná liga FLL 2015 beží, pridajte sa! Hrá sa o stavebnicu LEGO MINDSTORMS Education EV3!</i>', ''],
-                        ['V prípade ťažkostí s nahrávaním riešenia ho môžete poslať aj mailom na <i>pavel.petrovic@gmail.com</i>', '']]);
+/*----------------------------------EDIT JURY ACCOUNT-------------------------------------*/
+dict.set('edit-jury-form', [
+    ['Email:', 'Email:'],
+    ['Email', 'Email'],
+    ['Heslo:', 'Password:'],
+    ['Heslo', 'Password'],
+    ['Zopakuj heslo:', 'Repeat password:'],
+    ['Zopakuj heslo', 'Repeat password'],
+    ['Uložiť', 'Save']
+]);
 
-dict.set('intro-ul3', [ ['Chcete uspieť v tohtoročnom ročníku FLL? Ak áno, riešte letnú ligu!', ''],
-                        ['štartujeme 12. februára', ''],
-                        ['bude 10 kôl, ale zapojíť sa môžete do všetkých alebo hoci len do jedného z nich', ''],
-                        ['pre viacčlenné tímy vo veku 10-16 rokov (nemusíte byť registrovaní na FLL)', ''],
-                        ['každé dva týždne nové zadanie, na riešenie máte 3 týždne', ''],
-                        ['vecné ceny', ''],
-                        ['fair play a zdravý súťažný duch', ''],
-                        ['ani vy nemôžete chýbať!', '']]);
 
-dict.set('intro-ul4', [ ['Pravidlá', ''],
-                        ['Na krúžku, v klube alebo doma tím samostatne a načas vyrieši úlohu a odovzdá svoje riešenie na týchto stránkach.', ''],
-                        ['Riešenie obsahuje: spoločné foto vášho tímu, foto robota, program a video ako robot vyrieši úlohu. (<i>Tip: svoje video na YouTube označte ako &quot;unlisted&quot; a nik ho pred termínom odoslania nenájde, aj keď ho tam už budete mať</i>)', ''],
-                        ['Môžete použiť iba robotické stavebnice LEGO MINDSTORMS (RCX, NXT, EV3) so základnými senzormi a štandardný programovací jazyk NXT-G, EV3, alebo Robolab.', ''],
-                        ['Vaše riešenie získa do celkového ligového hodnotenia 0-3 body.', ''],
-                        ['Riešenia hodnotí skupina nezávislých rozhodcov', ''],
-                        ['Ak sa vám zdá úloha náročná, zjednodušte si ju podľa potreby!', '']]);
+/*--------------------------------------NAVIGATION----------------------------------------*/
 
-dict.set('complete-results', ['Kompletné výsledky', '']);
+dict.set('assignment', ['Zadanie', 'Assignment']);
+dict.set('assignments', ['Zadania', 'Assignments']);
+dict.set('assignments-overview', ['Prehľad zadaní', 'Assignments overview']);
+dict.set('results', ['Výsledky', 'Results']);
+dict.set('archive', ['Archív', 'Archive']);
+dict.set('users', ['Používatelia', 'Users']);
+dict.set('teams', ['Tímy', 'Teams']);
+dict.set('jury-pl', ['Rozhodcovia', 'Jury']);
+dict.set('language', ['Jazyk', 'Language']);
 
+
+/*-------------------------------------RESULT TABLE---------------------------------------*/
 dict.set('table-loading', ['Tabuľka sa načítava', '']);
 
-dict.set('intro-ul5', [ ['Ako hodnotíme?', ''],
-                        ['Vaše riešenia si dôkladne prezrú títo štyria ľudia: Mišo a Ľubo - študenti informatiky FMFI UK, Miška - doktorandka didaktiky informatiky na FMFI UK a Rišo - líder Robotika.SK:', ''],
-                        ['Každý z nich nezávisle od ostatných pridelí 0-3 body podľa toho, či riešenie je kompletné (obsahuje obrázky, video, program, dobrý popis a robot robí' +
-                        ' to, čo má) a nakoľko ich zaujme. Do tabuľky sa vám započíta aritmetický priemer.', ''], '']);
-
-dict.set('intro-ul6', [ ['Predchádzajúce ročníky Letnej ligy:', ''],
-                        ['Letná liga 2014', ''],
-                        ['Letná liga 2013', '']]);
-
-dict.set('intro-note', ['<i >Poznámka: Letná liga nie je priamou súčasťou FLL, je určená na predsúťažný tréning a pripravuje ju združenie <a href="http://robotika.sk/" target="_top">Robotika.SK</a></i>', ''])

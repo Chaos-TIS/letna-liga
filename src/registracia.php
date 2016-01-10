@@ -62,38 +62,38 @@ if (!isset($_SESSION['loggedUser']))
   <td><span class='error2'style="color: red; text-align: center;font-size:30px;font-family:calibri"><?php echo $reg->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td><input type="radio" checked name="type" value=0<?php if (isset($_POST['type']) && $_POST["type"]==0) echo ' checked'; ?>>Súťažný tím</td>
-  <td><input type="radio" name="type" value=1<?php if (isset($_POST['type']) && $_POST["type"]==1) echo ' checked'; ?>>Rozhodca</td>
+  <td><input type="radio" checked name="type" value=0<?php if (isset($_POST['type']) && $_POST["type"]==0) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
+  <td><input type="radio" name="type" value=1<?php if (isset($_POST['type']) && $_POST["type"]==1) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
   </tr>
   <tr>
   <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td>Meno tímu:</td>
-  <td><input type="text" name="uname" id="uname" value="<?php if (isset($_POST["uname"])) echo $_POST["uname"];?>" placeholder="Meno tímu"  /></td>
+  <td data-trans="reg-form"></td>
+  <td><input type="text" name="uname" id="uname" value="<?php if (isset($_POST["uname"])) echo $_POST["uname"];?>" data-trans="reg-form" /></td>
   </tr>
   <tr>
-  <td>Email:</td>
-  <td><input type="email" name="email" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" placeholder="Email" /></td>
+  <td data-trans="reg-form"></td>
+  <td><input type="email" name="email" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" data-trans="reg-form" /></td>
   </tr>
   <tr>
-  <td>Heslo:</td>
-  <td><input type="password" name="pass"  placeholder="Heslo"  /></td>
+  <td data-trans="reg-form"></td>
+  <td><input type="password" name="pass" data-trans="reg-form"  /></td>
   </tr>
   <tr>
-  <td>Zopakuj heslo:</td>
-  <td><input type="password" name="pass2" placeholder="Zopakuj heslo"  /></td>
+  <td data-trans="reg-form"></td>
+  <td><input type="password" name="pass2" data-trans="reg-form"  /></td>
   </tr>
   <tr>
-  <td>Napíš nám niečo o sebe:</td>
+  <td data-trans="reg-form"></td>
   <td><textarea cols="25" rows="3" name="os" id="os" ><?php if (isset($_POST["os"])) echo $_POST["os"];?></textarea></td>
   </tr>
   <tr>
-  <td><input type="radio" checked name="liga" value=1<?php if (isset($_POST['liga']) && $_POST["liga"]==1) echo ' checked'; ?>>Slovak league</td>
-  <td><input type="radio" name="liga" value=0<?php if (isset($_POST['liga']) && $_POST["liga"]==0) echo ' checked'; ?>>Open league</td>
+  <td><input type="radio" checked name="liga" value=1<?php if (isset($_POST['liga']) && $_POST["liga"]==1) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
+  <td><input type="radio" name="liga" value=0<?php if (isset($_POST['liga']) && $_POST["liga"]==0) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
   </tr>
   <tr>
-  <td><input type="submit" name="registrovat" value="Registrovat"></td>
+  <td><input type="submit" name="registrovat" data-trans="reg-form"></td>
   </tr>
   </table>
   </form>
@@ -104,11 +104,6 @@ if (!isset($_SESSION['loggedUser']))
       $("#uname").attr("disabled", disabled);
       $("#os").attr("disabled", disabled);
       $("[name=liga]").attr("disabled", disabled);
-      if(disabled){
-      $('#uname').attr('placeholder','Nevyplnat');
-    }else{
-      $('#uname').attr('placeholder','Meno tímu');
-    }
     });
     $(document).ready(function(){
       $("[name=type]").change();
