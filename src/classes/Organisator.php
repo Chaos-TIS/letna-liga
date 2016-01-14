@@ -25,6 +25,11 @@ class Organisator extends User {
 	public function isAdmin() {
 		return $this->admin;
 	}
+
+	public function getShortName()
+	{
+		return "organisator";
+	}
 	
 }
 ?>

@@ -31,5 +31,10 @@ class Team extends User {
 	public function getId() {
 		return $this->id;
 	}
+
+	public function getShortName()
+	{
+		return "team";
+	}
 }
 ?>

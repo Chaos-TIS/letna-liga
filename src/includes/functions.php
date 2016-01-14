@@ -110,7 +110,7 @@ function page_nav()
             }     
           }
           ?>
-						<li><a href="#" data-trans="assignments-overview"></a></li>
+						<li><a href="prehladZadani.php" data-trans="assignments-overview"></a></li>
 					</ul>
 				</li>
 				<li><a href="results.php" data-trans="results"></a></li>
@@ -422,6 +422,85 @@ function sprava_uctov_jury() {
         echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
     }
 }
+
+
+function prehlad_zadani_nezverejnene($typ) {
+    if ($link = db_connect()) {
+        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin >= CURDATE() "; // definuj dopyt
+    $result = mysqli_query($link, $sql); // vykonaj dopyt
+    if ($result) {
+            // dopyt sa podarilo vykonať
+            echo '<p>';
+        ?>
+            <form method="post">
+                <h1> Nezverejnené zadania</h1>
+            <?php
+            echo "<table text-align = 'center' border = '0'>";
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td><a href='#'>{$row['sk']}</a></td>";
+                if ($typ == "admin"){
+                echo "<td><input type='radio' name='datum' value='{$row['context_id']}'><br></td>\n";}
+                echo "</tr>";
+            }
+            if ($typ == "admin"){
+            echo "<tr>";
+            echo "<td><input type='date' name='start' min='2015-01-01'><br><br></td>";
+            echo "<td><input type='date' name='stop' min='2015-01-01'><br><br></td>";
+            echo "<td><input type='submit' name='send' value='Zverejni'><br><br></td>\n";
+            echo "</tr>";}
+            echo "</table>";
+            ?>
+</form>
+<?php
+            echo '</p>';
+            mysqli_free_result($result);
+    } else {
+            // NEpodarilo sa vykonať dopyt!
+        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
+    }
+    mysqli_close($link);
+    } else {
+        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
+        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
+    }
+}
+
+function prehlad_zadani_zverejnene() {
+    if ($link = db_connect()) {
+        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin < CURDATE() "; // definuj dopyt
+    $result = mysqli_query($link, $sql); // vykonaj dopyt
+    if ($result) {
+            // dopyt sa podarilo vykonať
+            echo '<p>';
+        ?>
+            <form method="post">
+            <h1> Zverejnené zadania</h1>
+            <?php
+            echo "<table text-align = 'center' border = '0'>";
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td><a href='#'>{$row['sk']}</a></td>";
+                //echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans='delete'></span></button><br></td>\n";
+                echo "</tr>";
+            }
+            echo "</table>";
+            ?>
+</form>
+<?php
+            echo '</p>';
+            mysqli_free_result($result);
+    } else {
+            // NEpodarilo sa vykonať dopyt!
+        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
+    }
+    mysqli_close($link);
+    } else {
+        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
+        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
+    }
+}
+
 
 
 
