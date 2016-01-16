@@ -1,69 +1,38 @@
 <?php
-//session_start();
 require_once(dirname(__FILE__)."/includes/functions.php");
 page_head("Letná liga FLL - Pridanie riešenia");
 page_nav();
 
-//***************
+/*
 $conn = db_connect();
-$_SESSION["team"] = Team::getFromDatabaseByID($conn,6);
+$_SESSION["loggedUser"] = Team::getFromDatabaseByID($conn,6);
 $_SESSION["assignment"] = new Assignment($conn,1);
-//***************
+*/
 
 if (!isset($_SESSION["assignment"]) || $_SESSION["assignment"] == null) die("Nie je vybrane zadanie!");
 if (!$_SESSION["assignment"]->isAfterDeadline()) die("Zadanie je po deadline!");
-if (!isset($_SESSION["team"]) || $_SESSION["team"] == null) die("Nie si prihlásený!");
+if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) die("Nie si prihlásený!");
+if (get_class($_SESSION["loggedUser"]) != "Team") die("Iba súťažiaci môže pridávať riešenia úloh!");
 
-$sql_get_solution = "SELECT c.context_id as 'context_id' FROM solutions s, contexts c WHERE s.context_id = c.context_id AND s.assignment_id = ".$_SESSION["assignment"]->getId()." AND c.user_id = ".$_SESSION["team"]->getId();
-//$conn = db_connect();
+$sql_get_solution = "SELECT c.context_id as 'context_id' FROM solutions s, contexts c WHERE s.context_id = c.context_id AND s.assignment_id = ".$_SESSION["assignment"]->getId()." AND c.user_id = ".$_SESSION["loggedUser"]->getId();
+$conn = db_connect();
 $solution = mysqli_query($conn,$sql_get_solution);
 
 if (mysqli_num_rows($solution) == 0) {
-	$cid = new_solution($conn, $_SESSION["team"]->getId(),$_SESSION["assignment"]->getId());
+	$cid = new_solution($conn, $_SESSION["loggedUser"]->getId(),$_SESSION["assignment"]->getId());
 }
 else {
 	$cid = mysqli_fetch_array($solution)['context_id'];
 }
 
-$solution = new Solution($conn, $cid, $_SESSION["team"], $_SESSION["assignment"]);
+$solution = new Solution($conn, $cid, $_SESSION["loggedUser"], $_SESSION["assignment"]);
 
 if (isset($_POST['checkbox'])) {
-	foreach($_POST['checkbox'] as $value){
-		$pole = explode(";", $value);
-		$sql = "SELECT * FROM ".$pole[0]."s WHERE ".$pole[0]."_id='".$pole[1]."'";
-		$result = mysqli_query($conn, $sql);
-		if ($result) {
-			if ($pole[0] != "video") {
-				$attachment = mysqli_fetch_array($result);
-				$ext = pathinfo($attachment['original_name'], PATHINFO_EXTENSION);
-			}
-			$sql = "DELETE FROM ".$pole[0]."s WHERE ".$pole[0]."_id='".$pole[1]."'";
-			$result = mysqli_query($conn, $sql);
-			if ($result) {
-				if ($pole[0] != "video") {
-					if (unlink("attachments/solutions/".$cid."/".$pole[0]."s/".$pole[1].".".$ext)) {
-						echo "[OK] Odstranenie prílohy prebehlo úspešne.<br>";
-					}
-					else {
-						echo "[ERROR] Chyba pri odstraňovaní súboru.<br>";
-					}
-				}
-				else {
-					echo "[OK] Odstranenie prílohy prebehlo úspešne.<br>";
-				}
-			}
-			else {
-				echo "[ERROR] Chyba pri odstraňovaní prílohy z databázy.".mysqli_error($conn)."<br>";
-			}
-		}
-		else {
-			echo "[ERROR] Príloha na odstránenie sa nenašla v databáze.<br>";
-		}
-	}
+	$solution->deleteAttachments($conn, $_POST['checkbox']);
 }
 
 if (isset($_POST['textPopis']) && $_POST['textPopis'] != $solution->getTxt()) {
-	$solution->setTxt($_POST['textPopis']);	
+	$solution->setTxt($conn, $_POST['textPopis']);	
 }
 
 if (isset($_POST['textVideo']) && $_POST['textVideo'] != "" ) {

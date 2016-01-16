@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 function __autoload($class_name) {
     include(dirname(__FILE__)."/../classes/$class_name.php");
@@ -209,7 +209,7 @@ function checkUploadFile($vel)
 }
 
 function db_connect() {
-    if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
+    if ($link = mysqli_connect('localhost', '...', '...')) {
         if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
@@ -228,6 +228,27 @@ function new_solution($conn, $uid, $aid) {
 	$cid = mysqli_insert_id($conn);
 	mysqli_query($conn,"INSERT INTO solutions (context_id,assignment_id) VALUES (".$cid.",".$aid.")");
 	return $cid;
+}
+
+function new_assignment($conn, $uid) {
+	mysqli_query($conn,"INSERT INTO contexts (user_id) VALUES (".$uid.")");
+	$cid = mysqli_insert_id($conn);
+	mysqli_query($conn,"INSERT INTO texts () VALUES ()");
+	$id1 = mysqli_insert_id($conn);
+	mysqli_query($conn,"INSERT INTO texts () VALUES ()");
+	$id2 = mysqli_insert_id($conn);
+	mysqli_query($conn,"INSERT INTO assignments (context_id, text_id_name, text_id_description) VALUES (".$cid.", ".$id1.", ".$id2.")");
+	return $cid;
+}
+
+function updateData($conn, $kde, $co, $zaco, $idName, $id) {
+	$sql_update = "UPDATE ".$kde." SET ".$co." = '".$zaco."' WHERE ".$idName." = ".$id;
+	if (mysqli_query($conn,$sql_update)) {
+		echo "[OK] - Text uložený.<br>";
+	}
+	else {
+		echo "[ERROR] - Chyba pri uložení textu do databázy.".mysqli_error($conn)."<br>";
+	}
 }
 
 function phpTranslate($key, $lang){
@@ -426,7 +447,7 @@ function sprava_uctov_jury() {
 
 function prehlad_zadani_nezverejnene($typ) {
     if ($link = db_connect()) {
-        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin >= CURDATE() "; // definuj dopyt
+        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin >= CURDATE() OR begin is NULL"; // definuj dopyt
     $result = mysqli_query($link, $sql); // vykonaj dopyt
     if ($result) {
             // dopyt sa podarilo vykonať
