@@ -3,5 +3,10 @@ class Administrator extends Organisator {
     public function __construct($id, $mail){
         parent::__construct($id, $mail);
     }
+
+    public function getShortName()
+	{
+		return "admin";
+	}
 }
 ?>

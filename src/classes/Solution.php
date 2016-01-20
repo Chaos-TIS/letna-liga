@@ -18,7 +18,7 @@ class Solution extends Context {
 			$this->best = $solution_pole['best'];
 			$this->assignment = $assignment;
 		
-			$sql_get_comment = "SELECT * FROM comments WHERE context_id".$solution_pole["context_id"];
+			$sql_get_comment = "SELECT * FROM comments WHERE context_id = ".$solution_pole["context_id"];
 			$comment = mysqli_query($conn,$sql_get_comment);
 			if ($comment != false) {
 				$comment_pole = mysqli_fetch_array($comment);
@@ -41,8 +41,9 @@ class Solution extends Context {
 		return $this->text;
 	}
 	
-	public function setTxt($text) {
+	public function setTxt($conn, $text) {
 		$this->text = $text;
+		updateData($conn, "solutions", "text", $text, "context_id", $this->getId());
 	}
 	
 	public function setComments($comments){
@@ -65,45 +66,9 @@ class Solution extends Context {
 			<textarea name="textPopis" cols="80" rows="10" ><?php echo $this->getTxt() ?></textarea>
 	
 			<br>			
-			<table cellpadding="3">
-			  <caption><h2 data-trans-key="solution-edit-page"></h2></caption>
-			  <tr>
-				<th width="5%" data-trans-key="solution-edit-page"></th>
-				<th width="30%" data-trans-key="solution-edit-page"></th>
-				<th width="60%" data-trans-key="solution-edit-page"></th>
-				<th width="5%" data-trans-key="solution-edit-page"></th>
-			  </tr>
-			  <?php
-			  foreach ($this->attachments as $attachment) {
-				$odkaz = "";
-				$ikona = "";
-				$checkbox = "";
-				if ($attachment instanceof Image) {
-					$odkaz = "attachments/solutions/".$attachment->getContext_id()."/images/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
-					$odkaz = "<a href=".$odkaz.">".$odkaz;
-					$ikona = Image::getIcon();
-					$checkbox = "image;".$attachment->getId();
-				}				
-				else if ($attachment instanceof Program) {
-					$odkaz = "attachments/solutions/".$attachment->getContext_id()."/programs/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
-					$odkaz = "<a href=".$odkaz.">".$odkaz;
-					$ikona = Program::getIcon();
-					$checkbox = "program;".$attachment->getId();
-				}
-				else {
-					$odkaz = '&lt;iframe width="500" height="375" src=<a href=http://www.youtube.com/embed/'.$attachment->getName().'>http://www.youtube.com/embed/'.$attachment->getName().'</a>" frameborder="0" allowfullscreen></iframe&gt';
-					$ikona = Video::getIcon();
-					$checkbox = "video;".$attachment->getId();
-				}
-				echo "<tr>";
-				echo "<td width=\"5%\" align=\"center\"> <img src=".$ikona."></td>";
-				echo "<td width=\"30%\">".$attachment->getName()."</td>";
-				echo "<td width=\"60%\"> ".$odkaz." </td>";				
-				echo '<td width=\"5%\" align="center"><input name="checkbox[]" type="checkbox" id="checkbox[]" value="'.$checkbox.'"></td>';
-				echo "</tr>";
-			  }
-			  ?>
-			</table>
+			<?php
+			$this->getAttachmentsTableHtml();
+			?>
 			
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
 			
@@ -124,6 +89,10 @@ class Solution extends Context {
 	
 	public function uploadFiles($conn, $subory) {
 		$this->uploadFiles1($conn, $subory, dirname(__FILE__)."/../attachments/solutions/".$this->id."/");
+	}
+	
+	public function deleteAttachments($conn, $prilohy) {
+		$this->deleteAttachments1($conn, $prilohy, dirname(__FILE__)."/../attachments/solutions/".$this->id."/");
 	}
 	
 	public function getPreviewHtml(){
