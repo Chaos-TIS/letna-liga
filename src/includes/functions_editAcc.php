@@ -8,15 +8,15 @@ function zmaz_acc($nazov) {
         $result = mysqli_query($link,$sql); // vykonaj dopyt
         if ($result) {
             // dopyt sa podarilo vykonať
-            echo '<p><strong>Účet bol zmazaný</strong></p>';
+            echoMessage('m-acc-deleted');
         } else {
             // dopyt sa NEpodarilo vykonať!
-            echo '<p class="chyba">Účet sa NEpodarilo zmazať z databázy</p>';
+            echoError('err-acc-deletion');
         }
         mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom!
-        echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom</p>';
+        echoError('db-connection-fail');
     }
 }
 
@@ -27,15 +27,15 @@ function set_jury($nazov) {
         $result = mysqli_query($link,$sql); // vykonaj dopyt
         if ($result) {
             // dopyt sa podarilo vykonať
-            echo '<p><strong>Účet bol potvrdený</strong></p>';
+            echoMessage('m-acc-validated');
         } else {
             // dopyt sa NEpodarilo vykonať!
-            echo '<p class="chyba">Účet sa NEpodarilo potvrdiť</p>';
+            echoError('err-acc-validation');
         }
         mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom!
-        echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom</p>';
+        echoError('db-connection-fail');
     }
 }
 
@@ -76,13 +76,13 @@ t.description='".$os."'
         $result = mysqli_query($link,$sql); 
         if ($result)
         {
-            $this->Handle("Zmeny boli ulozené do DB."); 
+            $this->Handle("m-changes-saved");
             ?>
             <meta http-equiv="refresh" content="4;url=spravaUctov.php?id=0"> 
             <?php      
         }else
         {
-            $this->HandleError("Nastala chyba pri editácii.");
+            $this->HandleError("err-changes-saving");
             ?>
             <meta http-equiv="refresh" content="4;url=editAcc.php"> 
             <?php
@@ -90,7 +90,7 @@ t.description='".$os."'
     
 
         }else{
-            $this->HandleError("NEpodarilo sa spojiť s databázovým serverom!");
+            $this->HandleError("db-connection-fail");
         }
     }
 
@@ -116,12 +116,12 @@ t.description='".$os."'
     
     function HandleError($err)
     {
-        $this->error_message .= $err."\r\n";
+        $this->error_message = $err;
     }
 
     function Handle($msg)
     {
-        $this->message .= $msg."\r\n";
+        $this->message = $msg;
     }
 }
 
@@ -158,13 +158,13 @@ u.password =  '".$pass."'
         $result = mysqli_query($link,$sql); 
         if ($result)
         {
-            $this->Handle("Zmeny boli ulozené do DB."); 
+            $this->Handle("m-changes-saved");
             ?>
             <meta http-equiv="refresh" content="4;url=spravaUctov.php?id=1"> 
             <?php      
         }else
         {
-            $this->HandleError("Nastala chyba pri editácii.");
+            $this->HandleError("err-changes-saving");
             ?>
             <meta http-equiv="refresh" content="4;url=editAcc.php"> 
             <?php
@@ -172,7 +172,7 @@ u.password =  '".$pass."'
     
 
         }else{
-            $this->HandleError("NEpodarilo sa spojiť s databázovým serverom!");
+            $this->HandleError("db-connection-fail");
         }
     }
 
@@ -198,12 +198,12 @@ u.password =  '".$pass."'
     
     function HandleError($err)
     {
-        $this->error_message .= $err."\r\n";
+        $this->error_message = $err;
     }
 
     function Handle($msg)
     {
-        $this->message .= $msg."\r\n";
+        $this->message = $msg;
     }
 }
 

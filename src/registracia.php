@@ -56,44 +56,35 @@ if (!isset($_SESSION['loggedUser']))
 <form method="post">
   <table align="center" width="60%" border="0" id="display">
   <tr>
-  <td><span class='error1'style="color: green; text-align: center;font-size:30px;font-family:calibri"><?php echo $reg->GetMessage(); ?></span></td>
+  <td><input type="radio" checked name="type" value=0<?php if (isset($_POST['type']) && $_POST["type"]==0) echo ' checked'; ?> ><span data-trans-key="reg-form"></span></td>
+  <td><input type="radio" name="type" value=1<?php if (isset($_POST['type']) && $_POST["type"]==1) echo ' checked'; ?> ><span data-trans-key="reg-form"></span></td>
   </tr>
   <tr>
-  <td><span class='error2'style="color: red; text-align: center;font-size:30px;font-family:calibri"><?php echo $reg->GetErrorMessage(); ?></span></td>
+  <td data-trans-key="reg-form"></td>
+  <td><input type="text" name="uname" id="uname" value="<?php if (isset($_POST["uname"])) echo $_POST["uname"];?>" data-trans-key="reg-form" /></td>
   </tr>
   <tr>
-  <td><input type="radio" checked name="type" value=0<?php if (isset($_POST['type']) && $_POST["type"]==0) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
-  <td><input type="radio" name="type" value=1<?php if (isset($_POST['type']) && $_POST["type"]==1) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
+  <td data-trans-key="reg-form"></td>
+  <td><input type="email" name="email" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" data-trans-key="reg-form" /></td>
   </tr>
   <tr>
-  <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
+  <td data-trans-key="reg-form"></td>
+  <td><input type="password" name="pass" data-trans-key="reg-form"  /></td>
   </tr>
   <tr>
-  <td data-trans="reg-form"></td>
-  <td><input type="text" name="uname" id="uname" value="<?php if (isset($_POST["uname"])) echo $_POST["uname"];?>" data-trans="reg-form" /></td>
+  <td data-trans-key="reg-form"></td>
+  <td><input type="password" name="pass2" data-trans-key="reg-form"  /></td>
   </tr>
   <tr>
-  <td data-trans="reg-form"></td>
-  <td><input type="email" name="email" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" data-trans="reg-form" /></td>
-  </tr>
-  <tr>
-  <td data-trans="reg-form"></td>
-  <td><input type="password" name="pass" data-trans="reg-form"  /></td>
-  </tr>
-  <tr>
-  <td data-trans="reg-form"></td>
-  <td><input type="password" name="pass2" data-trans="reg-form"  /></td>
-  </tr>
-  <tr>
-  <td data-trans="reg-form"></td>
+  <td data-trans-key="reg-form"></td>
   <td><textarea cols="25" rows="3" name="os" id="os" ><?php if (isset($_POST["os"])) echo $_POST["os"];?></textarea></td>
   </tr>
   <tr>
-  <td><input type="radio" checked name="liga" value=1<?php if (isset($_POST['liga']) && $_POST["liga"]==1) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
-  <td><input type="radio" name="liga" value=0<?php if (isset($_POST['liga']) && $_POST["liga"]==0) echo ' checked'; ?> ><span data-trans="reg-form"></span></td>
+  <td><input type="radio" checked name="liga" value=1<?php if (isset($_POST['liga']) && $_POST["liga"]==1) echo ' checked'; ?> ><span data-trans-key="reg-form"></span></td>
+  <td><input type="radio" name="liga" value=0<?php if (isset($_POST['liga']) && $_POST["liga"]==0) echo ' checked'; ?> ><span data-trans-key="reg-form"></span></td>
   </tr>
   <tr>
-  <td><input type="submit" name="registrovat" data-trans="reg-form"></td>
+  <td><input type="submit" name="registrovat" data-trans-key="reg-form"></td>
   </tr>
   </table>
   </form>
@@ -111,6 +102,9 @@ if (!isset($_SESSION['loggedUser']))
   </script>
 
 <?php
+echoMessage($reg->GetMessage());
+$err = $val->GetErrorMessage();
+echoError(!empty($err) ? $err : $reg->GetErrorMessage());
 page_footer()
 ?>
 

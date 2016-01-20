@@ -66,12 +66,12 @@ class Solution extends Context {
 	
 			<br>			
 			<table cellpadding="3">
-			  <caption><h2> Prílohy: </h2></caption>
+			  <caption><h2 data-trans-key="solution-edit-page"></h2></caption>
 			  <tr>
-				<th width="5%">Typ</th>
-				<th width="30%">Názov</th>
-				<th width="60%">Link</th>
-				<th width="5%">Zmaž</th>
+				<th width="5%" data-trans-key="solution-edit-page"></th>
+				<th width="30%" data-trans-key="solution-edit-page"></th>
+				<th width="60%" data-trans-key="solution-edit-page"></th>
+				<th width="5%" data-trans-key="solution-edit-page"></th>
 			  </tr>
 			  <?php
 			  foreach ($this->attachments as $attachment) {
@@ -107,10 +107,10 @@ class Solution extends Context {
 			
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
 			
-			<h2> Pridaj videá k riešeniu zo serveru Youtube (Každé video vlož do nového riadku.) </h2>
+			<h2 data-trans-key="solution-edit-page"></h2>
 			<textarea name="textVideo" cols="80" rows="3" ></textarea>
 			
-			<h2> Nahraj súbory (Veľkosť súboru nemôže presiahnúť 10 MB)</h2>
+			<h2 data-trans-key="solution-edit-page"></h2>
 			Vyber súbor: <input type="file" name="uploadedFiles[]" multiple />
 			
 			<br>

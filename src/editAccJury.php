@@ -42,22 +42,22 @@ if (!isset($_SESSION['loggedUser']))
   <td><span class='error2'style="color: red; text-align: center;font-size:30px;font-family:calibri"><?php echo $edit->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td data-trans="edit-jury-form"></td>
-  <td><input type="email" name="email" value="<?php if (isset($udaje["mail"])) echo $udaje["mail"];?>" data-trans="edit-jury-form" /></td>
+  <td data-trans-key="edit-jury-form"></td>
+  <td><input type="email" name="email" value="<?php if (isset($udaje["mail"])) echo $udaje["mail"];?>" data-trans-key="edit-jury-form" /></td>
   </tr>
   <tr>
   <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
   </tr>
   <tr>
-  <td data-trans="edit-jury-form"></td>
-  <td><input type="password" name="pass" data-trans="edit-jury-form" /></td>
+  <td data-trans-key="edit-jury-form"></td>
+  <td><input type="password" name="pass" data-trans-key="edit-jury-form" /></td>
   </tr>
   <tr>
-  <td data-trans="edit-jury-form"></td>
-  <td><input type="password" name="pass2" data-trans="edit-jury-form" /></td>
+  <td data-trans-key="edit-jury-form"></td>
+  <td><input type="password" name="pass2" data-trans-key="edit-jury-form" /></td>
   </tr>
   <tr>
-  <td><input type="submit" name="save" data-trans="edit-jury-form"></td>
+  <td><input type="submit" name="save" data-trans-key="edit-jury-form"></td>
   </tr>
   </table>
   </form>

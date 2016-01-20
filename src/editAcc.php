@@ -48,46 +48,39 @@ if (!isset($_SESSION['loggedUser']))
 <form method="post">
   <table align="center" width="60%" border="0" id="display">
   <tr>
-  <td><span class='error1'style="color: green; text-align: center;font-size:30px;font-family:calibri"><?php echo $edit->GetMessage(); ?></span></td>
+  <td data-trans-key="edit-team-form"></td>
+  <td><input type="text" name="uname" id="uname" value="<?php if (isset($udaje["name"])) echo $udaje["name"];?>" data-trans-key="edit-team-form"/></td>
   </tr>
   <tr>
-  <td><span class='error2'style="color: red; text-align: center;font-size:30px;font-family:calibri"><?php echo $edit->GetErrorMessage(); ?></span></td>
+  <td data-trans-key="edit-team-form"></td>
+  <td><input type="email" name="email" value="<?php if (isset($udaje["mail"])) echo $udaje["mail"];?>" data-trans-key="edit-team-form"/></td>
   </tr>
   <tr>
-  <td data-trans="edit-team-form"></td>
-  <td><input type="text" name="uname" id="uname" value="<?php if (isset($udaje["name"])) echo $udaje["name"];?>" data-trans="edit-team-form"/></td>
+  <td data-trans-key="edit-team-form"></td>
+  <td><input type="password" name="pass" data-trans-key="edit-team-form"/></td>
   </tr>
   <tr>
-  <td><span class='error'style="color: red; text-align: center;font-size:20px;font-family:calibri"><?php echo $val->GetErrorMessage(); ?></span></td>
+  <td data-trans-key="edit-team-form"></td>
+  <td><input type="password" name="pass2" data-trans-key="edit-team-form"/></td>
   </tr>
   <tr>
-  <td data-trans="edit-team-form"></td>
-  <td><input type="email" name="email" value="<?php if (isset($udaje["mail"])) echo $udaje["mail"];?>" data-trans="edit-team-form"/></td>
-  </tr>
-  <tr>
-  <td data-trans="edit-team-form"></td>
-  <td><input type="password" name="pass" data-trans="edit-team-form"/></td>
-  </tr>
-  <tr>
-  <td data-trans="edit-team-form"></td>
-  <td><input type="password" name="pass2" data-trans="edit-team-form"/></td>
-  </tr>
-  <tr>
-  <td data-trans="edit-team-form"></td>
+  <td data-trans-key="edit-team-form"></td>
   <td><textarea cols="25" rows="3" name="os" id="os" ><?php if (isset($udaje["description"])) echo $udaje["description"];?></textarea></td>
   </tr>
   <tr>
-  <td><input type="radio" checked name="liga" value=1<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==1) echo ' checked'; ?>><span data-trans="edit-team-form"></span></td>
-  <td><input type="radio" name="liga" value=0<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==0) echo ' checked'; ?>><span data-trans="edit-team-form"></span></td>
+  <td><input type="radio" checked name="liga" value=1<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==1) echo ' checked'; ?>><span data-trans-key="edit-team-form"></span></td>
+  <td><input type="radio" name="liga" value=0<?php if (isset($udaje['sk_league']) && $udaje["sk_league"]==0) echo ' checked'; ?>><span data-trans-key="edit-team-form"></span></td>
   </tr>
   <tr>
-  <td><input type="submit" name="save" data-trans="edit-team-form"></td>
+  <td><input type="submit" name="save" data-trans-key="edit-team-form"></td>
   </tr>
   </table>
   </form>
 
 
   <?php
-
+echoMessage($edit->GetMessage());
+$err = $val->GetErrorMessage();
+echoError(!empty($err) ? $err : $edit->GetErrorMessage());
 page_footer()
 ?>

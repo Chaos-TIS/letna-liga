@@ -42,22 +42,22 @@ if (isset($_POST['checkbox'])) {
 			if ($result) {
 				if ($pole[0] != "video") {
 					if (unlink("attachments/solutions/".$cid."/".$pole[0]."s/".$pole[1].".".$ext)) {
-						echo "[OK] Odstranenie prílohy prebehlo úspešne.<br>";
+						echoMessage("m-attachment-deleted");
 					}
 					else {
-						echo "[ERROR] Chyba pri odstraňovaní súboru.<br>";
+						echoError("err-attachment-deletion");
 					}
 				}
 				else {
-					echo "[OK] Odstranenie prílohy prebehlo úspešne.<br>";
+					echoMessage("m-attachment-deleted");
 				}
 			}
 			else {
-				echo "[ERROR] Chyba pri odstraňovaní prílohy z databázy.".mysqli_error($conn)."<br>";
+				echoError("err-attachment-db-deletion", mysqli_error($conn));
 			}
 		}
 		else {
-			echo "[ERROR] Príloha na odstránenie sa nenašla v databáze.<br>";
+			echoError("err-attachment-not-in-db");
 		}
 	}
 }

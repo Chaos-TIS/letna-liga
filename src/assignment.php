@@ -28,7 +28,7 @@ if($link = db_connect()){
     	         if($row2['text_id']==$row['text_id_name'])  {  
                 	?>
       	          <h2> <?php echo $row2['sk']; ?> </h2>   
-                  <strong><span data-trans="assignment-page"></span>  <?php  echo $row['end']?></strong>
+                  <strong><span data-trans-key="assignment-page"></span>  <?php  echo $row['end']?></strong>
                   <?php
                 }
                 if($row2['text_id']==$row['text_id_description'])  {  
@@ -47,7 +47,7 @@ if($link = db_connect()){
   }
 }
 ?>
-<h3 data-trans="assignment-page"></h3>
+<h3 data-trans-key="assignment-page"></h3>
 <ul>
 <?php
    if(Date("Y-m-d H:i:s")>$deadline){

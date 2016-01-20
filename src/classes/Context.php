@@ -57,7 +57,7 @@ abstract class Context{
 	public function uploadFiles1($conn, $files, $kde) {
 		$fileCount = count($files["name"]);
 		if ($fileCount + count($this->attachments) > 100) {
-			echo "[ERROR] Počet príloh presiahol maximálny povolený počet (100).";
+			echoError("err-too-many-attachments");
 			return;
 		}
 		for ($i = 0; $i < $fileCount; $i++) {
@@ -75,16 +75,16 @@ abstract class Context{
 						mkdir($kde, 0777, true);
 					}
 					if (move_uploaded_file($files["tmp_name"][$i], $target_file)) {
-						echo "[OK] Nahratie Súboru: ".$subor."<br>";
+						echoMessage("m-file-uploaded", $subor);
 					} else {
 						mysqli_query($conn,"DELETE FROM ".$typ."s WHERE ".$typ."_id = ".mysqli_insert_id($conn));
-						echo "[ERROR] Problém s uložením na server: ".$subor."<br>";
+						echoError("err-file-upload", $subor);
 					}
 				} else {
-					echo "[ERROR] Problém s uložením do databázy: ".$subor." ".mysqli_error($conn)."<br>";
+					echoError("err-file-upload-db", $subor.": ".mysqli_error($conn));
 				}		
 			} else {
-				echo "[ERROR] Nahratie Súboru: ".$subor." Nahrať je možné len súbory menšie ako 10MB <br>";
+				echoError("err-file-too-big", $subor);
 			}
 		}
 	}
@@ -97,9 +97,9 @@ abstract class Context{
 			if (strlen($pole[$i]) > 11) {
 				$video = substr(trim($pole[$i]), -11);
 				if (mysqli_query($conn,"INSERT INTO videos (context_id,link) VALUES (".$this->id.",\"".$video."\")")) {
-					echo "[OK] Video ".$video." <br>";
+					echoMessage("m-video-uploaded", $video);
 				} else {
-					echo "[ERROR] Video: chyba pri vkladaní do databázy ".$video." <br>".mysqli_error($conn);
+					echoError("err-video-upload", $video.": ".mysqli_error($conn));
 				}
 			}		
 		}
