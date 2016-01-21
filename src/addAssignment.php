@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__FILE__)."/includes/functions.php");
-page_head("Letná liga FLL - Pridanie zadania");
+page_head("Pridanie zadania");
 page_nav();
 
 /*
@@ -8,8 +8,8 @@ $conn = db_connect();
 $_SESSION["loggedUser"] = Organisator::getFromDatabaseByID($conn, 1);
 */
 
-if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) die("Nie si prihlásený!");
-if (get_class($_SESSION["loggedUser"]) == "Team") die("Iba administrátor alebo rozhodca môže pridávať zadania!");
+if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
+if (get_class($_SESSION["loggedUser"]) == "Team") dieWithError("err-add-assignment-rights");
 
 $conn = db_connect();
 
@@ -18,11 +18,11 @@ if(isset($_GET["cid"]) && !empty($_GET["cid"])) {
 	if (mysqli_query($conn,$sql_get_assignment)) {
 		$assignment = new Assignment($conn, $_GET["cid"]);
 		if (!$_SESSION["loggedUser"]->isAdmin() && $_SESSION["loggedUser"]->getId() != $assignment->getId()) {
-			die("Nemáš práva k editovaniu tohto riešenia!");
+			dieWithError("err-edit-assignment-rights");
 		}
 	}
 	else {
-		die("Toto zadanie neexistuje!");
+		dieWithError("err-assignment-not-exists");
 	}
 }
 else {

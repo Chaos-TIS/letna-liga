@@ -1,6 +1,6 @@
 <?php
 include 'includes/functions_reg.php';
-page_head("Registration");
+page_head("Registrácia");
 page_nav();
 session_unset();
 $val = new Validate();

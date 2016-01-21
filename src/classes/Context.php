@@ -23,12 +23,12 @@ abstract class Context{
 	public function getAttachmentsTableHtml() {
 		?>
 		<table cellpadding="3">
-		  <caption><h2> Prílohy: </h2></caption>
-		  <tr>
-			<th width="5%">Typ</th>
-			<th width="30%">Názov</th>
-			<th width="60%">Link</th>
-			<th width="5%">Zmaž</th>
+		  <caption><h2 data-trans-key="context-edit-page"></h2></caption>
+			  <tr>
+				<th width="5%" data-trans-key="context-edit-page"></th>
+				<th width="30%" data-trans-key="context-edit-page"></th>
+				<th width="60%" data-trans-key="context-edit-page"></th>
+				<th width="5%" data-trans-key="context-edit-page"></th>
 		  </tr>
 		  <?php
 		  foreach ($this->attachments as $attachment) {
@@ -163,22 +163,22 @@ abstract class Context{
 				if ($result) {
 					if ($pole[0] != "video") {
 						if (unlink($kde.$pole[0]."s/".$pole[1].".".$ext)) {
-							echo "[OK] Odstranenie prílohy prebehlo úspešne.<br>";
-						}
-						else {
-							echo "[ERROR] Chyba pri odstraňovaní súboru.<br>";
-						}
+							echoMessage("m-attachment-deleted");
 					}
 					else {
-						echo "[OK] Odstranenie prílohy prebehlo úspešne.<br>";
+						echoError("err-attachment-deletion");
 					}
 				}
 				else {
-					echo "[ERROR] Chyba pri odstraňovaní prílohy z databázy.".mysqli_error($conn)."<br>";
+					echoMessage("m-attachment-deleted");
 				}
 			}
 			else {
-				echo "[ERROR] Príloha na odstránenie sa nenašla v databáze.<br>";
+				echoError("err-attachment-db-deletion", mysqli_error($conn));
+			}
+		}
+		else {
+			echoError("err-attachment-not-in-db");
 			}
 		}
 		

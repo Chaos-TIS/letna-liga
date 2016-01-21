@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 define("SK", 0);
 define("ENG", 1);
@@ -19,6 +19,7 @@ function page_head($title)
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="keywords" content="fll, lego, letna liga">
         <meta name="author" content="Chaos">
+        <meta data-trans-title="<?php echo $title ?>">
         <title><?php echo $title ?></title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link type="text/css" href="styles.css" rel="stylesheet">
@@ -215,6 +216,11 @@ function checkUploadFile($vel)
 	}
 }
 
+function dieWithError($key){
+    echoError($key);
+    die();
+}
+
 function echoError($key, $info = null){
     ?><script>dict.echoError('<?php echo $key;?>', '<?php echo $info;?>');</script>
     <?php
@@ -226,16 +232,16 @@ function echoMessage($key, $info = null){
 }
 
 function db_connect() {
-    if ($link = mysqli_connect('localhost', '...', '...')) {
+    if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
         if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
         } else {
-            echoError('db-choice-fail');
+            echoError('err-db-choice-fail');
             return false;
         }
     } else {
-        echoError('db-connection-fail');
+        echoError('err-db-connection-fail');
         return false;
     }
 }
@@ -399,12 +405,12 @@ function sprava_uctov() {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echoError('db-query-fail');
+        echoError('err-db-query-fail');
     }
     mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('db-connection-fail');
+        echoError('err-db-connection-fail');
     }
 }
 
@@ -439,12 +445,12 @@ function sprava_uctov_jury() {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echoError('db-query-fail');
+        echoError('err-db-query-fail');
     }
     mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('db-connection-fail');
+        echoError('err-db-connection-fail');
     }
 }
 
@@ -458,7 +464,7 @@ function prehlad_zadani_nezverejnene($typ) {
             echo '<p>';
         ?>
             <form method="post">
-                <h1> Nezverejnené zadania</h1>
+                <h1 data-trans-key="unpublished-assignments"></h1>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
@@ -482,12 +488,12 @@ function prehlad_zadani_nezverejnene($typ) {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
+        echoError('err-db-query-fail');
     }
-    mysqli_close($link);
+        mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
+        echoError('err-db-connection-fail');
     }
 }
 
@@ -500,7 +506,7 @@ function prehlad_zadani_zverejnene() {
             echo '<p>';
         ?>
             <form method="post">
-            <h1> Zverejnené zadania</h1>
+            <h1 data-trans-key="published-assignments"></h1>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
@@ -517,12 +523,12 @@ function prehlad_zadani_zverejnene() {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
+        echoError('err-db-query-fail');
     }
-    mysqli_close($link);
+        mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
+        echoError('err-db-connection-fail');
     }
 }
 

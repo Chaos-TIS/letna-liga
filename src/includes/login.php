@@ -27,7 +27,7 @@ if ($link = db_connect()) {
                         $_SESSION['loggedUser'] = new Jury($row['id'], $row['mail'], $row['validated']);
                     }
                     else {
-                        $error = 'jury-acc-not-validated';
+                        $error = 'err-jury-acc-not-validated';
                     }
                 }
                 else {
@@ -36,11 +36,11 @@ if ($link = db_connect()) {
             }
         }
         else {
-            $error = 'wrong-password';
+            $error = 'err-wrong-password';
         }
     }
     else {
-        $error = 'non-existent-acc';
+        $error = 'err-non-existent-acc';
     }
 }
 if ($error !== null){

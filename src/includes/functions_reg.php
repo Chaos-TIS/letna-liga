@@ -153,7 +153,7 @@ class Reg{
     }
     else
         {
-            $this->HandleError("db-connection-fail");
+            $this->HandleError("err-db-connection-fail");
         }
 
     }

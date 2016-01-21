@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__FILE__)."/includes/functions.php");
-page_head("Letná liga FLL - Pridanie riešenia");
+page_head("Pridanie riešenia");
 page_nav();
 
 /*
@@ -9,10 +9,10 @@ $_SESSION["loggedUser"] = Team::getFromDatabaseByID($conn,6);
 $_SESSION["assignment"] = new Assignment($conn,1);
 */
 
-if (!isset($_SESSION["assignment"]) || $_SESSION["assignment"] == null) die("Nie je vybrane zadanie!");
-if (!$_SESSION["assignment"]->isAfterDeadline()) die("Zadanie je po deadline!");
-if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) die("Nie si prihlásený!");
-if (get_class($_SESSION["loggedUser"]) != "Team") die("Iba súťažiaci môže pridávať riešenia úloh!");
+if (!isset($_SESSION["assignment"]) || $_SESSION["assignment"] == null) dieWithError("err-no-assignment-chosen");
+if (!$_SESSION["assignment"]->isAfterDeadline()) dieWithError("err-assignment-deadline");
+if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
+if (get_class($_SESSION["loggedUser"]) != "Team") dieWithError("err-add-solution-rights");
 
 $sql_get_solution = "SELECT c.context_id as 'context_id' FROM solutions s, contexts c WHERE s.context_id = c.context_id AND s.assignment_id = ".$_SESSION["assignment"]->getId()." AND c.user_id = ".$_SESSION["loggedUser"]->getId();
 $conn = db_connect();

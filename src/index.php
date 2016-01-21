@@ -18,6 +18,7 @@ else
                 });
             </script>
 
+            <!-----------------------------------------INDEX PAGE TOP SK----------------------------------------------------->
             <div data-trans-lang="<?php echo SK?>">
                 <h2>Vitajte a pozrite si:</h2>
                 <a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/archive_control/show_year/2015">Zadania a riešenia letnej ligy</a>
@@ -53,6 +54,7 @@ else
                 <h2>Kompletné výsledky</h2>
             </div>
 
+            <!-----------------------------------------INDEX PAGE TOP ENG----------------------------------------------------->
             <div data-trans-lang="<?php echo ENG?>">
                 <h2>Welcome! You shouldn't miss the following:</h2>
                 <a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/archive_control/show_year/2015">Assignments and solutions of the summer league</a>
@@ -91,6 +93,7 @@ else
             <p id="results"><span  data-trans-key="table-loading"></span></p>
 
             <?php ob_start(); ?>
+            <!-----------------------------------------INDEX PAGE JURY IMAGES----------------------------------------------------->
             <div class="jury-img">
                 <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/lubos_miklosovic.jpg"><p>Luboš Miklošovič</p>
                 <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michal_fikar.jpg"><p>Michal Fikar</p>
@@ -102,6 +105,7 @@ else
             <?php $juryImages = ob_get_contents();
             ob_end_clean(); ?>
 
+            <!-----------------------------------------INDEX PAGE BOTTOM SK----------------------------------------------------->
             <div data-trans-lang="<?php echo SK?>">
                 <h2>Ako hodnotíme?</h2>
                 <p>
@@ -122,6 +126,7 @@ else
 
             </div>
 
+            <!-----------------------------------------INDEX PAGE BOTTOM ENG----------------------------------------------------->
             <div data-trans-lang="<?php echo ENG?>">
                 <h2>How do we rate?</h2>
                 <p>

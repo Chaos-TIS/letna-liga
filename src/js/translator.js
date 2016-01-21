@@ -89,21 +89,27 @@ var dict = {
         $("[data-trans-lang]").each(function() {
             $(this).css("display", (toLanguageCode === parseInt($(this).attr("data-trans-lang"))) ? "inline" : "none");
         });
+
+        if (scope === '*') {
+            var titleMeta = $("meta[data-trans-title]")[0];
+            if (typeof titleMeta != "undefined"){
+                if (toLanguageCode === 0){
+                    $('title').html(titleMeta.getAttribute("data-trans-title"));
+                }
+                else{
+                    $('title').html(dict.get(titleMeta.getAttribute("data-trans-title"), toLanguageCode-1));
+                }
+            }
+        }
     }
 };
 
+/*************************************TRANSLATIONS****************************************/
+/*---------------------------------------------------------------------------------------*/
+
 dict.set('main-header', ['Letná liga FLL', 'Summer league FLL']);
-dict.set('delete', ['Odstrániť', 'Delete']);
-dict.set('validate', ['Potvrdiť', 'Validate']);
 
-dict.set('logged-in', ['Prihlásený', 'Logged in as']);
-dict.set('logout', ['Odhlásiť', 'Logout']);
-
-dict.set('assignment-page', [
-    ['Riešenie možno odovzdávať do:', 'Deadline of this assingment is:'],
-    ['Riešenia:', 'Solutions:']]);
-
-/*--------------------------------------LOGIN FORM----------------------------------------*/
+/*-------------------------------------LOGIN-----------------------------------------*/
 dict.set('login-form', [['Prihlásenie', 'Login form'],
                         ['E-mailová adresa:', 'E-mail address:'],
                         ['Heslo:', 'Password:'],
@@ -112,7 +118,14 @@ dict.set('login-form', [['Prihlásenie', 'Login form'],
                         ['Registrácia', 'Registration']
 ]);
 
-/*----------------------------------REGISTRATION FORM-------------------------------------*/
+dict.set('logged-in', ['Prihlásený', 'Logged in as']);
+dict.set('logout', ['Odhlásiť', 'Logout']);
+
+dict.set('err-non-existent-acc', ['Neexistuje účet zaregistrovaný na tento e-mail!', 'No account is registered with this e-mail!']);
+dict.set('err-wrong-password', ['Zadali ste nesprávne heslo!', 'You have entered a wrong password!']);
+dict.set('err-jury-acc-not-validated', ['Tento rozhodcovský účet ešte nebol potvrdený!', 'This jury account has not been validated yet!']);
+
+/*----------------------------------REGISTRATION-------------------------------------*/
 dict.set('reg-form', [
     ['Súťažný tím', 'Competing team'],
     ['Rozhodca', 'Jury'],
@@ -129,6 +142,27 @@ dict.set('reg-form', [
     ['Open liga', 'Open league'],
     ['Registrovať', 'Register']
 ]);
+
+dict.set('m-registration-success', ['Boli ste úspešne zaregistrovaný.', 'Your account has been succesfully registered.']);
+
+dict.set('err-name-duplicate', ['Zadané meno sa nachádza v databáze!', 'The entered name is already taken!']);
+dict.set('err-email-duplicate', ['Zadaný email sa nachádza v databáze!', 'The entered email is already taken!']);
+dict.set('err-no-name', ['Nezadali ste meno!', 'You have not entered a name!']);
+dict.set('err-password-match', ['Zadané heslá sa nezhodujú!', 'The passwords do not match!']);
+dict.set('err-no-email', ['Nezadali ste email!', 'You have not entered an email!']);
+dict.set('err-invalid-email', ['Zlý formát emailu!', 'Invalid email format!']);
+dict.set('err-no-password', ['Nezadali ste heslo!', 'You have not entered a password!']);
+dict.set('err-registration', ['Nastala chyba pri registrácii.', 'An error has occured during the registration.']);
+
+/*----------------------------------ACCOUNT MANAGEMENT------------------------------------*/
+dict.set('delete', ['Odstrániť', 'Delete']);
+dict.set('validate', ['Potvrdiť', 'Validate']);
+
+dict.set('m-acc-deleted', ['Účet bol zmazaný.', 'Account has been deleted.']);
+dict.set('m-acc-validated', ['Účet bol potvrdený.', 'Account has been validated.']);
+
+dict.set('err-acc-deletion', ['Účet sa NEpodarilo zmazať z databázy.', 'It was not possible to delete the account.']);
+dict.set('err-acc-validation', ['Účet sa nepodarilo potvrdiť.', 'It was not possible to validate the account.']);
 
 /*----------------------------------EDIT TEAM ACCOUNT-------------------------------------*/
 dict.set('edit-team-form', [
@@ -177,45 +211,67 @@ dict.set('open-league', ['Open liga', 'Open league']);
 dict.set('team-name', ['Názov tímu', 'Team name']);
 dict.set('sum-points', ['Spolu', 'Sum']);
 
-/*-----------------------------------SOLUTION EDIT*--------------------------------------*/
-dict.set('solution-edit-page', [['Prílohy:', 'Attachments:'],
+/*-------------------------------------CONTEXT-----------------------------------------*/
+dict.set('context-edit-page', [['Prílohy:', 'Attachments:'],
     ['Typ', 'Type'],
     ['Názov', 'Name'],
     ['Link', 'Link'],
-    ['Zmaž', 'Delete'],
-    ['Pridaj videá k riešeniu zo serveru Youtube (Každé video vlož do nového riadku.)', 'Attach videos to your solution from Youtube (Insert every video to a new line.)'],
-    ['Nahraj súbory (Veľkosť súboru nemôže presiahnúť 10 MB)', 'Upload files (Maximum filesize is 10 MB)']]);
+    ['Zmaž', 'Delete']]);
 
-/*--------------------------------------MESSAGES------------------------------------------*/
-dict.set('non-existent-acc', ['Neexistuje účet zaregistrovaný na tento e-mail!', 'No account is registered with this e-mail!']);
-dict.set('wrong-password', ['Zadali ste nesprávne heslo!', 'You have entered a wrong password!']);
-dict.set('jury-acc-not-validated', ['Tento rozhodcovský účet ešte nebol potvrdený!', 'This jury account has not been validated yet!']);
-dict.set('db-connection-fail', ['Nepodarilo sa spojiť s databázovým serverom!', 'It was not possible to connect to the database server!']);
-dict.set('db-query-fail', ['Počas získavania údajov z databázy došlo k chybe!', 'An error has occured during the execution of a database query!']);
-dict.set('db-choice-fail', ['Nepodarilo sa vybrať databázu!', 'It was not possible to connect to selected database!']);
-dict.set('err-name-duplicate', ['Zadané meno sa nachádza v databáze!', 'The entered name is already taken!']);
-dict.set('err-email-duplicate', ['Zadaný email sa nachádza v databáze!', 'The entered email is already taken!']);
-dict.set('err-no-name', ['Nezadali ste meno!', 'You have not entered a name!']);
-dict.set('err-password-match', ['Zadané heslá sa nezhodujú!', 'The passwords do not match!']);
-dict.set('err-no-email', ['Nezadali ste email!', 'You have not entered an email!']);
-dict.set('err-invalid-email', ['Zlý formát emailu!', 'Invalid email format!']);
-dict.set('err-no-password', ['Nezadali ste heslo!', 'You have not entered a password!']);
-dict.set('m-registration-success', ['Boli ste úspešne zaregistrovaný!', 'Your account has been succesfully registered!']);
-dict.set('err-registration', ['Nastala chyba pri registrácii!.', 'An error has occured during the registration!']);
 dict.set('m-attachment-deleted', ['Odstránenie prílohy prebehlo úspešne.', 'The attachment was succesfully deleted.']);
+dict.set('m-file-uploaded', ['Úspešné nahratie súboru', 'Successful upload of file']);
+dict.set('m-video-uploaded', ['Úspešné nahratie videa', 'Successful upload of video']);
+
 dict.set('err-attachment-deletion', ['Chyba pri odstraňovaní súboru.', 'An error has occured during the attachment deletion.']);
 dict.set('err-attachment-db-deletion', ['Chyba pri odstraňovaní prílohy z databázy.', 'A database error has occured during the attachment deletion.']);
 dict.set('err-attachment-not-in-db', ['Príloha na odstránenie sa nenašla v databáze.', 'The attachment to be deleted could not be found in the database.']);
-dict.set('m-acc-deleted', ['Účet bol zmazaný.', 'Account has been deleted.']);
-dict.set('err-acc-deletion', ['Účet sa NEpodarilo zmazať z databázy.', 'It was not possible to delete the account.']);
-dict.set('m-acc-validated', ['Účet bol potvrdený.', 'Account has been validated.']);
-dict.set('err-acc-validation', ['Účet sa nepodarilo potvrdiť.', 'It was not possible to validate the account.']);
-dict.set('m-changes-saved', ['Zmeny boli ulozené do databázy.', 'The changes have been saved to the database.']);
-dict.set('err-changes-saving', ['Nepodarilo sa uložiť zmeny.', 'It was not possible to save the changes.']);
 dict.set('err-too-many-attachments', ['Počet príloh presiahol maximálny povolený počet.', 'You have exceeded the maximum number of attachments.']);
-dict.set('m-file-uploaded', ['Úspešné nahratie súboru', 'Successful upload of file']);
 dict.set('err-file-upload', ['Nepodarilo sa nahrať súbor', 'It wasnot possible to upload file']);
 dict.set('err-file-upload-db', ['Do databázy as nepodarilo vložiť súbor', 'An error has occured during the database insertion of file']);
 dict.set('err-file-too-big', ['Limit 10 MB na prílohu bol prekročený súborom', 'The following file has exceeded the maximum filesize of 10 MB']);
-dict.set('m-video-uploaded', ['Úspešné nahratie videa', 'Successful upload of video']);
-dict.set('err-video-upload', ['Do databázy as nepodarilo vložiť video', 'An error has occured during the database insertion of video']);
+dict.set('err-video-upload', ['Do databázy sa nepodarilo vložiť video', 'An error has occured during the database insertion of video']);
+
+
+/*-------------------------------------SOLUTION-----------------------------------------*/
+ dict.set('solution-edit-page', [['Pridaj videá k riešeniu zo serveru Youtube (Každé video vlož do nového riadku.)', 'Attach videos to your solution from Youtube (Insert every video to a new line.)'],
+    ['Nahraj súbory (Veľkosť súboru nemôže presiahnúť 10 MB)', 'Upload files (Maximum filesize is 10 MB)']]);
+
+dict.set('err-assignment-deadline', ['Zadanie je po deadline!', 'The submission deadline is over!']);
+dict.set('err-add-solution-rights', ['Iba súťažiaci môžu pridávať zadania!', 'Only the competitors can submit solutions!']);
+dict.set('new-assignment', ['Nové zadanie', 'New assignment']);
+
+/*------------------------------------ASSIGNMENT----------------------------------------*/
+dict.set('assignment-page', [
+    ['Riešenie možno odovzdávať do:', 'Deadline of this assingment is set to:'],
+    ['Riešenia:', 'Solutions:']]);
+
+dict.set('published-assignments', ['Zverejnené zadania', 'Published assignments']);
+dict.set('unpublished-assignments', ['Nezverejnené zadania', 'Unpublished assignments']);
+
+dict.set('m-date-changed', ['Dátum bol úspešne zmenený.', 'The date has been succesfully changed.']);
+
+dict.set('err-date-changing', ['Dátum sa nepodarilo zmeniť.', 'An error has occured during changing the date.']);
+dict.set('err-add-assignment-rights', ['Iba administrátor alebo rozhodca môže pridávať zadania!', 'Only the administrator and jury members can create assignments!']);
+dict.set('err-assignment-not-exists', ['Toto zadanie neexistuje!', 'This assignments does not exists!']);
+dict.set('err-edit-assignment-rights', ['Nemáš práva k editovaniu tohto riešenia!', 'You have insufficient rights to edit this assignment!']);
+dict.set('err-no-assignment-chosen', ['Nie je vybrane zadanie!', 'No assignment has been chosen!']);
+
+/*--------------------------------------MESSAGES------------------------------------------*/
+dict.set('m-changes-saved', ['Zmeny boli ulozené do databázy.', 'The changes have been saved to the database.']);
+
+dict.set('err-changes-saving', ['Nepodarilo sa uložiť zmeny.', 'It was not possible to save the changes.']);
+dict.set('err-db-connection-fail', ['Nepodarilo sa spojiť s databázovým serverom.', 'It was not possible to connect to the database server.']);
+dict.set('err-db-query-fail', ['Počas získavania údajov z databázy došlo k chybe.', 'An error has occured during the execution of a database query.']);
+dict.set('err-db-choice-fail', ['Nepodarilo sa vybrať databázu.', 'It was not possible to connect to selected database.']);
+dict.set('err-not-logged-in', ['Nie si prihlásený!', 'You are not logged in!']);
+
+/*--------------------------------------TITLES------------------------------------------*/
+dict.set('Pridanie zadania', ['Add assignment']);
+dict.set('Letná liga FLL', ['Summer league FLL']);
+dict.set('Pridanie riešenia', ['Add solution']);
+dict.set('Úprava účtu', ['Account edit']);
+dict.set('Registrácia', ['Registration']);
+dict.set('Správa účtov', ['Accounts management']);
+dict.set('Prehľad zadaní', ['Assignments overview']);
+
+dict.set('', ['', '']);

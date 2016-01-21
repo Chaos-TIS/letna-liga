@@ -16,7 +16,7 @@ function zmaz_acc($nazov) {
         mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom!
-        echoError('db-connection-fail');
+        echoError('err-db-connection-fail');
     }
 }
 
@@ -35,7 +35,7 @@ function set_jury($nazov) {
         mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom!
-        echoError('db-connection-fail');
+        echoError('err-db-connection-fail');
     }
 }
 
@@ -90,7 +90,7 @@ t.description='".$os."'
     
 
         }else{
-            $this->HandleError("db-connection-fail");
+            $this->HandleError("err-db-connection-fail");
         }
     }
 
@@ -172,7 +172,7 @@ u.password =  '".$pass."'
     
 
         }else{
-            $this->HandleError("db-connection-fail");
+            $this->HandleError("err-db-connection-fail");
         }
     }
 

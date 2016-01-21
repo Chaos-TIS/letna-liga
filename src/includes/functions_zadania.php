@@ -7,15 +7,15 @@ function set_date($contextid,$start_dat,$end_dat) {
         $result = mysqli_query($link,$sql); // vykonaj dopyt
         if ($result) {
             // dopyt sa podarilo vykonať
-            echo '<p><strong>Datum bol zmeneny</strong></p>';
+            echoMessage('m-date-changed');
         } else {
             // dopyt sa NEpodarilo vykonať!
-            echo '<p class="chyba">Datum sa NEpodarilo zmenit</p>';
+            echoError('err-date-changing');
         }
         mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom!
-        echo '<p class="chyba">NEpodarilo sa spojiť s databázovým serverom</p>';
+        echoError('err-db-connection-fail');
     }
 }
 ?>

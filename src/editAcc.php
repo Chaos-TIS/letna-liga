@@ -1,6 +1,6 @@
 <?php
 include 'includes/functions_editAcc.php';
-page_head("EditAccUser");
+page_head("Úprava účtu");
 page_nav();
 session_unset();
 $val = new Validate();
