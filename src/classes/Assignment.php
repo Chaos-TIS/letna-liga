@@ -52,9 +52,7 @@ class Assignment extends Context {
 		    while ($solutions_row = mysqli_fetch_assoc($solutions)) {	      
 				 array_push($this->solutions,new Solution($conn, $solutions_row['context_id'], Team::getFromDatabaseByID($conn, $solutions_row['user_id']), $this));
       } 
-		
-		}
-		
+		}   		
 	}
 	
 	public function uploadFiles($conn, $subory) {
@@ -138,7 +136,7 @@ class Assignment extends Context {
 	}
 	
 	public function getPreviewHtml(){
-	   ?>
+	 ?>
 	  <h2> <?php  echo $this->name_sk?> </h2>  
     <strong>Riešenie možno odovzdávať do:  <?php  echo $this->deadline;?></strong>  
     <div> <?php echo $this->text_sk; ?> </div> 
@@ -154,76 +152,17 @@ class Assignment extends Context {
         ?>
         <li><a href="solution.php?id=<?php echo $team->getId(); ?>"> <?php echo $team3; ?> </a> </li> 
         <?php                  
-      } 
+      }
     }
     else if (isset($_SESSION['loggedUser'])){
+      echo "eeha6532";
   				if(is_a($_SESSION['loggedUser'], 'Team')){
-             ?>  <a href="addSolution.php">Pridať zadanie</a>
-             <?php           
+          echo "eeha";
           }
-          else if (is_a($_SESSION['loggedUser'], 'Jury')){
-              ?> 
-                <a href="#">Pridať hodnotenie</a>
-             <?php
-          }
-          else if (is_a($_SESSION['loggedUser'], 'Administrator')){
-              ?>  <table>
-            <?php
-              if($link = db_connect()){
-                ?>
-                <tr>
-                <th></th>
-                <?php
-                  $sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 ORDER BY s.user_id";
-                  $result = mysqli_query($link,$sql);
-                  if($result!=false){
-                    $pocet=1;
-                    $rozhodcovia = array();
-                    while ($row = mysqli_fetch_assoc($result)) { 
-                      ?>            
-                      <th>Rozhodca <?php echo $pocet;?></th>
-                      <?php
-                        array_push($rozhodcovia, $row['user_id']);
-                        $pocet++;
-                    } 
-                  } ?>
-                  </tr>
-                <?php
-            
-                for($i=0;$i<count($this->solutions);$i++){
-                ?>
-                  <tr>
-                    <th><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
-           
-                      <?php
-                      for($j=0;$j<count($rozhodcovia);$j++){
-                        $sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
-                        $result = mysqli_query($link,$sql);
-                        if($result!=false){
-                          ?> <td>Ukončené</td> <?php                        
-                        }
-                        else{
-                          ?> <td>Nehodnotené</td> <?php    
-                        }
-                        
-                      }
-                
-                ?>
-                  </tr>  
-                  <?php              
-                }
-              }
-            ?>
-            </table>
-            <?php    
-          }
-    } 
-    else{
-        
-    } 
+    }
     ?>
-      </ul>
-      <?php
+    </ul>
+    <?php
 	}
 	
 	public function getResultTableRowHTML(){

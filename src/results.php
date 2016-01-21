@@ -24,7 +24,7 @@ else
                 });
             </script>
 
-            <p id="results"><span data-trans="table-loading"></span></p>
+            <p id="results"><span data-trans-key="table-loading"></span></p>
 
         </div>
 

@@ -1,6 +1,6 @@
 <?php
 include 'includes/functions_zadania.php';
-page_head("PrehladZadani");
+page_head("Prehľad zadaní");
 page_nav();
 /*
 $conn = db_connect();
@@ -19,7 +19,7 @@ if (isset($_SESSION['loggedUser'])&&($_SESSION['loggedUser']->getShortName() == 
 	prehlad_zadani_zverejnene();
 	?>
 	<form action="addAssignment.php">
-		<input type="submit" value="Nové zadanie">
+		<input type="submit" data-trans-key="new-assignment">
 	</form>
 	<?php
 }else{
