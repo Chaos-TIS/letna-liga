@@ -1,6 +1,6 @@
 <?php
 include 'includes/functions_editAcc.php';
-page_head("Správa účtov");
+page_head("SpravaUctov");
 page_nav();
 if (!isset($_SESSION['loggedUser']))
   get_login_form();

@@ -142,18 +142,6 @@ table {
 	display: inline-block;
 }
 
-.center, #error-message, #success-message {
+.center {
 	text-align: center;
-}
-
-[data-trans-lang] {
-	display: none;
-}
-
-#error-message *{
-	color: red;
-}
-
-#success-message *{
-	color: green;
 }

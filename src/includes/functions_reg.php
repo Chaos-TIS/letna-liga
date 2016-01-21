@@ -17,7 +17,7 @@ class Validate {
             }
             else
             {
-            $this->HandleError("err-name-duplicate");
+            $this->HandleError("Zadané meno sa nachádza v databáze.");
             return false;
             }
         }
@@ -37,7 +37,7 @@ class Validate {
             }
             else
             {
-            $this->HandleError("err-email-duplicate");
+            $this->HandleError("Zadaný email sa nachádza v databáze.");
             return false;
             }
         }
@@ -45,7 +45,7 @@ class Validate {
 
     function validate_name($n) {
     	if (empty($n)) {
-            $this->HandleError('err-no-name');
+            $this->HandleError("Zadaj meno.");
             return false;
         }
         return true;
@@ -54,7 +54,7 @@ class Validate {
     function validate_pass($p1,$p2) {
     	if ($p1 != $p2)
     	{
-    		$this->HandleError("err-password-match");
+    		$this->HandleError("Zadané heslá sa nezhodujú.");
     		return false;
     	}else{
     		return true;
@@ -64,12 +64,12 @@ class Validate {
     function validate_mail($e){
     	
     	if (empty($e)) {
-        $this->HandleError("err-no-email");
+        $this->HandleError("Zadaj email.");
         return false;
       } else {
         // check if e-mail address is well-formed
         if (!filter_var($e, FILTER_VALIDATE_EMAIL)) {
-          $this->HandleError("err-invalid-email");
+          $this->HandleError("Zlý formát emailu."); 
           return false;
         }
       }
@@ -79,7 +79,7 @@ class Validate {
 
     function required_pass($p) {
     	if (empty($p)){
-    		$this->HandleError("err-no-password");
+    		$this->HandleError("Zadaj heslo.");
     		return false;
     	}
     	return true;
@@ -98,7 +98,7 @@ class Validate {
     
     function HandleError($err)
     {
-        $this->error_message = $err;
+        $this->error_message .= $err."\r\n";
     }
 }
 
@@ -122,7 +122,7 @@ class Reg{
                 $result = mysqli_query($link,$sql);
                 if($result)
                 {
-                    $this->Handle("m-registration-success");
+                    $this->Handle("Bol ste uspesne zaregistrovany."); 
                     ?>
                     <meta http-equiv="refresh" content="4;url=index.php"> 
                     <?php      
@@ -135,8 +135,8 @@ class Reg{
                 WHERE LOWER(u.mail) = '".$email."'";
                 $result = mysqli_query($link,$sql);
                 if($result)
-                {
-                    $this->Handle("m-registration-success");
+                { 
+                    $this->Handle("Bol ste uspesne zaregistrovany."); 
                     ?>
                     <meta http-equiv="refresh" content="4;url=index.php"> 
                     <?php
@@ -145,7 +145,7 @@ class Reg{
         }
         else
         {
-            $this->HandleError("err-registration");
+            $this->HandleError("Nastala chyba pri registracii."); 
             ?>
             <meta http-equiv="refresh" content="4;url=registracia.php"> 
             <?php
@@ -153,7 +153,7 @@ class Reg{
     }
     else
         {
-            $this->HandleError("err-db-connection-fail");
+            $this->HandleError("NEpodarilo sa spojiť s databázovým serverom!");
         }
 
     }
@@ -180,12 +180,12 @@ class Reg{
     
     function HandleError($err)
     {
-        $this->error_message = $err;
+        $this->error_message .= $err."\r\n";
     }
 
     function Handle($msg)
     {
-        $this->message = $msg;
+        $this->message .= $msg."\r\n";
     }
 }
 

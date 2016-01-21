@@ -15,7 +15,6 @@ if ($link = db_connect()) {
             LEFT OUTER JOIN organisators o ON (o.user_id = u.user_id)
             WHERE LOWER(u.mail) = '$mail'";
     $result = mysqli_query($link, $sql);
-    $error = null;
     if ($row = mysqli_fetch_array($result)) {
         if (md5($password) == $row['password']) {
             if (is_null($row['admin'])) {
@@ -27,7 +26,7 @@ if ($link = db_connect()) {
                         $_SESSION['loggedUser'] = new Jury($row['id'], $row['mail'], $row['validated']);
                     }
                     else {
-                        $error = 'err-jury-acc-not-validated';
+                        echo phpTranslate('jury-acc-not-validated', $_SESSION['lang']);
                     }
                 }
                 else {
@@ -36,15 +35,12 @@ if ($link = db_connect()) {
             }
         }
         else {
-            $error = 'err-wrong-password';
+            echo phpTranslate('wrong-password', $_SESSION['lang']);
         }
     }
     else {
-        $error = 'err-non-existent-acc';
+        echo phpTranslate('non-existent-acc', $_SESSION['lang']);
     }
-}
-if ($error !== null){
-    echo $error;
 }
 die;
 ?>

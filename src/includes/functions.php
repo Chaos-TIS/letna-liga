@@ -1,8 +1,5 @@
 <?php
 
-define("SK", 0);
-define("ENG", 1);
-
 function __autoload($class_name) {
     include(dirname(__FILE__)."/../classes/$class_name.php");
 }
@@ -19,7 +16,6 @@ function page_head($title)
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="keywords" content="fll, lego, letna liga">
         <meta name="author" content="Chaos">
-        <meta data-trans-title="<?php echo $title ?>">
         <title><?php echo $title ?></title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link type="text/css" href="styles.css" rel="stylesheet">
@@ -31,12 +27,12 @@ function page_head($title)
 
     <script>
         $(document).ready(function(){
-            dict.translateElement();
+        dict.translate();
         });
     </script>
 
     <body>
-    <a href="."><h1 data-trans-key="main-header"></h1></a>
+    <a href="."><h1 data-trans="main-header"></h1></a>
 <?php
 Image::setIcon("images/image.png");
 Video::setIcon("images/video.png");
@@ -48,19 +44,19 @@ function get_login_form(){
     <form id="login-form" onsubmit="validateLogin()" method="post" accept-charset="utf-8">
         <table>
             <tr>
-                <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;" data-trans-key="login-form"></p></td>
+                <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;" data-trans="login-form"></p></td>
             </tr>
             <tr>
-                <td><label for="mail" data-trans-key="login-form"></label></td>
+                <td><label for="mail" data-trans="login-form"></label></td>
                 <td><input id="mail" type="text" placeholder="email@email.com"></td>
             </tr>
             <tr>
-                <td><label for="password" data-trans-key="login-form"></label></td>
-                <td><input id="password" type="password"  data-trans-key="login-form"></td>
+                <td><label for="password" data-trans="login-form"></label></td>
+                <td><input id="password" type="password"  data-trans="login-form"></td>
             </tr>
             <tr>
-                <td><input type="submit" name="submit" data-trans-key="login-form"></td>
-                <td style="text-align: right;"><a href="registracia.php" data-trans-key="login-form"></a></td>
+                <td><input type="submit" name="submit" data-trans="login-form"></td>
+                <td style="text-align: right;"><a href="registracia.php" data-trans="login-form"></a></td>
             </tr>
         </table>
     </form>
@@ -73,9 +69,9 @@ function get_login_form(){
                     async : true,
                     type: "POST",
                     data : {mail : login, password : password},
-                    url : "includes/login.php"}).done(function(error) {
-                if (error) {
-                    dict.echoError(error, '');
+                    url : "includes/login.php"}).done(function(data) {
+                if (data) {
+                    alert(data);
                 }
                 else{
                     location.reload();
@@ -90,19 +86,17 @@ function get_login_form(){
 function get_logout_button(){
     ?>
     <form id="logout-form" action="includes/logout.php">
-        <span><span data-trans-key="logged-in"></span> <?php echo $_SESSION['loggedUser']->mail;?></span>
-        <input type="submit" name="submit" data-trans-key="logout">
+        <span><span data-trans="logged-in"></span> <?php echo $_SESSION['loggedUser']->mail;?></span>
+        <input type="submit" name="submit" data-trans="logout">
     </form>
     <?php
 }
 
 function page_nav()
 {
-    ?>
-		<div class="nav">
-			<ul id="menu" class="menu">
-				<li><span data-trans-key="assignments"></span>
-					<ul>
+    ?>		<div class="nav"> <ul id="menu" class="menu"> 	
+          <li><span data-trans="assignments"></span>					
+          <ul>
 
 					<?php
 					if ($link = db_connect()) {
@@ -110,17 +104,16 @@ function page_nav()
             $result = mysqli_query($link,$sql);
             $i=1;
             while ($row = mysqli_fetch_assoc($result)) {
-              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
+              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>" <?php echo $i ?>. <span data-trans="assignment"></span></a></li>  <?php
               $i++;
             }     
           }
           ?>
-            <li><a href="prehladZadani.php" <span data-trans-key="assignments-overview"></span>></a></li>
+            <li><a href="prehladZadani.php" <span data-trans="assignments-overview"></span></a></li>
 					</ul>
 				</li>
-				<li><a href="results.php?year=<?php echo Date("Y")?>"<span data-trans-key="results"></span> ></a></li>
-				
-				<li><span data-trans-key="archive"></span>
+				<li><a href="results.php?year=<?php echo Date("Y")?>"<span data-trans="results"></span> </a></li>
+				<li><span data-trans="archive"></span>
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
@@ -131,47 +124,45 @@ function page_nav()
                 while ($row = mysqli_fetch_assoc($result)) {
                     if($rok != $row["year"]){
                       if($rok != 0){
-                        ?> 
-                        </ul>
+                        ?> </ul>
                         <?php
                       }
                       $poc=1;
                       $rok=$row["year"];
-                      ?>
-                      <li class="submenu">
-                        <span><?php echo $row["year"] ?></span> <ul>
-								        <li class="noborder"><a href="results.php?year=<?php echo $row["year"]; ?>" data-trans-key="results"></a></li>
-								        <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>
+                      ?> <li class="submenu"><span> <?php echo $row["year"] ?> </span> <ul>                            
+                      <li class="noborder"><a href="results.php?year=<?php echo $row["year"]; ?> " data-trans="results"></a></li> 
+								        <li><a href="assignment.php?id=<?php echo $row["context_id"] ?> "> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>
 								       <?php
 								       $poc++;
                     }
                     else{
-                       ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>  <?php
+                       ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?> "> <?php echo $poc ?>. <span data-trans="assignment"></span></a></li>  <?php
                         $poc++;
                     }
                 }
                }
 					   ?>
-					
 					</ul>
 					</ul>
 				</li>
-        <?php
-        if (isset($_SESSION['loggedUser'])){
-        if ($_SESSION['loggedUser'] instanceof Administrator) { ?>
-  				<li><a href="#" data-trans-key="users"></a>
-                      <ul>
-                          <li><a href="spravaUctov.php?id=0" data-trans-key="teams"></a></li>
-                          <li><a href="spravaUctov.php?id=1" data-trans-key="jury-pl"></a></li>
-                      </ul>
-                  </li>
- <?php 
+				
+				<?php
+				if (isset($_SESSION['loggedUser'])){
+  				if(is_a($_SESSION['loggedUser'], 'Administrator')){
+            ?> <li><a href="#" data-trans="users"></a>
+              <ul>
+                            <li><a href="spravaUctov.php?id=0" data-trans="teams"></a></li>
+                            <li><a href="spravaUctov.php?id=1" data-trans="jury-pl"></a></li>
+                        </ul>
+                    </li>    
+            <?php
           }
-        }?>
-				<li><a href="#" data-trans-key="language"></a>
+        }
+				?>                
+				<li><a href="#" data-trans="language"></a>
 					<ul>
-						<li><a href="#" onclick="dict.translateElement(dict.SK)"><img src="images/sk.png" width=33 height=22></a></li>
-						<li><a href="#" onclick="dict.translateElement(dict.ENG)"><img src="images/eng.png" width=33 height=22></a></li>
+						<li><a href="#" onclick="dict.translate(dict.SK)"><img src="images/sk.png" width=33 height=22></a></li>
+						<li><a href="#" onclick="dict.translate(dict.ENG)"><img src="images/eng.png" width=33 height=22></a></li>
 					</ul>
 				</li>
 			</ul>
@@ -179,8 +170,6 @@ function page_nav()
 		<script type="text/javascript">
 		var dropdown=new TINY.dropdown.init("dropdown", {id:'menu', active:'menuhover'});
 		</script>
-        <p id="success-message"></p>
-        <p id="error-message"></p>
     <?php
 }
 
@@ -204,32 +193,17 @@ function checkUploadFile($vel)
 	}
 }
 
-function dieWithError($key){
-    echoError($key);
-    die();
-}
-
-function echoError($key, $info = null){
-    ?><script>dict.echoError('<?php echo $key;?>', '<?php echo $info;?>');</script>
-    <?php
-}
-
-function echoMessage($key, $info = null){
-    ?><script>dict.echoSuccess('<?php echo $key;?>', '<?php echo $info;?>');</script>
-    <?php
-}
-
 function db_connect() {
     if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
         if (mysqli_select_db($link, 'letnaliga')) {
             mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
         } else {
-            echoError('err-db-choice-fail');
+            echo phpTranslate('db-choice-fail', $_SESSION['lang']);
             return false;
         }
     } else {
-        echoError('err-db-connection-fail');
+        echo phpTranslate('db-connection-fail', $_SESSION['lang']);
         return false;
     }
 }
@@ -262,7 +236,17 @@ function updateData($conn, $kde, $co, $zaco, $idName, $id) {
 	}
 }
 
-function get_result_table($sk_league, $year) {
+function phpTranslate($key, $lang){
+    $_POST['key'] = $key;
+    $_POST['lang'] = $lang;
+    ob_start();
+    require(dirname(__FILE__)."/../includes/translations.php");
+    $result = ob_get_contents();
+    ob_end_clean();
+    return $result;
+}
+
+function get_result_table($sk_league, $lang, $year) {
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
     if (!isset($year)){
         $year = "(SELECT MAX(year) FROM assignments)";
@@ -331,17 +315,20 @@ function get_result_table($sk_league, $year) {
         arsort($sum_array);
 
         $league = $sk_league ? "sk-league" : "open-league";
+        $t_league = phpTranslate($league, $lang);
+        $t_team_name = phpTranslate("team-name", $lang);
+        $t_sum = phpTranslate("sum-points", $lang);
 
-        $result_table = '<p class="center" data-trans-key="'.$league.'"></p>';
+        $result_table = '<p class="center" data-trans="'.$league.'">'.$t_league.'</p>';
         $result_table .= '<table class="result-table">
                          <tr style="font-weight: bold; background-color: #ff6600; border-bottom: 1px solid black;">
-                         <td data-trans-key="team-name"></td>';
+                         <td data-trans="team-name">'.$t_team_name.'</td>';
 
         for ($i = 1; $i < sizeof($aid_array)+1; $i++){
             $href = 'assignment.php?id='.$aid_array[$i];
             $result_table .= '<td><a style="color: black;" href="'.$href.'">'.$i.'</a></td>';
         }
-        $result_table .= '<td data-trans-key="sum-points"></td></tr>';
+        $result_table .= '<td data-trans="sum-points">'.$t_sum.'</td></tr>';
 
         foreach ($sum_array as $user => $sum){
             $result_table .= "<tr style='border-top: 1px solid black;'><td style='border-right: 1px solid black; font-weight: bold;'><strong>$user</strong></td>";
@@ -382,7 +369,7 @@ function sprava_uctov() {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
                 echo "<td><a href='editAcc.php?id={$row['user_id']}'>{$row['name']}</a></td>";
-                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans-key='delete'></span></button><br></td>\n";
+                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans='delete'></span></button><br></td>\n";
                 echo "</tr>";
             }
             echo "</table>";
@@ -393,12 +380,12 @@ function sprava_uctov() {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echoError('err-db-query-fail');
+        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
     }
     mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('err-db-connection-fail');
+        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
     }
 }
 
@@ -418,11 +405,11 @@ function sprava_uctov_jury() {
                 echo "<tr>";
                 echo "<td><a href='editAccJury.php?id={$row['user_id']}'>{$row['mail']}</a></td>";
                 if ($row['validated']==0) {
-                    echo "<td><button type='submit' name='active' value='{$row['user_id']}'><span data-trans-key='validate'></span></button><br></td>";
+                    echo "<td><button type='submit' name='active' value='{$row['user_id']}'><span data-trans='validate'></span></button><br></td>";
                 }else{
                     echo "<td><br></td>";
                 }
-                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans-key='delete'></span></button><br></td>\n";
+                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans='delete'></span></button><br></td>\n";
                 echo "</tr>";
             }
             echo "</table>";
@@ -433,12 +420,12 @@ function sprava_uctov_jury() {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echoError('err-db-query-fail');
+        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
     }
     mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('err-db-connection-fail');
+        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
     }
 }
 
@@ -452,7 +439,7 @@ function prehlad_zadani_nezverejnene($typ) {
             echo '<p>';
         ?>
             <form method="post">
-                <h1 data-trans-key="unpublished-assignments"></h1>
+                <h1> Nezverejnené zadania</h1>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
@@ -476,12 +463,12 @@ function prehlad_zadani_nezverejnene($typ) {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echoError('err-db-query-fail');
+        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
     }
-        mysqli_close($link);
+    mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('err-db-connection-fail');
+        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
     }
 }
 
@@ -494,7 +481,7 @@ function prehlad_zadani_zverejnene() {
             echo '<p>';
         ?>
             <form method="post">
-            <h1 data-trans-key="published-assignments"></h1>
+            <h1> Zverejnené zadania</h1>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
@@ -511,12 +498,12 @@ function prehlad_zadani_zverejnene() {
             mysqli_free_result($result);
     } else {
             // NEpodarilo sa vykonať dopyt!
-        echoError('err-db-query-fail');
+        echo '<p class="chyba" data-trans="db-query-fail">'.phpTranslate('db-query-fail', $_SESSION['lang']).'</p>' . "\n";
     }
-        mysqli_close($link);
+    mysqli_close($link);
     } else {
         // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('err-db-connection-fail');
+        echo '<p class="chyba" data-trans="db-connection-fail">'.phpTranslate('db-connection-fail', $_SESSION['lang']).'</p>';
     }
 }
 
