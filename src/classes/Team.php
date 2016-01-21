@@ -36,5 +36,9 @@ class Team extends User {
 	{
 		return "team";
 	}
+	
+	  public function getName(){
+    return $this->name;
+  }
 }
 ?>

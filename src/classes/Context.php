@@ -64,7 +64,7 @@ abstract class Context{
 	}
 	
 	public function setAttachments($conn) {
-		$this->attachments = [];
+		$this->attachments = array();
 		$sql_get_images = "SELECT * FROM images WHERE context_id = ".$this->id;
 		$images = mysqli_query($conn,$sql_get_images);	
 		if ($images != false) {

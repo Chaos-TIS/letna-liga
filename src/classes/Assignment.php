@@ -45,17 +45,14 @@ class Assignment extends Context {
     }
 	
 	public function setSolutions($conn) {
-		$this->solutions = [];
-		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id' FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+		$this->solutions = array(); // TODO
+		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id' FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;  
 		$solutions = mysqli_query($conn,$sql_get_solutions);
 		if ($solutions != false) {
-			$solutions_pole = mysqli_fetch_array($solutions);
-			for ($i = 0 ; $i < count($solutions_pole['user_id']) ; $i++) {
-				$this->solutions[] = new Solution($conn, $solutions_pole['context_id'], Team::getFromDatabaseByID($conn, $solutions_pole['user_id']), $this);
-			}
-		
-		}
-		
+		    while ($solutions_row = mysqli_fetch_assoc($solutions)) {	      
+				 array_push($this->solutions,new Solution($conn, $solutions_row['context_id'], Team::getFromDatabaseByID($conn, $solutions_row['user_id']), $this));
+      } 
+		}   		
 	}
 	
 	public function uploadFiles($conn, $subory) {
@@ -139,7 +136,33 @@ class Assignment extends Context {
 	}
 	
 	public function getPreviewHtml(){
-	
+	 ?>
+	  <h2> <?php  echo $this->name_sk?> </h2>  
+    <strong>Riešenie možno odovzdávať do:  <?php  echo $this->deadline;?></strong>  
+    <div> <?php echo $this->text_sk; ?> </div> 
+    <h3>Riešenia:</h3>
+    <ul>
+    <?php
+    if(Date("Y-m-d H:i:s")>$this->deadline){ 
+      for($i=0;$i<count($this->solutions);$i++){ 
+        
+        $team = $this->solutions[$i];
+        $team2= $team->getTeam();
+        $team3 = $team2->getName();
+        ?>
+        <li><a href="solution.php?id=<?php echo $team->getId(); ?>"> <?php echo $team3; ?> </a> </li> 
+        <?php                  
+      }
+    }
+    else if (isset($_SESSION['loggedUser'])){
+      echo "eeha6532";
+  				if(is_a($_SESSION['loggedUser'], 'Team')){
+          echo "eeha";
+          }
+    }
+    ?>
+    </ul>
+    <?php
 	}
 	
 	public function getResultTableRowHTML(){
