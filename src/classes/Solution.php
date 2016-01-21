@@ -7,10 +7,8 @@ class Solution extends Context {
 	private $points;
 	private $comments;
 	private $assignment;
-	protected $id;
 	
 	public function __construct($conn, $id, $author, $assignment) {
-	   
 		$sql_get_solution = "SELECT * FROM solutions WHERE context_id = ".$id;
 		$solution = mysqli_query($conn,$sql_get_solution);
 		if ($solution != false) {
@@ -24,7 +22,7 @@ class Solution extends Context {
 			$comment = mysqli_query($conn,$sql_get_comment);
 			if ($comment != false) {
 				$comment_pole = mysqli_fetch_array($comment);
-				$comments = array();
+				$comments = [];
 				for ($i = 0 ; $i < count($comment_pole['comment_id']) ; $i++) {
 					$comments[] = new Comment($conn,
 												 $comment_pole['comment_id'][$i],
@@ -37,7 +35,6 @@ class Solution extends Context {
 				$this->setComments($comments);
 			}
 		}
-		$this->idd=$id;
     }
 	
 	public function getTxt() {
@@ -103,7 +100,6 @@ class Solution extends Context {
 	}
 	
 	public function getComments(){
-	   return $this->comments;
 	
 	}
 	
@@ -112,20 +108,13 @@ class Solution extends Context {
 	}
 	
 	public function getPoints(){
-     return $this->points;	
+	
 	}
 	
 	public function save(){
 	
 	}
 	
-	public function getTeam(){
-     return $this->author;
-  }
-  
-  public function getId(){
-    return $this->idd;
-  }
 	
 }
 ?>

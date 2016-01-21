@@ -13,11 +13,72 @@ if (!isset($_SESSION['loggedUser']))
 
 $id = (integer)$_GET["id"] ;
 if($link = db_connect()){
-  $_SESSION['asignment'] = new Assignment($link,$id);
+  $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE $id = c.context_id";
+  $result = mysqli_query($link, $sql);
+	if($result){
+  	 $por=1 ;
+  	 if($row = mysqli_fetch_array($result)){
+  	    $assignmentid = $row['context_id'];
+  	        $name =  $row['text_id_name'];
+  	        $deadline=$row['end']; 
+            $sql2 = "SELECT * FROM texts";
+            $result2 = mysqli_query($link, $sql2);
+            if($result2){
+            	while ($row2 = mysqli_fetch_assoc($result2)) {
+    	         if($row2['text_id']==$row['text_id_name'])  {  
+                	?>
+      	          <h2> <?php echo $row2['sk']; ?> </h2>   
+                  <strong><span data-trans-key="assignment-page"></span>  <?php  echo $row['end']?></strong>
+                  <?php
+                }
+                if($row2['text_id']==$row['text_id_description'])  {  
+                	?>
+      	          <div> <?php echo $row2['sk']; ?> </div>  
+                    
+                  <?php
+                  
+                }
+              }
+            }
+  	        
+        
+     }
+    	
+  }
 }
-if (isset($_SESSION['asignment'])){
-  $_SESSION['asignment']->getPreviewHtml();
-}
+?>
+<h3 data-trans-key="assignment-page"></h3>
+<ul>
+<?php
+   if(Date("Y-m-d H:i:s")>$deadline){
+    $sql = "SELECT * FROM solutions WHERE assignment_id=$assignmentid";
+    $result = mysqli_query($link, $sql);
+  	if($result){
+  	 while ($row = mysqli_fetch_assoc($result)) {
+  	   $team = $row['context_id'];
+  	   $sql2 = "SELECT * FROM contexts WHERE context_id=$team limit 1";
+        $result2 = mysqli_query($link, $sql2);
+  	     if($result2){
+  	     while ($row2 = mysqli_fetch_assoc($result2)) {
+             $user=$row2['user_id'];
+             $sql3 = "SELECT * FROM teams WHERE user_id=$user limit 1 ";
+             $result3 = mysqli_query($link, $sql3);
+  	         if($result3){
+    	         while ($row3 = mysqli_fetch_assoc($result3)) {
+    	              ?>
+                    <li><a href=""> <?php echo $row3['name']; ?> </a> </li>    
+                    <?php
+               }
+             }
+         }
+        }  
+     }
+    }   
+  }
 
+?>
+</ul>  
+</div> 
+<?php
 page_footer()
 ?>
