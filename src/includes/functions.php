@@ -507,7 +507,7 @@ function prehlad_zadani_nezverejnene($typ) {
 
 function prehlad_zadani_zverejnene() {
     if ($link = db_connect()) {
-        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin < CURDATE() "; // definuj dopyt
+        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin < CURDATE() && year = YEAR(CURDATE()) "; // definuj dopyt
     $result = mysqli_query($link, $sql); // vykonaj dopyt
     if ($result) {
             // dopyt sa podarilo vykonať
