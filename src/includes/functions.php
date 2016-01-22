@@ -53,7 +53,7 @@ function get_topright_form()
 
 function get_login_form(){
 ?>
-    <form id="login-form" onsubmit="validateLogin()" method="post" accept-charset="utf-8">
+    <form id="login-form" method="post" accept-charset="utf-8">
         <table>
             <tr>
                 <td><p style="margin-bottom: 0; margin-top: 0; font-weight: bold; color: #3399ff;" data-trans-key="login-form"></p></td>
@@ -73,7 +73,7 @@ function get_login_form(){
         </table>
     </form>
     <script>
-        function validateLogin() {
+        $("#login-form")[0].addEventListener("submit", function(event) {
             event.preventDefault();
             var login = $("#mail").val();
             var password = $("#password").val();
@@ -89,7 +89,7 @@ function get_login_form(){
                     location.reload();
                 }
             });
-        }
+        });
     </script>
 
 <?php
@@ -355,7 +355,7 @@ function get_result_table($sk_league, $year) {
         $result_table = '<p class="center" data-trans-key="'.$league.'"></p>';
         $result_table .= '<table class="result-table">
                          <tr style="font-weight: bold; background-color: #ff6600; border-bottom: 1px solid black;">
-                         <th data-trans-key="team-name"></th>';
+                         <th><span data-trans-key="team-name"></span></th>';
 
         for ($i = 1; $i < sizeof($aid_array)+1; $i++){
             $href = 'assignment.php?id='.$aid_array[$i];

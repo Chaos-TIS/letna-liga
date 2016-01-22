@@ -48,7 +48,7 @@ var dict = {
                     break;
                 }
             }
-            if (typeof toLanguageCode == "undefined"){
+            if (typeof toLanguageCode == "undefined" || toLanguageCode == null){
                 toLanguageCode = this.DEFAULT_LANGUAGE;
             }
         }
