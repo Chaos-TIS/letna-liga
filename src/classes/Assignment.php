@@ -45,14 +45,13 @@ class Assignment extends Context {
     }
 	
 	public function setSolutions($conn) {
-		$this->solutions = [];
-		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id' FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+		$this->solutions = array(); // TODO
+		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id' FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;  
 		$solutions = mysqli_query($conn,$sql_get_solutions);
 		if ($solutions != false) {
-			$solutions_pole = mysqli_fetch_array($solutions);
-			for ($i = 0 ; $i < count($solutions_pole['user_id']) ; $i++) {
-				$this->solutions[] = new Solution($conn, $solutions_pole['context_id'], Team::getFromDatabaseByID($conn, $solutions_pole['user_id']), $this);
-			}
+		    while ($solutions_row = mysqli_fetch_assoc($solutions)) {	      
+				 array_push($this->solutions,new Solution($conn, $solutions_row['context_id'], Team::getFromDatabaseByID($conn, $solutions_row['user_id']), $this));
+      } 
 		
 		}
 		
@@ -139,7 +138,93 @@ class Assignment extends Context {
 	}
 	
 	public function getPreviewHtml(){
-	
+	 	   ?>
+	  <h2> <?php  echo $this->name_sk?> </h2>  
+	  <h3 data-trans-key="assignment-page"></h3> 
+	  <strong><?php  echo $this->deadline;?></strong>
+    <div> <?php echo $this->text_sk; ?> </div> 
+    <h3>Riešenia:</h3>
+    <ul>
+    <?php
+    if(Date("Y-m-d H:i:s")>$this->deadline){ 
+      for($i=0;$i<count($this->solutions);$i++){ 
+        
+        $team = $this->solutions[$i];
+        $team2= $team->getTeam();
+        $team3 = $team2->getName();
+        ?>
+        <li><a href="solution.php?id=<?php echo $team->getId(); ?>"> <?php echo $team3; ?> </a> </li> 
+        <?php                  
+      } 
+    }
+    else if (isset($_SESSION['loggedUser'])){
+  				if(is_a($_SESSION['loggedUser'], 'Team')){
+             ?>  <a href="addSolution.php">Pridať zadanie</a>
+             <?php           
+          }
+          else if (is_a($_SESSION['loggedUser'], 'Jury')){
+              ?> 
+                <a href="#">Pridať hodnotenie</a>
+             <?php
+          }
+          else if (is_a($_SESSION['loggedUser'], 'Administrator')){
+              ?>  <table>
+            <?php
+              if($link = db_connect()){
+                ?>
+                <tr>
+                <th></th>
+                <?php
+                  $sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 ORDER BY s.user_id";
+                  $result = mysqli_query($link,$sql);
+                  if($result!=false){
+                    $pocet=1;
+                    $rozhodcovia = array();
+                    while ($row = mysqli_fetch_assoc($result)) { 
+                      ?>            
+                      <th>Rozhodca <?php echo $pocet;?></th>
+                      <?php
+                        array_push($rozhodcovia, $row['user_id']);
+                        $pocet++;
+                    } 
+                  } ?>
+                  </tr>
+                <?php
+            
+                for($i=0;$i<count($this->solutions);$i++){
+                ?>
+                  <tr>
+                    <th><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
+           
+                      <?php
+                      for($j=0;$j<count($rozhodcovia);$j++){
+                        $sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
+                        $result = mysqli_query($link,$sql);
+                        if($result!=false){
+                          ?> <td>Ukončené</td> <?php                        
+                        }
+                        else{
+                          ?> <td>Nehodnotené</td> <?php    
+                        }
+                        
+                      }
+                
+                ?>
+                  </tr>  
+                  <?php              
+                }
+              }
+            ?>
+            </table>
+            <?php    
+          }
+    } 
+    else{
+        
+    } 
+    ?>
+      </ul>
+      <?php
 	}
 	
 	public function getResultTableRowHTML(){
@@ -149,6 +234,14 @@ class Assignment extends Context {
 	public function getSolutions(){
 		return $this->solutions;
 	}
+	
+	public function getSolution($id){
+    for($i=0;$i<count($this->solutions);$i++){
+      if($this->solutions[$i]->getId()==$id){
+        return $this->solutions[$i]; 
+      }
+    }
+  }
 	
 	public function isPublished(){
 		return $this->timeOfPublishing != null;

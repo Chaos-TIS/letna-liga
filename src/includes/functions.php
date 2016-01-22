@@ -98,88 +98,75 @@ function get_logout_button(){
 
 function page_nav()
 {
-    ?>
-		<div class="nav">
+      ?>
+    	<div class="nav">
 			<ul id="menu" class="menu">
 				<li><span data-trans-key="assignments"></span>
 					<ul>
+
 					<?php
 					if ($link = db_connect()) {
             $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";
             $result = mysqli_query($link,$sql);
             $i=1;
             while ($row = mysqli_fetch_assoc($result)) {
-              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
+              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-tran-keys="assignment"></span></a></li>  <?php
               $i++;
             }     
           }
           ?>
-						<li><a href="prehladZadani.php" data-trans-key="assignments-overview"></a></li>
+						<li><a href="prehladZadani.php" <span data-trans-key="assignments-overview"></span></a></li>
 					</ul>
 				</li>
-				<li><a href="results.php" data-trans-key="results"></a></li>
+				<li><a href="results.php?year=<?php echo Date("Y") ?>" <span data-trans-key="results"></span></a></li>
+				
+				
 				<li><span data-trans-key="archive"></span>
-					<ul>
-						<li class="submenu">
-              <span>2013</span> <ul>
-								<li class="noborder"><a href="results.php?year=2013" data-trans-key="results"></a></li>
-								<?php
-								if ($link = db_connect()) {
-                  $sql =  "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2013 ORDER BY begin ASC";
-                  $result = mysqli_query($link,$sql);
-                  $i=1;
-                  while ($row = mysqli_fetch_assoc($result)) {
-                    ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
-                    $i++;
-                  }     
+					      <ul>
+					   <?php
+					     if($link = db_connect()){
+                $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) ORDER BY end ASC";
+                $result = mysqli_query($link,$sql);
+                $rok = 0;
+                $poc = 1;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    if($rok != $row["year"]){
+                      if($rok != 0){
+                        ?> 
+                        </ul>
+                        <?php
+                      }
+                      $poc=1;
+                      $rok=$row["year"];
+                      ?>
+                      <li class="submenu">
+                        <span><?php echo $row["year"] ?></span> <ul>
+								        <li class="noborder"><a href="results.php?year=<?php echo $row["year"] ?>""><span data-trans-key="results"></span></a></li>
+								        <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>
+								       <?php
+								       $poc++;
+                    }
+                    else{
+                       ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>  <?php
+                        $poc++;
+                    }
                 }
-                ?>
-							</ul>
-              
-              </li>
-						<li class="submenu">
-              <span>2014</span> <ul>
-								<li class="noborder"><a href="results.php?year=2014" data-trans-key="results"></a></li>
-								<?php
-								if ($link = db_connect()) {
-                  $sql =  "SELECT * FROM CONTEXTS c INNER JOIN ASSIGNMENTS a ON (a.context_id = c.context_id) WHERE a.year = 2014 ORDER BY begin ASC";
-                  $result = mysqli_query($link,$sql);
-                  $i=1;
-                  while ($row = mysqli_fetch_assoc($result)) {
-                    ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
-                    $i++;
-                  }     
-                }
-                ?>
-							</ul>
-              
-              </li>
-						<li class="submenu">
-							<span>2015</span><ul>
-								<li class="noborder"><a href="results.php?year=2015" data-trans-key="results"></a></li>
-								<?php
-      					if ($link = db_connect()) {
-                  $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";
-                  $result = mysqli_query($link,$sql);
-                  $i=1;
-                  while ($row = mysqli_fetch_assoc($result)) {
-                    ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
-                    $i++;
-                  }     
-                }
-                ?>
-							</ul>
-						</li>
+               }
+					   ?>
+					
+					</ul>
 					</ul>
 				</li>
-                <?php if ($_SESSION['loggedUser'] instanceof Administrator) { ?>
-				<li><a href="#" data-trans-key="users"></a>
+                <?php 
+                if (isset($_SESSION['loggedUser'])){
+                if ($_SESSION['loggedUser'] instanceof Administrator) { ?>
+				            <li><a href="#" data-trans-key="users"></a>
                     <ul>
                         <li><a href="spravaUctov.php?id=0" data-trans-key="teams"></a></li>
                         <li><a href="spravaUctov.php?id=1" data-trans-key="jury-pl"></a></li>
                     </ul>
                 </li>
-                <?php }?>
+                <?php } }?>
 				<li><a href="#" data-trans-key="language"></a>
 					<ul>
 						<li><a href="#" onclick="dict.translateElement(dict.SK)"><img src="images/sk.png" width=33 height=22></a></li>
@@ -511,7 +498,7 @@ function prehlad_zadani_zverejnene() {
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
-                echo "<td><a href='#'>{$row['sk']}</a></td>";
+                echo "<td><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
                 //echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans='delete'></span></button><br></td>\n";
                 echo "</tr>";
             }
