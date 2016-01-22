@@ -22,7 +22,7 @@ function page_head($title)
         <meta data-trans-title="<?php echo $title ?>">
         <title><?php echo $title ?></title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
-        <link type="text/css" href="styles.css" rel="stylesheet">
+        <link type="text/css" href="css/styles.css" rel="stylesheet">
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
         <script type="text/javascript" src="js/dropdownmenu.js" ></script>
         <script type="text/javascript" src="js/translator.js" ></script>
@@ -41,6 +41,14 @@ function page_head($title)
 Image::setIcon("images/image.png");
 Video::setIcon("images/video.png");
 Program::setIcon("images/file.png");
+}
+
+function get_topright_form()
+{
+    if (!isset($_SESSION['loggedUser']))
+        get_login_form();
+    else
+        get_logout_button();
 }
 
 function get_login_form(){
@@ -106,19 +114,19 @@ function page_nav()
 
 					<?php
 					if ($link = db_connect()) {
-            $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = ".Date("Y")." ORDER BY begin ASC";
+            $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = (SELECT max(year) FROM assignments) ORDER BY begin ASC";
             $result = mysqli_query($link,$sql);
             $i=1;
             while ($row = mysqli_fetch_assoc($result)) {
-              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-tran-keys="assignment"></span></a></li>  <?php
+              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
               $i++;
-            }     
+            }
           }
           ?>
 						<li><a href="prehladZadani.php" <span data-trans-key="assignments-overview"></span></a></li>
 					</ul>
 				</li>
-				<li><a href="results.php?year=<?php echo Date("Y") ?>" <span data-trans-key="results"></span></a></li>
+				<li><a href="results.php" <span data-trans-key="results"></span></a></li>
 				
 				
 				<li><span data-trans-key="archive"></span>
@@ -261,6 +269,17 @@ function updateData($conn, $kde, $co, $zaco, $idName, $id) {
 	}
 }
 
+function get_max_year(){
+    if ($link = db_connect()){
+        $sql = "SELECT max(year) AS year FROM assignments;";
+        if ($result = mysqli_query($link, $sql))
+            if ($row = mysqli_fetch_array($result))
+                return $row['year'];
+
+    }
+    return Date("Y");
+}
+
 function get_result_table($sk_league, $year) {
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
     if (!isset($year)){
@@ -288,12 +307,14 @@ function get_result_table($sk_league, $year) {
 
 
 
-        $result = mysqli_query($link, $sql);
+
+
+        if (!$result = mysqli_query($link, $sql))
+            return;
+
         $userPointsMap = array();
         $aid_array = array();
 
-        if (!$result)
-            return;
         while ($row = mysqli_fetch_array($result)) {
             $end_array = array_values($aid_array);
             if (!sizeof($aid_array) || $row['assignment_id'] != end($end_array)){
@@ -334,13 +355,13 @@ function get_result_table($sk_league, $year) {
         $result_table = '<p class="center" data-trans-key="'.$league.'"></p>';
         $result_table .= '<table class="result-table">
                          <tr style="font-weight: bold; background-color: #ff6600; border-bottom: 1px solid black;">
-                         <td data-trans-key="team-name"></td>';
+                         <th data-trans-key="team-name"></th>';
 
         for ($i = 1; $i < sizeof($aid_array)+1; $i++){
             $href = 'assignment.php?id='.$aid_array[$i];
-            $result_table .= '<td><a style="color: black;" href="'.$href.'">'.$i.'</a></td>';
+            $result_table .= '<th><a href="'.$href.'">'.$i.'</a></th>';
         }
-        $result_table .= '<td data-trans-key="sum-points"></td></tr>';
+        $result_table .= '<th><span data-trans-key="sum-points"></span></th></tr>';
 
         foreach ($sum_array as $user => $sum){
             $result_table .= "<tr style='border-top: 1px solid black;'><td style='border-right: 1px solid black; font-weight: bold;'><strong>$user</strong></td>";

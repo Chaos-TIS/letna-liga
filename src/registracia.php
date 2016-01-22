@@ -2,6 +2,7 @@
 include 'includes/functions_reg.php';
 page_head("Registrácia");
 page_nav();
+get_topright_form();
 session_unset();
 $val = new Validate();
 $reg = new Reg();
@@ -46,10 +47,6 @@ if (isset($_POST["type"]) && $_POST["type"] == 0){
     }
   }
 }
-if (!isset($_SESSION['loggedUser']))
-  get_login_form();
-  else
-  get_logout_button();
 ?>
 
 </br>

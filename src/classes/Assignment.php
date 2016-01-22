@@ -70,13 +70,13 @@ class Assignment extends Context {
 	<div id="content">
 		
 		<form name="form1" enctype="multipart/form-data" method="POST" action="addAssignment.php?cid=<?php echo $this->getId() ?>">
-			<h2> Názov zadania (SK) </h2>
+			<h2><span data-trans-key="assignment-name"></span> (SK) </h2>
 			<input type="text" name="skName" value="<?php echo $this->getSkName() ?>">
-			<h2> Názov zadania (ENG) </h2>
+			<h2><span data-trans-key="assignment-name"></span> (ENG) </h2>
 			<input type="text" name="engName" value="<?php echo $this->getEngName() ?>">
-			<h2> Popis zadania (SK) </h2>
+			<h2><span data-trans-key="assignment-description"></span> (SK)</h2>
 			<textarea name="skTextPopis" cols="80" rows="10" ><?php echo $this->getSkTxt() ?></textarea>
-			<h2> Popis zadania (ENG) </h2>
+			<h2><span data-trans-key="assignment-description"></span> (ENG)</h2>
 			<textarea name="engTextPopis" cols="80" rows="10" ><?php echo $this->getEngTxt() ?></textarea>
 	
 			<br>			
@@ -86,14 +86,14 @@ class Assignment extends Context {
 			
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
 			
-			<h2> Pridaj videá k riešeniu zo serveru Youtube (Každé video vlož do nového riadku.) </h2>
+			<h2 data-trans-key="solution-edit-page"></h2>
 			<textarea name="textVideo" cols="80" rows="3" ></textarea>
 			
-			<h2> Nahraj súbory (Veľkosť súboru nemôže presiahnúť 10 MB)</h2>
+			<h2 data-trans-key="solution-edit-page"></h2>
 			Vyber súbor: <input type="file" name="uploadedFiles[]" multiple />
 			
 			<br>
-			<input type="submit" value="Ulož zmeny" id="upload" />
+			<input type="submit" id="upload" data-trans-key="save-changes"/>
 			
 		</form>
 
@@ -139,11 +139,10 @@ class Assignment extends Context {
 	
 	public function getPreviewHtml(){
 	 	   ?>
-	  <h2> <?php  echo $this->name_sk?> </h2>  
-	  <h3 data-trans-key="assignment-page"></h3> 
-	  <strong><?php  echo $this->deadline;?></strong>
+	  <h2> <?php  echo $this->name_sk?> </h2>
+	  <h3><span data-trans-key="assignment-page"></span> <?php  echo $this->deadline;?></h3>
     <div> <?php echo $this->text_sk; ?> </div> 
-    <h3>Riešenia:</h3>
+    <h3><span data-trans-key="solutions"></span>:</h3>
     <ul>
     <?php
     if(Date("Y-m-d H:i:s")>$this->deadline){ 
@@ -159,12 +158,12 @@ class Assignment extends Context {
     }
     else if (isset($_SESSION['loggedUser'])){
   				if(is_a($_SESSION['loggedUser'], 'Team')){
-             ?>  <a href="addSolution.php">Pridať zadanie</a>
+             ?>  <a href="addSolution.php" data-trans-key="add-solution"></a>
              <?php           
           }
           else if (is_a($_SESSION['loggedUser'], 'Jury')){
               ?> 
-                <a href="#">Pridať hodnotenie</a>
+                <a href="#" data-trans-key="add-rating"></a>
              <?php
           }
           else if (is_a($_SESSION['loggedUser'], 'Administrator')){
@@ -201,10 +200,10 @@ class Assignment extends Context {
                         $sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
                         $result = mysqli_query($link,$sql);
                         if($result!=false){
-                          ?> <td>Ukončené</td> <?php                        
+                          ?> <td data-trans-key="finished"></td> <?php
                         }
                         else{
-                          ?> <td>Nehodnotené</td> <?php    
+                          ?> <td data-trans-key="not-rated"></td> <?php
                         }
                         
                       }

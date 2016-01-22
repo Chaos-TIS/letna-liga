@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__)."/includes/functions.php");
 page_head("Pridanie riešenia");
 page_nav();
+get_topright_form();
 
 /*
 $conn = db_connect();

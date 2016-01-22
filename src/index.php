@@ -2,11 +2,7 @@
 require_once(dirname(__FILE__)."/includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
-
-if (!isset($_SESSION['loggedUser']))
-    get_login_form();
-else
-    get_logout_button();
+get_topright_form();
 ?>
 
         <div id="content">
@@ -21,7 +17,7 @@ else
             <!-----------------------------------------INDEX PAGE TOP SK----------------------------------------------------->
             <div data-trans-lang="<?php echo SK?>">
                 <h2>Vitajte a pozrite si:</h2>
-                <a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/archive_control/show_year/2015">Zadania a riešenia letnej ligy</a>
+                <a href="prehladZadani.php">Zadania a riešenia letnej ligy</a>
                 <h2>Oznamy:</h2>
                 <ul>
                     <li><i>Letná liga FLL 2015 beží, pridajte sa! Hrá sa o stavebnicu LEGO MINDSTORMS Education EV3!</i></li>
@@ -57,7 +53,7 @@ else
             <!-----------------------------------------INDEX PAGE TOP ENG----------------------------------------------------->
             <div data-trans-lang="<?php echo ENG?>">
                 <h2>Welcome! You shouldn't miss the following:</h2>
-                <a href="http://kempelen.ii.fmph.uniba.sk/letnaliga/index.php/archive_control/show_year/2015">Assignments and solutions of the summer league</a>
+                <a href="prehladZadani.php">Assignments and solutions of the summer league</a>
                 <h2>Announcements:</h2>
                 <ul>
                     <li><i>The summer league 2015 is on, join us! The main prize is a LEGO MINDSTORMS Education EV3 kit !</i></li>

@@ -2,14 +2,12 @@
 include 'includes/functions_zadania.php';
 page_head("Prehľad zadaní");
 page_nav();
+get_topright_form();
 /*
 $conn = db_connect();
 $_SESSION["loggedUser"] = Organisator::getFromDatabaseByID($conn, 1);*/
 
-if (!isset($_SESSION['loggedUser']))
-  get_login_form();
-  else
-  get_logout_button();
+
 
 if (isset($_POST["send"])){
      set_date($_POST["datum"],$_POST["start"],$_POST["stop"]) ; }

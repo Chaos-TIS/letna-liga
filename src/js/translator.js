@@ -242,7 +242,7 @@ dict.set('new-assignment', ['Nové zadanie', 'New assignment']);
 
 /*------------------------------------ASSIGNMENT----------------------------------------*/
 dict.set('assignment-page', [
-    ['Riešenie možno odovzdávať do:', 'Deadline of this assingment is set to:'],
+    ['Riešenie možno odovzdávať do:', 'Deadline of this assignment is set to:'],
     ['Riešenia:', 'Solutions:']]);
 
 dict.set('published-assignments', ['Zverejnené zadania', 'Published assignments']);
@@ -274,4 +274,17 @@ dict.set('Registrácia', ['Registration']);
 dict.set('Správa účtov', ['Accounts management']);
 dict.set('Prehľad zadaní', ['Assignments overview']);
 
+dict.set('results-of-league', ['Výsledky letnej ligy', 'Results of summer league']);
+
+dict.set('finished', ['Ukončené', 'Finished']);
+dict.set('not-rated', ['Neohodnotené', 'Not rated']);
+dict.set('add-rating', ['Pridať hodnotenie', 'Add rating']);
+dict.set('add-solution', ['Pridať riešenie', 'Add solution']);
+dict.set('solutions', ['Riešenia', 'Solutions']);
+dict.set('assignment-name', ['Názov zadania', 'Assignment name']);
+dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
+dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
+
+dict.set('', ['', '']);
+dict.set('', ['', '']);
 dict.set('', ['', '']);

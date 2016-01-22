@@ -3,10 +3,7 @@ require_once(dirname(__FILE__)."/includes/functions.php");
 
 page_head("Letná liga FLL");
 page_nav();
-if (!isset($_SESSION['loggedUser']))
-            get_login_form();
-        else
-            get_logout_button();
+get_topright_form();
 ?>
 <div id="content">
 <?php

@@ -2,6 +2,7 @@
 include 'includes/functions_editAcc.php';
 page_head("Úprava účtu");
 page_nav();
+get_topright_form();
 session_unset();
 $val = new Validate();
 $edit = new Edit();
@@ -35,10 +36,7 @@ if( isset($_POST["uname"])&& $val->validate_name($_POST["uname"]) &&
           }
         }
 }
-if (!isset($_SESSION['loggedUser']))
-  get_login_form();
-  else
-  get_logout_button();
+
 
 
 

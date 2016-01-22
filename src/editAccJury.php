@@ -2,6 +2,7 @@
 include 'includes/functions_editAcc.php';
 page_head("Úprava účtu");
 page_nav();
+get_topright_form();
 session_unset();
 $val = new Validate();
 $edit = new EditJury();
@@ -23,10 +24,7 @@ if(   isset($_POST["email"])&& $val->validate_mail($_POST["email"]) &&
           }
         }
 }
-if (!isset($_SESSION['loggedUser']))
-  get_login_form();
-  else
-  get_logout_button();
+
 
 
 

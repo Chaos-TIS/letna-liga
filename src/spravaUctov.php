@@ -2,10 +2,7 @@
 include 'includes/functions_editAcc.php';
 page_head("Správa účtov");
 page_nav();
-if (!isset($_SESSION['loggedUser']))
-  get_login_form();
-  else
-  get_logout_button();
+get_topright_form();
 
   if (isset($_POST["zrus"])){
       zmaz_acc($_POST['zrus']);}

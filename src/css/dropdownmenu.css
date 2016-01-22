@@ -14,3 +14,4 @@
 .menu li.noborder {border-top:none}
 li.menuhover a, li.menuhover li.menuhover a {color:#fff; background:#7b0e0e}
 li.menuhover span, li.menuhover li.menuhover span {color:#fff; background:#7b0e0e}
+.menu a span {display: inline !important;}
