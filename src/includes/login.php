@@ -19,19 +19,19 @@ if ($link = db_connect()) {
     if ($row = mysqli_fetch_array($result)) {
         if (md5($password) == $row['password']) {
             if (is_null($row['admin'])) {
-                $_SESSION['loggedUser'] = new Team($row['id'], $row['mail'], $row['name'], $row['description'], $row['sk_league']);
+                $_SESSION['loggedUser'] = new Team($row['user_id'], $row['mail'], $row['name'], $row['description'], $row['sk_league']);
             }
             else {
                 if (!$row['admin']) {
                     if ($row['validated']) {
-                        $_SESSION['loggedUser'] = new Jury($row['id'], $row['mail'], $row['validated']);
+                        $_SESSION['loggedUser'] = new Jury($row['user_id'], $row['mail'], $row['validated']);
                     }
                     else {
                         $error = 'err-jury-acc-not-validated';
                     }
                 }
                 else {
-                    $_SESSION['loggedUser'] = new Administrator($row['id'], $row['mail']);
+                    $_SESSION['loggedUser'] = new Administrator($row['user_id'], $row['mail']);
                 }
             }
         }

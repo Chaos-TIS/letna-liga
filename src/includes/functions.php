@@ -402,7 +402,8 @@ function sprava_uctov() {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
                 echo "<td><a href='editAcc.php?id={$row['user_id']}'>{$row['name']}</a></td>";
-                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans-key='delete'></span></button><br></td>\n";
+                echo "<td><button type='submit' name='zrus' onclick='return confirm(dict.get(\"delete-acc-prompt\") + \" \" + \"{$row['name']}\"  + \"?\");' value='{$row['user_id']}'><span
+                data-trans-key='delete'></span></button><br></td>\n";
                 echo "</tr>";
             }
             echo "</table>";
@@ -442,7 +443,13 @@ function sprava_uctov_jury() {
                 }else{
                     echo "<td><br></td>";
                 }
-                echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans-key='delete'></span></button><br></td>\n";
+
+                if ($row['user_id'] != $_SESSION['loggedUser']->id) {
+                    echo "<td><button type='submit' name='zrus' onclick='return confirm(dict.get(\"delete-acc-prompt\") + \" \" + \"{$row['mail']}\"  + \"?\");'
+                    value='{$row['user_id']}'><span data-trans-key='delete'></span></button><br></td>\n";
+                }else{
+                    echo "<td><br></td>";
+                }
                 echo "</tr>";
             }
             echo "</table>";

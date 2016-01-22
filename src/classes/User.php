@@ -27,17 +27,17 @@ abstract class User
 
     public static function getById($id) {
         if ($db = db_connect()){
-            $result = mysqli_query($db, "SELECT * FROM USERS WHERE id=$id");
+            $result = mysqli_query($db, "SELECT * FROM USERS WHERE user_id=$id");
             if ($row = mysqli_fetch_array($result)) {
                 switch ($row['type']){
                     case 0:
-                        $user = new Team($row['id'], $row['mail'], $row['name'], '', false);
+                        $user = new Team($row['user_id'], $row['mail'], $row['name'], '', false);
                         break;
                     case 1:
-                        $user = new Administrator($row['id'], $row['mail']);
+                        $user = new Administrator($row['user_id'], $row['mail']);
                         break;
                     case 2:
-                        $user = new Jury($row['id'], $row['mail'], true);
+                        $user = new Jury($row['user_id'], $row['mail'], true);
                         break;
                     default:
                         return null;

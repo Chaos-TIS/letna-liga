@@ -11,6 +11,8 @@ var dict = {
     },
 
     get : function(key, toLanguageCode, index){
+        if (typeof toLanguageCode == "undefined")
+            toLanguageCode = this.CURRENT;
         var result = this.dictionary[key];
         if (typeof result == "undefined"){
             return "";
@@ -285,6 +287,6 @@ dict.set('assignment-name', ['Názov zadania', 'Assignment name']);
 dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
 dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
 
-dict.set('', ['', '']);
+dict.set('delete-acc-prompt', ['Určite chcete zmazať používateľský účet', 'Are you sure you want to delete user account']);
 dict.set('', ['', '']);
 dict.set('', ['', '']);
