@@ -1,138 +1,69 @@
 <?php
-require_once(dirname(__FILE__)."/../includes/functions.php");
+require_once(dirname(__FILE__)."/includes/functions.php");
 
-class Solution extends Context {
-    private $text;
-    private $best;
-	private $points;
-	private $comments;
-	private $assignment;
-	  protected $id;
-	  protected $author;
-	
-	public function __construct($conn, $id, $author, $assignment) {
-		$sql_get_solution = "SELECT * FROM solutions WHERE context_id = ".$id;
-		$solution = mysqli_query($conn,$sql_get_solution);
-		if ($solution != false) {
-			$solution_pole = mysqli_fetch_array($solution);
-			parent::__construct($conn, $solution_pole['context_id'], $author);
-			$this->text = $solution_pole['text'];
-			$this->best = $solution_pole['best'];
-			$this->assignment = $assignment;
-			$this->id=$id;
-			$this->author=$author;
-		
-			$sql_get_comment = "SELECT * FROM comments WHERE context_id = ".$solution_pole["context_id"];
-			$comment = mysqli_query($conn,$sql_get_comment);
-			if ($comment != false) {
-				$comment_pole = mysqli_fetch_array($comment);
-				$comments = array();
-				for ($i = 0 ; $i < count($comment_pole['comment_id']) ; $i++) {
-					$comments[] = new Comment($conn,
-												 $comment_pole['comment_id'][$i],
-												 $this,
-												 $comment_pole['user_id'][$i],
-												 $comment_pole['text'][$i],
-												 $comment_pole['points'][$i]
-												);
-				}
-				$this->setComments($comments);
-			}
-		}
-    }
-	
-	public function getTxt() {
-		return $this->text;
-	}
-	
-	public function setTxt($conn, $text) {
-		$this->text = $text;
-		updateData($conn, "solutions", "text", $text, "context_id", $this->getId());
-	}
-	
-	public function setComments($comments){
-		$this->comments = $comments;
-		$points = 0.0;
-		for ($i = 0 ; $i < count($comments) ; $i++) {
-			$points += $comments[$i].getPoints();
-		}
-		if (count($comments) != 0) {
-			$this->points = $points / count($comments);
-		}
-	}		
-	
-	public function getEditingHtml(){
-	?>
-	<div id="content">
-		
-		<form name="form1" enctype="multipart/form-data" method="POST" action="addSolution.php">
-			<h2> Popis riešenia </h2>
-			<textarea name="textPopis" cols="80" rows="10" ><?php echo $this->getTxt() ?></textarea>
-	
-			<br>			
-			<?php
-			$this->getAttachmentsTableHtml();
-			?>
-			
-			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
-			
-			<h2 data-trans-key="solution-edit-page"></h2>
-			<textarea name="textVideo" cols="80" rows="3" ></textarea>
-			
-			<h2 data-trans-key="solution-edit-page"></h2>
-			Vyber súbor: <input type="file" name="uploadedFiles[]" multiple />
-			
-			<br>
-			<input type="submit" value="Ulož zmeny" id="upload" />
-			
-		</form>
-
-	</div>
-	<?php
-	}
-	
-	public function uploadFiles($conn, $subory) {
-		$this->uploadFiles1($conn, $subory, dirname(__FILE__)."/../attachments/solutions/".$this->id."/");
-	}
-	
-	public function deleteAttachments($conn, $prilohy) {
-		$this->deleteAttachments1($conn, $prilohy, dirname(__FILE__)."/../attachments/solutions/".$this->id."/");
-	}
-	
-	public function getPreviewHtml(){
-	 ?>
-    <h2>Hodnotenie riešení</h2>
-    <h3>Meno tímu: <?php echo $this->author->getName(); ?></h3>
-    <p><?php echo $this->author->getDescription(); ?></p>
-    <h3>Riešenie</h3>
-    <p><?php echo $this->text; ?></p>
-    
-</div>
-<?php
-	}
-	
-	public function getComments(){
-	
-	}
-	
-	public function getMainComment(){
-	
-	}
-	
-	public function save(){
-	
-	}
-	
-	public function getTeam(){
-   return $this->author;
-  }
-  
-  public function getPoints(){
-    return $this->points;
-  }
-  
-  public function getId(){
-    return $this->id;
+page_head("Letn� liga FLL");
+page_nav();
+if (!isset($_SESSION['loggedUser']))
+            get_login_form();
+        else
+            get_logout_button();
+$id = (integer)$_GET["id"] ;
+$teamId = (integer) $_GET["tid"];
+if($link = db_connect()){
+  if (isset($_SESSION['asignment'])){
+    $_SESSION['solution'] = new Solution($link,$id,Team::getFromDatabaseByID($link,$teamId),$_SESSION['asignment']);
   }
 }
+if(isset($_SESSION['solution'])){
+?>
+  <div id="content">
+<?php
+  $_SESSION['solution']->getPreviewHtml();
+  ?>
+    <table>
+    <tr>
+    <?php
+    if($link= db_connect()){
+    
+      $sql_get_images = "SELECT * FROM images i WHERE i.context_id = ".$id;
+  		$images = mysqli_query($link,$sql_get_images);
+  		if ($images != false) {  
+  		    while ($images_row = mysqli_fetch_assoc($images)) {
+  		      
+  		      $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/images/".$images_row['image_id'].substr($images_row['original_name'],-4); 
+            ?>
+              <td><a class="fancybox" rel="group" href="<?php echo $subor; ?>"><img src=<?php $subor ?>, width="100", width="100") ?> </a></td>
+            <?php
+          }
+        }
+      ?>
+      </tr>
+      </table>
+      <?php
+      $sql_get_video = "SELECT * FROM videos v WHERE v.context_id = ".$id;
+  		$videos = mysqli_query($link,$sql_get_video);
+  		if ($videos != false) { 
+        while ($videos_row = mysqli_fetch_assoc($videos)) { 
+          $linka = "http://www.youtube.com/embed/".$videos_row['link'];
+          
+    		?>
+    		  <iframe width="500" height="375" src="<?php echo $link; ?>" frameborder="0" allowfullscreen></iframe> <br>
+    		<?php
+        }
+      }
+  }
+}
+?>
+<!-- Add jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/includes/source/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/includes/source/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".fancybox").fancybox();
+	});
+</script>
+<?php
+page_footer()
 ?>
