@@ -24,6 +24,21 @@ class Team extends User {
 		return null;
     }
 
+	public function __get($property) {
+		if (property_exists($this, $property)) {
+			return $this->$property;
+		}
+
+		return null;
+	}
+
+	public function __set($property, $value) {
+		if (property_exists($this, $property)) {
+			$this->$property = $value;
+		}
+		return $this;
+	}
+
     public function getSolutionOf($assignment) {
 		//TODO
 	}
@@ -40,5 +55,9 @@ class Team extends User {
 	public function getName(){
     return $this->name;
   }
+
+	public function getDescription() {
+		return $this->description;
+	}
 }
 ?>

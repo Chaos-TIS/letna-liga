@@ -7,7 +7,7 @@ echo get_result_table(1, $_GET["year"]);
 echo get_result_table(0, $_GET["year"]);
 ?>
     <script>
-        dict.translateElement(null, "#results")
+        dict.translateElement(null, "#results");
     </script>
 <?php
 ?>

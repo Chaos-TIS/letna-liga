@@ -289,10 +289,10 @@ function get_result_table($sk_league, $year) {
         return;
     }
     if ($link = db_connect()) {
-        $sql = "SELECT q.name, a.year, q.solution_id, q.best, a.context_id assignment_id, q.points
+        $sql = "SELECT q.name, q.user_id, q.solution_id, q.best, a.context_id assignment_id, q.points
                 FROM assignments a
                 LEFT OUTER JOIN (
-                    SELECT t.name, s.context_id solution_id, s.best, s.assignment_id, ROUND(SUM(comm.points)/COUNT(comm.points),2) points
+                    SELECT t.name, t.user_id, s.context_id solution_id, s.best, s.assignment_id, ROUND(SUM(comm.points)/COUNT(comm.points),2) points
                     FROM solutions s
                     LEFT OUTER JOIN contexts c ON (c.context_id = s.context_id)
                     LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
@@ -312,33 +312,35 @@ function get_result_table($sk_league, $year) {
         if (!$result = mysqli_query($link, $sql))
             return;
 
-        $userPointsMap = array();
+        $teamPointsMap = array();
+        $teamIdMap = array();
         $aid_array = array();
 
         while ($row = mysqli_fetch_array($result)) {
             $end_array = array_values($aid_array);
+            $teamIdMap[$row['name']] = $row['user_id'];
             if (!sizeof($aid_array) || $row['assignment_id'] != end($end_array)){
                 array_push($aid_array, $row['assignment_id']);
-                foreach ($userPointsMap as $user => $array) {
+                foreach ($teamPointsMap as $user => $array) {
                     array_push($array, null);
                 }
             }
 
-            if (!isset($userPointsMap[$row['name']]) && $row['name'] != null){
-                $userPointsMap[$row['name']] = array();
+            if (!isset($teamPointsMap[$row['name']]) && $row['name'] != null){
+                $teamPointsMap[$row['name']] = array();
                 for ($i = 0; $i < sizeof($aid_array); $i++)
                 {
-                    array_push($userPointsMap[$row['name']], null);
+                    array_push($teamPointsMap[$row['name']], null);
                 }
             }
 
             if ($row['name'] != null){
-                $userPointsMap[$row['name']][sizeof($aid_array)-1] = array((float)$row['points'], $row['solution_id'], $row['best']);
+                $teamPointsMap[$row['name']][sizeof($aid_array)-1] = array((float)$row['points'], $row['solution_id'], $row['best']);
             }
         }
 
         $sum_array = array();
-        foreach ($userPointsMap as $user => $array){
+        foreach ($teamPointsMap as $user => $array){
             $sum = 0;
             for ($i = 0; $i < sizeof($aid_array); $i++){
                 if (!is_null($array[$i])){
@@ -366,12 +368,12 @@ function get_result_table($sk_league, $year) {
         foreach ($sum_array as $user => $sum){
             $result_table .= "<tr style='border-top: 1px solid black;'><td style='border-right: 1px solid black; font-weight: bold;'><strong>$user</strong></td>";
             for ($i = 0; $i < sizeof($aid_array); $i++){
-                if (is_null($userPointsMap[$user][$i])){
+                if (is_null($teamPointsMap[$user][$i])){
                     $result_table .= "<td style=' font-weight: bold;'>-</td>";
                 }
                 else {
-                    $result_table .= '<td style="font-weight: bold; '.($userPointsMap[$user][$i][2]?"background-color: #6CF952;":"").'"><a
-                    href="solution.php?id='.$userPointsMap[$user][$i][1].'">'.$userPointsMap[$user][$i][0].'</a></td>';
+                    $result_table .= '<td style="font-weight: bold; '.($teamPointsMap[$user][$i][2]?"background-color: #6CF952;":"").'"><a
+                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'&tid='.$teamIdMap[$user].'">'.$teamPointsMap[$user][$i][0].'</a></td>';
                 };
             }
             $result_table .= '<td style="border-left: 1px solid black;"><strong>'.$sum_array[$user].'</strong></td>';

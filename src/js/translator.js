@@ -288,5 +288,6 @@ dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
 dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
 
 dict.set('delete-acc-prompt', ['Určite chcete zmazať používateľský účet', 'Are you sure you want to delete user account']);
+dict.set('solution', ['Riešenie', 'Solution']);
 dict.set('', ['', '']);
 dict.set('', ['', '']);

@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__)."/includes/functions.php");
 
-page_head("Letná liga FLL");
+page_head("Letnï¿½ liga FLL");
 page_nav();
 if (!isset($_SESSION['loggedUser']))
             get_login_form();
@@ -10,9 +10,7 @@ if (!isset($_SESSION['loggedUser']))
 $id = (integer)$_GET["id"] ;
 $teamId = (integer) $_GET["tid"];
 if($link = db_connect()){
-  if (isset($_SESSION['asignment'])){
-    $_SESSION['solution'] = new Solution($link,$id,Team::getFromDatabaseByID($link,$teamId),$_SESSION['asignment']);
-  }
+	$_SESSION['solution'] = new Solution($link,$id,Team::getFromDatabaseByID($link,$teamId),$_SESSION['asignment']);
 }
 if(isset($_SESSION['solution'])){
 ?>

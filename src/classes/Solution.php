@@ -7,20 +7,26 @@ class Solution extends Context {
 	private $points;
 	private $comments;
 	private $assignment;
-	  protected $id;
-	  protected $author;
 	
 	public function __construct($conn, $id, $author, $assignment) {
+		parent::__construct($conn, $id, $author);
 		$sql_get_solution = "SELECT * FROM solutions WHERE context_id = ".$id;
 		$solution = mysqli_query($conn,$sql_get_solution);
 		if ($solution != false) {
 			$solution_pole = mysqli_fetch_array($solution);
-			parent::__construct($conn, $solution_pole['context_id'], $author);
+
 			$this->text = $solution_pole['text'];
 			$this->best = $solution_pole['best'];
 			$this->assignment = $assignment;
 			$this->id=$id;
 			$this->author=$author;
+
+			if (is_null($this->assignment)){
+        		$selectAssignmentId = "SELECT assignment_id FROM solutions WHERE context_id = {$this->id}";
+				if ($result = mysqli_query($conn, $selectAssignmentId))
+					if ($row = mysqli_fetch_array($result))
+						$this->assignment = new Assignment($conn, $row['assignment_id']);
+			}
 		
 			$sql_get_comment = "SELECT * FROM comments WHERE context_id = ".$solution_pole["context_id"];
 			$comment = mysqli_query($conn,$sql_get_comment);
@@ -38,8 +44,24 @@ class Solution extends Context {
 				}
 				$this->setComments($comments);
 			}
+
 		}
     }
+
+    public function __get($property) {
+		if (property_exists($this, $property)) {
+			return $this->$property;
+		}
+
+		return null;
+	}
+
+	public function __set($property, $value) {
+		if (property_exists($this, $property)) {
+			$this->$property = $value;
+		}
+		return $this;
+	}
 	
 	public function getTxt() {
 		return $this->text;
@@ -102,9 +124,9 @@ class Solution extends Context {
 	public function getPreviewHtml(){
 	 ?>
     <h2>Hodnotenie riešení</h2>
-    <h3>Meno tímu: <?php echo $this->author->getName(); ?></h3>
-    <p><?php echo $this->author->getDescription(); ?></p>
-    <h3>Riešenie</h3>
+    <h3><span data-trans-key="team-name"></span>: <?php echo $this->author->name; ?></h3>
+    <p><?php echo $this->author->description; ?></p>
+    <h3 data-trans-key="solution"></h3>
     <p><?php echo $this->text; ?></p>
     
 </div>
@@ -133,6 +155,10 @@ class Solution extends Context {
   
   public function getId(){
     return $this->id;
+  }
+
+  public function getAssignment(){
+  	return $this->assignment;
   }
 }
 ?>
