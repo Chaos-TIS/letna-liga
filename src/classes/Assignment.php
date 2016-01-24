@@ -15,7 +15,7 @@ class Assignment extends Context {
     public function __construct($conn, $id) {
 		$sql_get_assignment = "SELECT * FROM assignments a, contexts c WHERE c.context_id = a.context_id AND c.context_id = ".$id;
 		$assignment = mysqli_query($conn,$sql_get_assignment);
-		if ($assignment != false) {
+		if ($assignment != false && mysqli_num_rows($assignment) != 0) {
 			$assignment_pole = mysqli_fetch_array($assignment);
 			parent::__construct($conn, $assignment_pole['context_id'], Organisator::getFromDatabaseByID($conn, $assignment_pole['user_id']));
 			
@@ -42,6 +42,10 @@ class Assignment extends Context {
 			}
 			$this->setSolutions($conn);
 		}
+		else {
+			$this->name_sk 	= "Nové zadanie";
+			$this->name_eng = "New assignment";
+		}
     }
 	
 	public function setSolutions($conn) {
@@ -65,11 +69,17 @@ class Assignment extends Context {
 		$this->deleteAttachments1($conn, $prilohy, dirname(__FILE__)."/../attachments/assignments/".$this->id."/");
 	}
 	
-	public function getEditingHtml(){
+	public function getEditingHtml($new = false){
+	if ($new) {
+		$link = "newAssignment.php";
+	}
+	else {
+		$link = "addAssignment.php?cid=".$this->id;
+	}
 	?>
 	<div id="content">
 		
-		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST" action="addAssignment.php?cid=<?php echo $this->getId() ?>">
+		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST" action=<?php echo $link;?> >					
 			<h2><span data-trans-key="assignment-name"></span> (SK) </h2>
 			<input type="text" name="skName" value="<?php echo $this->getSkName() ?>">
 			<h2><span data-trans-key="assignment-name"></span> (ENG) </h2>

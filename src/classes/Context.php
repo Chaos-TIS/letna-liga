@@ -46,33 +46,36 @@ abstract class Context{
 				<th width="5%" data-trans-key="context-edit-page"></th>
 		  </tr>
 		  <?php
-		  foreach ($this->attachments as $attachment) {
-			$odkaz = "";
-			$ikona = "";
-			$checkbox = "";
-			if ($attachment instanceof Image) {
-				$odkaz = "attachments/solutions/".$attachment->getContext_id()."/images/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
-				$ikona = Image::getIcon();
-				$checkbox = "image;".$attachment->getId();
-			}				
-			else if ($attachment instanceof Program) {
-				$odkaz = "attachments/solutions/".$attachment->getContext_id()."/programs/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
-				$ikona = Program::getIcon();
-				$checkbox = "program;".$attachment->getId();
+		  if (is_array($this->attachments)) {
+			foreach ($this->attachments as $attachment) {
+				$odkaz = "";
+				$ikona = "";
+				$checkbox = "";
+				if ($attachment instanceof Image) {
+					$odkaz = "attachments/solutions/".$attachment->getContext_id()."/images/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
+					$ikona = Image::getIcon();
+					$checkbox = "image;".$attachment->getId();
+				}				
+				else if ($attachment instanceof Program) {
+					$odkaz = "attachments/solutions/".$attachment->getContext_id()."/programs/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
+					$ikona = Program::getIcon();
+					$checkbox = "program;".$attachment->getId();
+				}
+				else {
+					$odkaz = "http://www.youtube.com/embed/".$attachment->getName();
+					$ikona = Video::getIcon();
+					$checkbox = "video;".$attachment->getId();
+				}
+				$odkaz = "<a href=".$odkaz.">".$odkaz;
+				echo "<tr>";
+				echo "<td width=\"5%\" align=\"center\"> <img src=".$ikona."></td>";
+				echo "<td width=\"30%\">".$attachment->getName()."</td>";
+				echo "<td width=\"60%\"> ".$odkaz." </td>";				
+				echo '<td width=\"5%\" align="center"><input name="checkbox[]" type="checkbox" id="checkbox[]" value="'.$checkbox.'"></td>';
+				echo "</tr>";
 			}
-			else {
-				$odkaz = "http://www.youtube.com/embed/".$attachment->getName();
-				$ikona = Video::getIcon();
-				$checkbox = "video;".$attachment->getId();
-			}
-			$odkaz = "<a href=".$odkaz.">".$odkaz;
-			echo "<tr>";
-			echo "<td width=\"5%\" align=\"center\"> <img src=".$ikona."></td>";
-			echo "<td width=\"30%\">".$attachment->getName()."</td>";
-			echo "<td width=\"60%\"> ".$odkaz." </td>";				
-			echo '<td width=\"5%\" align="center"><input name="checkbox[]" type="checkbox" id="checkbox[]" value="'.$checkbox.'"></td>';
-			echo "</tr>";
 		  }
+		  
 		  ?>
 		</table>
 		<?php		

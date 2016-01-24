@@ -2,12 +2,12 @@
 require_once(dirname(__FILE__)."/../includes/functions.php");
 
 class Solution extends Context {
-    private $text;;
+    private $text;
 
     private $best;
 	private $points;
 	private $comments;
-	private $assignment	
+	private $assignment;	
 	public function __construct($conn, $id, $author, $assignment) {
 		parent::__construct($conn, $id, $author);
 		$sql_get_solution = "SELECT * FROM solutions WHERE context_id = ".$id;

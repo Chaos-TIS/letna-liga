@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 define("SK", 0);
 define("ENG", 1);
@@ -255,7 +255,7 @@ function new_assignment($conn, $uid) {
 	$id1 = mysqli_insert_id($conn);
 	mysqli_query($conn,"INSERT INTO texts () VALUES ()");
 	$id2 = mysqli_insert_id($conn);
-	mysqli_query($conn,"INSERT INTO assignments (context_id, text_id_name, text_id_description) VALUES (".$cid.", ".$id1.", ".$id2.")");
+	mysqli_query($conn,"INSERT INTO assignments (context_id, text_id_name, text_id_description, year) VALUES (".$cid.", ".$id1.", ".$id2.", ".date("Y").")");
 	return $cid;
 }
 

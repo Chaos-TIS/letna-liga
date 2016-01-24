@@ -7,28 +7,11 @@ get_topright_form();
 if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
 if (get_class($_SESSION["loggedUser"]) == "Team") dieWithError("err-add-assignment-rights");
 
-$conn = db_connect();
-
-//$_SESSION["loggedUser"] = new Administrator(1, "pavel.petrovic@gmail.com");
-
-if(isset($_GET["cid"]) && !empty($_GET["cid"])) {
-	$sql_get_assignment = "SELECT * FROM assignments a, contexts c WHERE c.context_id = a.context_id AND c.context_id = ".$_GET["cid"];
-	$flag = false;
-	$result = mysqli_query($conn,$sql_get_assignment); 
-	if ($result == true && mysqli_num_rows($result) != 0) {
-		$assignment = new Assignment($conn, $_GET["cid"]);
-		if (!$_SESSION["loggedUser"]->isAdmin() && $_SESSION["loggedUser"]->getId() != $assignment->getId()) {
-			dieWithError("err-edit-assignment-rights");
-		}
-	}
-	else {
-		$assignment = new Assignment($conn, 0);
-		$flag = true;
-	}
-	if (isset($_POST['checkbox'])) {
-		$assignment->deleteAttachments($conn, $_POST['checkbox']);
-	}
-
+if ($conn = db_connect()) {
+	$id = new_assignment($conn, $_SESSION["loggedUser"]->getId());
+	
+	$assignment = new Assignment($conn, $id);
+	
 	if (isset($_POST['skName']) && $_POST['skName'] != $assignment->getSkName()) {
 		$assignment->setSkName($conn, $_POST['skName']);	
 	}
@@ -55,15 +38,10 @@ if(isset($_GET["cid"]) && !empty($_GET["cid"])) {
 			$assignment->uploadFiles($conn, $_FILES['uploadedFiles']);
 		}
 	}
-	$assignment->setAttachments($conn);
-	$assignment->getEditingHtml($flag);
+	
+	mysqli_close($conn);
+	?> <meta http-equiv="refresh" content="1;url=addAssignment.php?cid=<?php echo $id; ?>"><?php
 }
-else {
-	$assignment = new Assignment($conn, 0);
-	$assignment->getEditingHtml(true);
-}
-
-mysqli_close($conn);
 
 page_footer();
 ?>
