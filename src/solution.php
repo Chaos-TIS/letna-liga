@@ -3,7 +3,6 @@ require_once(dirname(__FILE__)."/includes/functions.php");
 
 page_head("Letná liga FLL");
 page_nav();
-$_SESSION["loggedUser"] = new Administrator(1, "pavel.petrovic@gmail.com");
 if (!isset($_SESSION['loggedUser']))
             get_login_form();
         else
@@ -43,7 +42,7 @@ if(isset($_SESSION['solution'])){
   		      
   		      $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/images/".$images_row['image_id'].substr($images_row['original_name'],-4); 
             ?>
-              <td><a class="fancybox" rel="group" href="<?php echo $subor; ?>"><img src=<?php $subor ?>, width="100", width="100") ?> </a></td>
+              <td><a class="fancybox" rel="group" href="<?php echo $subor; ?>"><img src="<?php echo $subor ?>" width="100", width="100") ?> </a></td>
             <?php
           }
         }
@@ -58,7 +57,7 @@ if(isset($_SESSION['solution'])){
           $linka = "http://www.youtube.com/embed/".$videos_row['link'];
           
     		?>
-    		  <iframe width="500" height="375" src="<?php echo $link; ?>" frameborder="0" allowfullscreen></iframe> <br>
+    		  <iframe width="500" height="375" src="<?php echo $linka; ?>" frameborder="0" allowfullscreen></iframe> <br>
     		<?php
         }
       }
@@ -68,8 +67,8 @@ if(isset($_SESSION['solution'])){
 <!-- Add jQuery library -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!-- Add fancyBox -->
-<link rel="stylesheet" href="/includes/source/jquery.fancybox.css" type="text/css" media="screen" />
-<script type="text/javascript" src="/includes/source/jquery.fancybox.pack.js"></script>
+<link rel="stylesheet" href="js/source/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/source/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".fancybox").fancybox();
