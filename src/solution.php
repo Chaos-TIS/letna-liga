@@ -38,12 +38,19 @@ if(isset($_SESSION['solution'])){
       $sql_get_images = "SELECT * FROM images i WHERE i.context_id = ".$id;
   		$images = mysqli_query($link,$sql_get_images);
   		if ($images != false) {  
-  		    while ($images_row = mysqli_fetch_assoc($images)) {
-  		      
+  		    while ($images_row = mysqli_fetch_assoc($images)) {  
+  		      $pocet=0;
   		      $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/images/".$images_row['image_id'].substr($images_row['original_name'],-4); 
             ?>
               <td><a class="fancybox" rel="group" href="<?php echo $subor; ?>"><img src="<?php echo $subor ?>" width="100", width="100") ?> </a></td>
             <?php
+            $pocet++;
+    		if($pocet%5==0){
+          ?>
+          </tr>
+          <tr>
+          <?php
+        }
           }
         }
       ?>
@@ -59,9 +66,27 @@ if(isset($_SESSION['solution'])){
     		?>
     		  <iframe width="500" height="375" src="<?php echo $linka; ?>" frameborder="0" allowfullscreen></iframe> <br>
     		<?php
+    		
         }
       }
   }
+  <p>
+	<?php
+	if ((isset($_SESSION['loggedUser']) && (is_a($_SESSION['loggedUser'], 'Jury') || is_a($_SESSION['loggedUser'], 'Administrator')))) {
+		$this->getCommentEditingHtml();
+	}
+	else {
+		for ($i = 0 ; $i < count($this->comments) ; $i++) {
+			if ($_SESSION['solution']->comments[$i]->getAuthor() instanceof Administrator) {
+				$_SESSION['solution']->comments[$i]->getPreviewHtml();
+				break;
+			}
+		}
+	}
+	?>
+	</p>
+    
+</div>
 }
 ?>
 <!-- Add jQuery library -->

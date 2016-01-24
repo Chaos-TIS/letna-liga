@@ -148,23 +148,7 @@ class Solution extends Context {
     </h3>
     <p><?php echo $this->text; ?></p>
 	<h3><span data-trans-key="rating"></span>:</h3>
-	<p>
-	<?php
-	if ((isset($_SESSION['loggedUser']) && (is_a($_SESSION['loggedUser'], 'Jury') || is_a($_SESSION['loggedUser'], 'Administrator')))) {
-		$this->getCommentEditingHtml();
-	}
-	else {
-		for ($i = 0 ; $i < count($this->comments) ; $i++) {
-			if ($this->comments[$i]->getAuthor() instanceof Administrator) {
-				$this->comments[$i]->getPreviewHtml();
-				break;
-			}
-		}
-	}
-	?>
-	</p>
-    
-</div>
+	
 <?php
 	}
 	
