@@ -69,7 +69,7 @@ class Assignment extends Context {
 	?>
 	<div id="content">
 		
-		<form name="form1" enctype="multipart/form-data" method="POST" action="addAssignment.php?cid=<?php echo $this->getId() ?>">
+		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST" action="addAssignment.php?cid=<?php echo $this->getId() ?>">
 			<h2><span data-trans-key="assignment-name"></span> (SK) </h2>
 			<input type="text" name="skName" value="<?php echo $this->getSkName() ?>">
 			<h2><span data-trans-key="assignment-name"></span> (ENG) </h2>

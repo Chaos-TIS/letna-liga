@@ -266,7 +266,7 @@ function new_comment($conn, $cid, $uid) {
 
 function pridaj_hodnotenie($comments, $id) {
 	?>
-	<form name="form1" enctype="multipart/form-data" method="POST" action="<?php echo "solution.php?id=".$comments[$id]->getSolution()."&comment=".$id; ?>" >
+	<form accept-charset="utf-8" name="form1" enctype="multipart/form-data" method="POST" action="<?php echo "solution.php?id=".$comments[$id]->getSolution()."&comment=".$id; ?>" >
 		<table>
 			<?php
 			if (is_a($_SESSION['loggedUser'], 'Administrator')) {

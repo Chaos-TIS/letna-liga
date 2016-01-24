@@ -102,7 +102,7 @@ class Solution extends Context {
 	?>
 	<div id="content">
 		
-		<form name="form1" enctype="multipart/form-data" method="POST" action="addSolution.php">
+		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST" action="addSolution.php">
 			<h2 data-trans-key="solution-description"></h2>
 			<textarea name="textPopis" cols="80" rows="10" ><?php echo $this->getTxt() ?></textarea>
 	
