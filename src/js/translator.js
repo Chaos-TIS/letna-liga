@@ -289,5 +289,13 @@ dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
 
 dict.set('delete-acc-prompt', ['Určite chcete zmazať používateľský účet', 'Are you sure you want to delete user account']);
 dict.set('solution', ['Riešenie', 'Solution']);
-dict.set('', ['', '']);
+dict.set('rating', ['Hodnotenie', 'Rating']);
+dict.set('solution-of', ['Riešenie úlohy', 'Solution of']);
+dict.set('jury', ['Rozhodca', 'Jury']);
+dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
+dict.set('m-text-saved', ['Text uložený.', 'Text saved.']);
+dict.set('err-text-saving', ['Chyba pri ukladaní textu do databázy.', 'An error has occured during saving the text to the database.']);
+
+dict.set('solution-description', ['Popis riešenia', 'Solution description']);
+
 dict.set('', ['', '']);

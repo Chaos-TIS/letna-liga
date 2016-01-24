@@ -3,6 +3,7 @@ require_once(dirname(__FILE__)."/includes/functions.php");
 
 page_head("Letná liga FLL");
 page_nav();
+$_SESSION["loggedUser"] = new Administrator(1, "pavel.petrovic@gmail.com");
 if (!isset($_SESSION['loggedUser']))
             get_login_form();
         else

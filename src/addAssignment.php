@@ -9,7 +9,7 @@ if (get_class($_SESSION["loggedUser"]) == "Team") dieWithError("err-add-assignme
 
 $conn = db_connect();
 
-$_SESSION["loggedUser"] = new Administrator(1, "pavel.petrovic@gmail.com");
+//$_SESSION["loggedUser"] = new Administrator(1, "pavel.petrovic@gmail.com");
 
 if(isset($_GET["cid"]) && !empty($_GET["cid"])) {
 	$sql_get_assignment = "SELECT * FROM assignments a, contexts c WHERE c.context_id = a.context_id AND c.context_id = ".$_GET["cid"];	

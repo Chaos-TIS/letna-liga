@@ -90,8 +90,8 @@ class Assignment extends Context {
 			<textarea name="textVideo" cols="80" rows="3" ></textarea>
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
-			Vyber súbor: <input type="file" name="uploadedFiles[]" multiple />
-			
+			<input type="file" name="uploadedFiles[]" multiple />
+			<br>
 			<br>
 			<input type="submit" id="upload" data-trans-key="save-changes"/>
 			
@@ -139,9 +139,17 @@ class Assignment extends Context {
 	
 	public function getPreviewHtml(){
 		?>
-		<h2> <?php  echo $this->name_sk?> </h2>
+		<?php
+		$name_sk = $this->name_sk;
+		$name_eng = is_null($this->name_eng) ? $name_sk : $this->name_eng;
+		$text_sk = $this->text_sk;
+		$text_eng = is_null($this->text_eng) ? $text_sk : $this->text_eng;
+		?>
+		<h2 data-trans-lang="<?php echo SK?>"> <?php echo $name_sk?> </h2>
+		<h2 data-trans-lang="<?php echo ENG?>"> <?php echo $name_eng?> </h2>
 		<h3><span data-trans-key="assignment-page"></span> <?php  echo $this->deadline;?></h3>
-		<div> <?php echo $this->text_sk; ?> </div>
+		<div data-trans-lang="<?php echo SK?>"> <?php echo $text_sk?> </div>
+		<div data-trans-lang="<?php echo ENG?>"> <?php echo $text_eng?> </div>
 		<br>
 		<?php
 		if(Date("Y-m-d H:i:s") < $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Team')){ 
@@ -161,7 +169,7 @@ class Assignment extends Context {
 					$rozhodcovia = array();
 					while ($row = mysqli_fetch_assoc($result)) { 
 						?>            
-						<th>Rozhodca <?php echo $pocet;?></th>
+						<th><span data-trans-key="jury"></span> <?php echo $pocet;?></th>
 						<?php
 						array_push($rozhodcovia, $row['user_id']);
 						$pocet++;

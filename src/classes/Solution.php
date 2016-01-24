@@ -52,7 +52,7 @@ class Solution extends Context {
 		$solution = mysqli_query($conn,$sql_get_solution);
 		if ($solution != false) {
 			$solution_pole = mysqli_fetch_array($solution);
-			return new self($conn, $id, Team::getFromDatabaseByID($conn, $id), new Assignment($conn, $id));
+			return new self($conn, $id, Team::getFromDatabaseByID($conn, $solution_pole['user_id']), new Assignment($conn, $solution_pole['assignment_id']));
 		}
 		return null;
     }
@@ -103,7 +103,7 @@ class Solution extends Context {
 	<div id="content">
 		
 		<form name="form1" enctype="multipart/form-data" method="POST" action="addSolution.php">
-			<h2> Popis riešenia </h2>
+			<h2 data-trans-key="solution-description"></h2>
 			<textarea name="textPopis" cols="80" rows="10" ><?php echo $this->getTxt() ?></textarea>
 	
 			<br>			
@@ -117,10 +117,10 @@ class Solution extends Context {
 			<textarea name="textVideo" cols="80" rows="3" ></textarea>
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
-			Vyber súbor: <input type="file" name="uploadedFiles[]" multiple />
-			
+			<input type="file" name="uploadedFiles[]" multiple />
 			<br>
-			<input type="submit" value="Ulož zmeny" id="upload" />
+			<br>
+			<input type="submit" data-trans-key="save-changes" id="upload" />
 			
 		</form>
 
@@ -140,9 +140,14 @@ class Solution extends Context {
 	?>
     <h3><span data-trans-key="team-name"></span>: <?php echo $this->author->getName(); ?></h3>
     <p><?php echo $this->author->description; ?></p>
-    <h3 data-trans-key="solution"></h3>
+    <h3 data-trans-lang="<?php echo SK?>">Riešenie úlohy: <?php echo $this->assignment->getSkName();?></h3>
+    <h3 data-trans-lang="<?php echo ENG?>">Solution of assignment:
+		<?php
+		echo is_null($this->assignment->getEngName()) ? $this->assignment->getSkName() : $this->assignment->getEngName();
+		?>
+    </h3>
     <p><?php echo $this->text; ?></p>
-	<h3>Hodnotenie:</h3>
+	<h3><span data-trans-key="rating"></span>:</h3>
 	<p>
 	<?php
 	if ((isset($_SESSION['loggedUser']) && (is_a($_SESSION['loggedUser'], 'Jury') || is_a($_SESSION['loggedUser'], 'Administrator')))) {

@@ -278,7 +278,7 @@ function pridaj_hodnotenie($comments, $id) {
 			?>
 		</table>
 		<br>
-		<input type="submit" value="Ulož zmeny" id="upload" />
+		<input type="submit" data-trans-key="save-changes" id="upload" />
 	</form>
 	<?php
 }
@@ -286,10 +286,10 @@ function pridaj_hodnotenie($comments, $id) {
 function updateData($conn, $kde, $co, $zaco, $idName, $id) {
 	$sql_update = "UPDATE ".$kde." SET ".$co." = '".$zaco."' WHERE ".$idName." = ".$id;
 	if (mysqli_query($conn,$sql_update)) {
-		echo "[OK] - Text uložený.<br>";
+		echoMessage("m-text-saved");
 	}
 	else {
-		echo "[ERROR] - Chyba pri uložení textu do databázy.".mysqli_error($conn)."<br>";
+		echoError("text-saving", mysqli_error($conn));
 	}
 }
 
@@ -313,7 +313,7 @@ function get_result_table($sk_league, $year) {
         return;
     }
     if ($link = db_connect()) {
-        $sql = "SELECT q.name, q.user_id, q.solution_id, q.best, a.context_id assignment_id, q.points
+        $sql = "SELECT q.name, q.solution_id, q.best, a.context_id assignment_id, q.points
                 FROM assignments a
                 LEFT OUTER JOIN (
                     SELECT t.name, t.user_id, s.context_id solution_id, s.best, s.assignment_id, ROUND(SUM(comm.points)/COUNT(comm.points),2) points
@@ -337,12 +337,10 @@ function get_result_table($sk_league, $year) {
             return;
 
         $teamPointsMap = array();
-        $teamIdMap = array();
         $aid_array = array();
 
         while ($row = mysqli_fetch_array($result)) {
             $end_array = array_values($aid_array);
-            $teamIdMap[$row['name']] = $row['user_id'];
             if (!sizeof($aid_array) || $row['assignment_id'] != end($end_array)){
                 array_push($aid_array, $row['assignment_id']);
                 foreach ($teamPointsMap as $user => $array) {
@@ -397,7 +395,7 @@ function get_result_table($sk_league, $year) {
                 }
                 else {
                     $result_table .= '<td style="font-weight: bold; '.($teamPointsMap[$user][$i][2]?"background-color: #6CF952;":"").'"><a
-                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'&tid='.$teamIdMap[$user].'">'.$teamPointsMap[$user][$i][0].'</a></td>';
+                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'">'.$teamPointsMap[$user][$i][0].'</a></td>';
                 };
             }
             $result_table .= '<td style="border-left: 1px solid black;"><strong>'.$sum_array[$user].'</strong></td>';
@@ -509,8 +507,10 @@ function prehlad_zadani_nezverejnene($typ) {
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
+                $eng = is_null($row['eng']) ? $row['sk'] : $row['eng'];
                 echo "<tr>";
-                echo "<td><a href='#'>{$row['sk']}</a></td>";
+                echo "<td data-trans-lang='".SK."'><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
+                echo "<td data-trans-lang='".ENG."'><a href='assignment.php?id={$row['context_id']}'>{$eng}</a></td>";
                 if ($typ == "admin"){
                 echo "<td><input type='radio' name='datum' value='{$row['context_id']}'><br></td>\n";}
                 echo "</tr>";
@@ -551,8 +551,10 @@ function prehlad_zadani_zverejnene() {
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
+                $eng = is_null($row['eng']) ? $row['sk'] : $row['eng'];
                 echo "<tr>";
-                echo "<td><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
+                echo "<td data-trans-lang='".SK."'><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
+                echo "<td data-trans-lang='".ENG."'><a href='assignment.php?id={$row['context_id']}'>{$eng}</a></td>";
                 //echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans='delete'></span></button><br></td>\n";
                 echo "</tr>";
             }
