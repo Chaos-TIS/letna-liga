@@ -28,24 +28,33 @@ class Solution extends Context {
 						$this->assignment = new Assignment($conn, $row['assignment_id']);
 			}
 		
-			$sql_get_comment = "SELECT * FROM comments WHERE context_id = ".$solution_pole["context_id"];
+			$sql_get_comment = "SELECT * FROM comments WHERE solution_id = ".$id;
 			$comment = mysqli_query($conn,$sql_get_comment);
 			if ($comment != false) {
-				$comment_pole = mysqli_fetch_array($comment);
 				$comments = array();
-				for ($i = 0 ; $i < count($comment_pole['comment_id']) ; $i++) {
+				while($comments_pole = mysqli_fetch_array($comment)) {
 					$comments[] = new Comment($conn,
-												 $comment_pole['comment_id'][$i],
-												 $this,
-												 $comment_pole['user_id'][$i],
-												 $comment_pole['text'][$i],
-												 $comment_pole['points'][$i]
+												 $comments_pole['comment_id'],
+												 $this->id,
+												 $comments_pole['user_id'],
+												 $comments_pole['text'],
+												 $comments_pole['points']
 												);
 				}
 				$this->setComments($comments);
 			}
 
 		}
+    }
+	
+	public static function getFromDatabaseByID($conn, $id){
+		$sql_get_solution = "SELECT c.user_id AS 'user_id', s.assignment_id AS 'assignment_id' FROM contexts c, solutions s WHERE c.context_id = s.context_id AND c.context_id = ".$id;
+		$solution = mysqli_query($conn,$sql_get_solution);
+		if ($solution != false) {
+			$solution_pole = mysqli_fetch_array($solution);
+			return new self($conn, $id, Team::getFromDatabaseByID($conn, $id), new Assignment($conn, $id));
+		}
+		return null;
     }
 
     public function __get($property) {
@@ -74,12 +83,18 @@ class Solution extends Context {
 	
 	public function setComments($comments){
 		$this->comments = $comments;
+		if (count($comments) == 1) {
+			$this->points = $comments[0]->getPoints();
+			return;
+		}
 		$points = 0.0;
 		for ($i = 0 ; $i < count($comments) ; $i++) {
-			$points += $comments[$i].getPoints();
+			if ($comments[$i]->getAuthor() instanceof Jury) {
+				$points += $comments[$i]->getPoints();
+			}
 		}
-		if (count($comments) != 0) {
-			$this->points = $points / count($comments);
+		if (count($comments) != 1) {
+			$this->points = $points / (count($comments) - 1);
 		}
 	}		
 	
@@ -122,23 +137,52 @@ class Solution extends Context {
 	}
 	
 	public function getPreviewHtml(){
-	 ?>
-    <h2>Hodnotenie riešení</h2>
-    <h3><span data-trans-key="team-name"></span>: <?php echo $this->author->name; ?></h3>
+	?>
+    <h3><span data-trans-key="team-name"></span>: <?php echo $this->author->getName(); ?></h3>
     <p><?php echo $this->author->description; ?></p>
     <h3 data-trans-key="solution"></h3>
     <p><?php echo $this->text; ?></p>
+	<h3>Hodnotenie:</h3>
+	<p>
+	<?php
+	if ((isset($_SESSION['loggedUser']) && (is_a($_SESSION['loggedUser'], 'Jury') || is_a($_SESSION['loggedUser'], 'Administrator')))) {
+		$this->getCommentEditingHtml();
+	}
+	else {
+		for ($i = 0 ; $i < count($this->comments) ; $i++) {
+			if ($this->comments[$i]->getAuthor() instanceof Administrator) {
+				$this->comments[$i]->getPreviewHtml();
+				break;
+			}
+		}
+	}
+	?>
+	</p>
     
 </div>
 <?php
 	}
 	
-	public function getComments(){
-	
+	public function getCommentEditingHtml() {
+		$conn = db_connect();
+		if ($conn == false) return;
+		$user = $_SESSION['loggedUser'];
+		for ($i = 0 ; $i < count($this->comments) ; $i++) {
+			if ($this->comments[$i]->getAuthor()->getId() == $user->getId()) {
+				if (is_a($_SESSION['loggedUser'], 'Administrator')) $this->comments[$i]->setPoints($conn, $this->points);
+				pridaj_hodnotenie($this->comments, $i);
+				return;
+			}
+		}
+		$comment_id = new_comment($conn, $this->id, $user->getId());
+		
+		$this->comments[] = Comment::getFromDatabaseByID($conn, $comment_id);
+		if (is_a($_SESSION['loggedUser'], 'Administrator')) $this->comments[count($this->comments) - 1]->setPoints($conn, $this->points);
+		pridaj_hodnotenie($this->comments, count($this->comments) - 1);
 	}
 	
-	public function getMainComment(){
-	
+	public function getComments(){
+		return $this->comments;
 	}
 	
 	public function save(){

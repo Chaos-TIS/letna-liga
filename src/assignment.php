@@ -10,10 +10,10 @@ get_topright_form();
 
 $id = (integer)$_GET["id"] ;
 if($link = db_connect()){
-  $_SESSION['asignment'] = new Assignment($link,$id);
+  $_SESSION['assignment'] = new Assignment($link,$id);
 }
-if (isset($_SESSION['asignment'])){
-  $_SESSION['asignment']->getPreviewHtml();
+if (isset($_SESSION['assignment'])){
+  $_SESSION['assignment']->getPreviewHtml();
 }
 
 page_footer()

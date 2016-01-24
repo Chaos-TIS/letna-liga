@@ -4,12 +4,6 @@ page_head("Pridanie riešenia");
 page_nav();
 get_topright_form();
 
-/*
-$conn = db_connect();
-$_SESSION["loggedUser"] = Team::getFromDatabaseByID($conn,6);
-$_SESSION["assignment"] = new Assignment($conn,1);
-*/
-
 if (!isset($_SESSION["assignment"]) || $_SESSION["assignment"] == null) dieWithError("err-no-assignment-chosen");
 if (!$_SESSION["assignment"]->isAfterDeadline()) dieWithError("err-assignment-deadline");
 if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");

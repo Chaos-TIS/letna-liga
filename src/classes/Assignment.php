@@ -138,92 +138,73 @@ class Assignment extends Context {
 	}
 	
 	public function getPreviewHtml(){
-	 	   ?>
-	  <h2> <?php  echo $this->name_sk?> </h2>
-	  <h3><span data-trans-key="assignment-page"></span> <?php  echo $this->deadline;?></h3>
-    <div> <?php echo $this->text_sk; ?> </div> 
-    <h3><span data-trans-key="solutions"></span>:</h3>
-    <ul>
-    <?php
-    if(Date("Y-m-d H:i:s")>$this->deadline){ 
-      for($i=0;$i<count($this->solutions);$i++){ 
-        
-        $team = $this->solutions[$i];
-        $team2= $team->getTeam();
-        $team3 = $team2->getName();
-        ?>
-        <li><a href="solution.php?id=<?php echo $team->getId(); ?>"> <?php echo $team3; ?> </a> </li> 
-        <?php                  
-      } 
-    }
-    else if (isset($_SESSION['loggedUser'])){
-  				if(is_a($_SESSION['loggedUser'], 'Team')){
-             ?>  <a href="addSolution.php" data-trans-key="add-solution"></a>
-             <?php           
-          }
-          else if (is_a($_SESSION['loggedUser'], 'Jury')){
-              ?> 
-                <a href="#" data-trans-key="add-rating"></a>
-             <?php
-          }
-          else if (is_a($_SESSION['loggedUser'], 'Administrator')){
-              ?>  <table>
-            <?php
-              if($link = db_connect()){
-                ?>
-                <tr>
-                <th></th>
-                <?php
-                  $sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 ORDER BY s.user_id";
-                  $result = mysqli_query($link,$sql);
-                  if($result!=false){
-                    $pocet=1;
-                    $rozhodcovia = array();
-                    while ($row = mysqli_fetch_assoc($result)) { 
-                      ?>            
-                      <th>Rozhodca <?php echo $pocet;?></th>
-                      <?php
-                        array_push($rozhodcovia, $row['user_id']);
-                        $pocet++;
-                    } 
-                  } ?>
-                  </tr>
-                <?php
-            
-                for($i=0;$i<count($this->solutions);$i++){
-                ?>
-                  <tr>
-                    <th><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
-           
-                      <?php
-                      for($j=0;$j<count($rozhodcovia);$j++){
-                        $sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
-                        $result = mysqli_query($link,$sql);
-                        if($result!=false){
-                          ?> <td data-trans-key="finished"></td> <?php
-                        }
-                        else{
-                          ?> <td data-trans-key="not-rated"></td> <?php
-                        }
-                        
-                      }
-                
-                ?>
-                  </tr>  
-                  <?php              
-                }
-              }
-            ?>
-            </table>
-            <?php    
-          }
-    } 
-    else{
-        
-    } 
-    ?>
-      </ul>
-      <?php
+		?>
+		<h2> <?php  echo $this->name_sk?> </h2>
+		<h3><span data-trans-key="assignment-page"></span> <?php  echo $this->deadline;?></h3>
+		<div> <?php echo $this->text_sk; ?> </div>
+		<br>
+		<?php
+		if(Date("Y-m-d H:i:s") < $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Team')){ 
+			?> <a href="addSolution.php" data-trans-key="add-solution"></a> <?php           
+		}
+		else if (Date("Y-m-d H:i:s") > $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Administrator')){
+			?> <table> <?php
+			if($link = db_connect()){
+				?>
+				<tr>
+				<th></th>
+				<?php
+				$sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 AND o.validated = 1 ORDER BY s.user_id";
+				$result = mysqli_query($link,$sql);
+				if($result!=false){
+					$pocet=1;
+					$rozhodcovia = array();
+					while ($row = mysqli_fetch_assoc($result)) { 
+						?>            
+						<th>Rozhodca <?php echo $pocet;?></th>
+						<?php
+						array_push($rozhodcovia, $row['user_id']);
+						$pocet++;
+					} 
+				}
+				?> </tr> <?php
+				for($i=0;$i<count($this->solutions);$i++){
+				?>
+				<tr>
+					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
+					<?php
+					for($j=0;$j<count($rozhodcovia);$j++){
+						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
+						$result = mysqli_query($link,$sql);
+						if($result!=false){
+							?> <td data-trans-key="finished"></td> <?php
+						}
+						else {
+							?> <td data-trans-key="not-rated"></td> <?php
+						}
+					}
+			
+				?> </tr> <?php              
+				}
+			}
+			?> </table> <?php    
+		}
+		else if (Date("Y-m-d H:i:s") > $this->deadline) {
+			?>
+			<h3><span data-trans-key="solutions"></span>:</h3>
+			<ul>
+			<?php
+			for($i=0;$i<count($this->solutions);$i++){ 
+			
+				$team = $this->solutions[$i];
+				$team2= $team->getTeam();
+				$team3 = $team2->getName();
+				?>
+				<li><a href="solution.php?id=<?php echo $team->getId(); ?>"> <?php echo $team3; ?> </a> </li> 
+				<?php                  
+			}
+			?> </ul> <?php
+		}
 	}
 	
 	public function getResultTableRowHTML(){
@@ -249,7 +230,7 @@ class Assignment extends Context {
 	public function isAfterDeadline(){
 		$deadline = strtotime($this->deadline);
 		$cur_time = strtotime(date("c"));
-		return $deadline < $cur_time;//!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		return $deadline > $cur_time;
 	}
 	
 	public function save(){

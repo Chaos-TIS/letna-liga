@@ -1,18 +1,30 @@
 <?php
 require_once(dirname(__FILE__)."/includes/functions.php");
 
-page_head("Letn� liga FLL");
+page_head("Letná liga FLL");
 page_nav();
 if (!isset($_SESSION['loggedUser']))
             get_login_form();
         else
             get_logout_button();
 $id = (integer)$_GET["id"] ;
-$teamId = (integer) $_GET["tid"];
+
 if($link = db_connect()){
-	$_SESSION['solution'] = new Solution($link,$id,Team::getFromDatabaseByID($link,$teamId),$_SESSION['asignment']);
+	$_SESSION['solution'] = Solution::getFromDatabaseByID($link, $id);
 }
 if(isset($_SESSION['solution'])){
+	if (isset($_GET['comment'])) {
+		$comment = $_SESSION['solution']->getComments()[$_GET['comment']];
+		if ($_SESSION['loggedUser']->getId() == $comment->getAuthor()->getId()) {
+			if (isset($_POST['commentText']) && $_POST['commentText'] != $comment->getTxt()) {
+				$comment->setTxt($link, $_POST['commentText']);	
+			}
+			if (isset($_POST['commentPoints']) && $_POST['commentPoints'] != $comment->getPoints()) {
+				$comment->setPoints($link, $_POST['commentPoints']);	
+			}
+		}
+	}	
+	
 ?>
   <div id="content">
 <?php

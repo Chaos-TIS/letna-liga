@@ -20,7 +20,6 @@ class Team extends User {
 			$team_pole = mysqli_fetch_array($team);
 			return new self($id, $team_pole['mail'],$team_pole['name'],$team_pole['desc'],$team_pole['sk']);
 		}
-		echo "som tu";
 		return null;
     }
 

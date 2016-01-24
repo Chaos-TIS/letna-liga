@@ -259,6 +259,30 @@ function new_assignment($conn, $uid) {
 	return $cid;
 }
 
+function new_comment($conn, $cid, $uid) {
+	mysqli_query($conn,"INSERT INTO comments (solution_id, user_id) VALUES (".$cid.",".$uid.")");
+	return mysqli_insert_id($conn);
+}
+
+function pridaj_hodnotenie($comments, $id) {
+	?>
+	<form name="form1" enctype="multipart/form-data" method="POST" action="<?php echo "solution.php?id=".$comments[$id]->getSolution()."&comment=".$id; ?>" >
+		<table>
+			<?php
+			if (is_a($_SESSION['loggedUser'], 'Administrator')) {
+				for ($i = 0 ; $i < count($comments) ; $i++) {
+					if ($i != $id) $comments[$i]->getPreviewHtml();
+				}
+			}
+			$comments[$id]->getEditingHtml();
+			?>
+		</table>
+		<br>
+		<input type="submit" value="Ulož zmeny" id="upload" />
+	</form>
+	<?php
+}
+
 function updateData($conn, $kde, $co, $zaco, $idName, $id) {
 	$sql_update = "UPDATE ".$kde." SET ".$co." = '".$zaco."' WHERE ".$idName." = ".$id;
 	if (mysqli_query($conn,$sql_update)) {
