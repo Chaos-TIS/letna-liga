@@ -77,7 +77,7 @@ if(isset($_SESSION['solution'])){
   <p>
   <?php
   if ((isset($_SESSION['loggedUser']) && (is_a($_SESSION['loggedUser'], 'Jury') || is_a($_SESSION['loggedUser'], 'Administrator')))) {
-    $this->getCommentEditingHtml();
+    $_SESSION['solution']->getCommentEditingHtml();
   }
   else {
     for ($i = 0 ; $i < count($_SESSION['solution']->comments) ; $i++) {

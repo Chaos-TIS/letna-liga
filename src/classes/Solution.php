@@ -108,7 +108,7 @@ class Solution extends Context {
 	
 			<br>			
 			<?php
-			$this->getAttachmentsTableHtml();
+			$this->getAttachmentsTableHtml('solutions');
 			?>
 			
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />

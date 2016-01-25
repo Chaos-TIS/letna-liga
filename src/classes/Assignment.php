@@ -91,7 +91,7 @@ class Assignment extends Context {
 	
 			<br>			
 			<?php
-			$this->getAttachmentsTableHtml();
+			$this->getAttachmentsTableHtml('assignments');
 			?>
 			
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
@@ -192,7 +192,7 @@ class Assignment extends Context {
 				for($i=0;$i<count($this->solutions);$i++){
 				?>
 				<tr>
-					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
+					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
 					<?php
 					for($j=0;$j<count($rozhodcovia);$j++){
 						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
@@ -249,7 +249,7 @@ class Assignment extends Context {
 
 				?>
 				<tr>
-				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
+				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
 				<?php
 				if ($best == '1'){
 					?><td><input type='radio' name='best' value="<?php echo $this->solutions[$i]->getTeam()->getId(); ?>" checked></td></tr><?php

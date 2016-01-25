@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 define("SK", 0);
 define("ENG", 1);
@@ -22,9 +22,9 @@ function page_head($title)
         <meta data-trans-title="<?php echo $title ?>">
         <title><?php echo $title ?></title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
-        <link type="text/css" href="css/styles.css" rel="stylesheet">
+        <link type="text/css" href="css/styles.css" rel="stylesheet"> 
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
-		<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="max-width:530px">
+		<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="(max-width:530px)"> 
         <script type="text/javascript" src="js/dropdownmenu.js" ></script>
         <script type="text/javascript" src="js/translator.js" ></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -136,7 +136,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) ORDER BY begin ASC";
+                $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE end IS NOT NULL AND begin IS NOT NULL ORDER BY begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;
@@ -508,7 +508,7 @@ function prehlad_zadani_nezverejnene($typ) {
             echo '<p>';
         ?>
             <form method="post">
-                <h1 data-trans-key="unpublished-assignments"></h1>
+                <h2 data-trans-key="unpublished-assignments"></h2>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
@@ -552,7 +552,7 @@ function prehlad_zadani_zverejnene() {
             echo '<p>';
         ?>
             <form method="post">
-            <h1 data-trans-key="published-assignments"></h1>
+            <h2 data-trans-key="published-assignments"></h2>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
