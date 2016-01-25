@@ -9,8 +9,14 @@ get_topright_form();
 
             <script>
                 $(document).ready(function(){
-                    $("#results").load("includes/show_result_tables.php");
-
+                    var results = $("#results");
+                    results.load("includes/show_result_tables.php",
+                        function () {
+                            if (results.html() == ""){
+                                results.html("<span data-trans-key='results-not-available'></span>");
+                                dict.translateElement(null, "#results");
+                            }
+                        });
                 });
             </script>
 

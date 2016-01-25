@@ -136,7 +136,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) ORDER BY begin ASC";
+                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() ORDER BY a.begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;
@@ -311,26 +311,30 @@ function get_max_year(){
 
 function get_result_table($sk_league, $year) {
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-    if (!isset($year)){
-        $year = "(SELECT MAX(year) FROM assignments)";
-    }
-    if ($year <= 2015 && !$sk_league) {
-        return;
-    }
     if ($link = db_connect()) {
-        $sql = "SELECT q.name, q.solution_id, q.best, a.context_id assignment_id, q.points
+        if (!isset($year)){
+            $maxYearQuery = "SELECT MAX(year) AS year FROM assignments";
+            if ($result = mysqli_query($link, $maxYearQuery))
+                if ($row = mysqli_fetch_array($result))
+                    $year = $row['year'];
+        }
+        if ($year <= 2015 && !$sk_league) {
+            return "";
+        }
+
+        $sql = "SELECT q.name, q.solution_id, q.best, a.context_id assignment_id, q.points, q.sk_league AS league
                 FROM assignments a
                 LEFT OUTER JOIN (
-                    SELECT t.name, t.user_id, s.context_id solution_id, s.best, s.assignment_id, ROUND(SUM(comm.points)/COUNT(comm.points),2) points
+                    SELECT t.name, t.sk_league, s.context_id solution_id, s.best, s.assignment_id, comm.points
                     FROM solutions s
                     LEFT OUTER JOIN contexts c ON (c.context_id = s.context_id)
                     LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
                     LEFT OUTER JOIN teams t ON (t.user_id = u.user_id)
-                    LEFT OUTER JOIN comments comm ON (comm.solution_id = c.context_id)
+                    LEFT OUTER JOIN comments comm ON (comm.solution_id = c.context_id AND comm.user_id = 1)
                    	WHERE t.sk_league IN (1, $sk_league)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
-                WHERE a.year = $year
+                WHERE a.year = $year AND a.begin <= CURDATE()
                 ORDER BY a.begin ASC;
                 ";
 
@@ -339,11 +343,11 @@ function get_result_table($sk_league, $year) {
 
 
         if (!$result = mysqli_query($link, $sql))
-            return;
+            return "";
 
         $teamPointsMap = array();
+        $teamLeagueMap = array();
         $aid_array = array();
-
         while ($row = mysqli_fetch_array($result)) {
             $end_array = array_values($aid_array);
             if (!sizeof($aid_array) || $row['assignment_id'] != end($end_array)){
@@ -363,7 +367,12 @@ function get_result_table($sk_league, $year) {
 
             if ($row['name'] != null){
                 $teamPointsMap[$row['name']][sizeof($aid_array)-1] = array((float)$row['points'], $row['solution_id'], $row['best']);
+                $teamLeagueMap[$row['name']] = $row['league'];
             }
+        }
+
+        if (empty($teamPointsMap)){
+            return "";
         }
 
         $sum_array = array();
@@ -393,13 +402,14 @@ function get_result_table($sk_league, $year) {
         $result_table .= '<th><span data-trans-key="sum-points"></span></th></tr>';
 
         foreach ($sum_array as $user => $sum){
+            $best_color = array("#53DFF5", "#73FF57")[$teamLeagueMap[$user]];
             $result_table .= "<tr style='border-top: 1px solid black;'><td style='border-right: 1px solid black; font-weight: bold;'><strong>$user</strong></td>";
             for ($i = 0; $i < sizeof($aid_array); $i++){
                 if (is_null($teamPointsMap[$user][$i])){
                     $result_table .= "<td style=' font-weight: bold;'>-</td>";
                 }
                 else {
-                    $result_table .= '<td style="font-weight: bold; '.($teamPointsMap[$user][$i][2]?"background-color: #6CF952;":"").'"><a
+                    $result_table .= '<td style="font-weight: bold; '.($teamPointsMap[$user][$i][2]?"background-color: $best_color;":"").'"><a
                     href="solution.php?id='.$teamPointsMap[$user][$i][1].'">'.$teamPointsMap[$user][$i][0].'</a></td>';
                 };
             }
@@ -501,7 +511,7 @@ function sprava_uctov_jury() {
 
 function prehlad_zadani_nezverejnene($typ) {
     if ($link = db_connect()) {
-        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin >= CURDATE() OR begin is NULL"; // definuj dopyt
+        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > CURDATE() OR begin is NULL"; // definuj dopyt
     $result = mysqli_query($link, $sql); // vykonaj dopyt
     if ($result) {
             // dopyt sa podarilo vykonať
@@ -545,7 +555,7 @@ function prehlad_zadani_nezverejnene($typ) {
 
 function prehlad_zadani_zverejnene() {
     if ($link = db_connect()) {
-        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin < CURDATE() && year = YEAR(CURDATE()) "; // definuj dopyt
+        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= CURDATE() && year = YEAR(CURDATE()) "; // definuj dopyt
     $result = mysqli_query($link, $sql); // vykonaj dopyt
     if ($result) {
             // dopyt sa podarilo vykonať

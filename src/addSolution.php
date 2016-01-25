@@ -5,7 +5,7 @@ page_nav();
 get_topright_form();
 
 if (!isset($_SESSION["assignment"]) || $_SESSION["assignment"] == null) dieWithError("err-no-assignment-chosen");
-if (!$_SESSION["assignment"]->isAfterDeadline()) dieWithError("err-assignment-deadline");
+if ($_SESSION["assignment"]->isAfterDeadline()) dieWithError("err-assignment-deadline");
 if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
 if (get_class($_SESSION["loggedUser"]) != "Team") dieWithError("err-add-solution-rights");
 

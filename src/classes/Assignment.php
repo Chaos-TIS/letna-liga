@@ -311,7 +311,7 @@ class Assignment extends Context {
 	public function isAfterDeadline(){
 		$deadline = strtotime($this->deadline);
 		$cur_time = strtotime(date("c"));
-		return $deadline > $cur_time;
+		return $deadline < $cur_time;
 	}
 	
 	public function save(){

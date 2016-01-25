@@ -298,4 +298,4 @@ dict.set('err-text-saving', ['Chyba pri ukladaní textu do databázy.', 'An erro
 
 dict.set('solution-description', ['Popis riešenia', 'Solution description']);
 
-dict.set('', ['', '']);
+dict.set('results-not-available', ['Aktuálne výsledky ešte nie sú k dispozícii.', 'Acutal results are not available yet.']);
