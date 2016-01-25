@@ -50,7 +50,7 @@ class Assignment extends Context {
 	
 	public function setSolutions($conn) {
 		$this->solutions = array(); // TODO
-		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id' FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;  
+		$sql_get_solutions = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best_id'  FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;  
 		$solutions = mysqli_query($conn,$sql_get_solutions);
 		if ($solutions != false) {
 		    while ($solutions_row = mysqli_fetch_assoc($solutions)) {	      
@@ -174,6 +174,9 @@ class Assignment extends Context {
 				<?php
 				$sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 AND o.validated = 1 ORDER BY s.user_id";
 				$result = mysqli_query($link,$sql);
+				?>
+				<a href="bestSolution.php?id=<?php echo $this->id ?>" >select best solution</a> 
+				<?php
 				if($result!=false){
 					$pocet=1;
 					$rozhodcovia = array();
@@ -223,6 +226,66 @@ class Assignment extends Context {
 			}
 			?> </ul> <?php
 		}
+	}
+
+
+	public function getBestSolution(){
+		if (Date("Y-m-d H:i:s") > $this->deadline) {
+			?>
+			<h3><span data-trans-key="solutions"></span>:</h3>
+			<form id="form1" name="form1" method="post" action="">
+			<table>
+			<?php
+			if($link = db_connect()){
+			$sql = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best'  FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+			$result = mysqli_query($link,$sql);
+			}
+			for($i=0;$i<count($this->solutions);$i++){ 
+				$best = mysqli_fetch_assoc($result);
+				$team = $this->solutions[$i];
+				$team2= $team->getTeam();
+				$team3 = $team2->getName();
+				$best = "{$best['best']}";
+
+				?>
+				<tr>
+				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
+				<?php
+				if ($best == '1'){
+					?><td><input type='radio' name='best' value="<?php echo $this->solutions[$i]->getTeam()->getId(); ?>" checked></td></tr><?php
+				}else{
+					
+				?>	
+				<td><input type='radio' name='best' value='<?php echo $this->solutions[$i]->getTeam()->getId(); ?>'></td>
+				</tr>
+				<?php 
+			}                 
+			}
+			?></table>  <?php
+		}
+		?>
+		
+		<input type="submit" name="save" id="save" value="Save" />
+		</form>
+		<?php
+
+	
+	}
+
+	public function addBestSolution($pom){
+		if($link = db_connect()){
+			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 0 WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+			$result = mysqli_query($link,$sql);
+			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
+			$result = mysqli_query($link,$sql);
+			if($result){
+				echoMessage('Add best solution');
+				?>
+				<meta http-equiv="refresh" content="0;url=bestSolution.php?id=<?php echo $this->id ?>">
+				<?php 
+			}
+		}
+
 	}
 	
 	public function getResultTableRowHTML(){

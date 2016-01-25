@@ -124,7 +124,7 @@ class Reg{
                 {
                     $this->Handle("m-registration-success");
                     ?>
-                    <meta http-equiv="refresh" content="4;url=index.php"> 
+                    <meta http-equiv="refresh" content="3;url=index.php"> 
                     <?php      
                 }
             }
@@ -138,7 +138,7 @@ class Reg{
                 {
                     $this->Handle("m-registration-success");
                     ?>
-                    <meta http-equiv="refresh" content="4;url=index.php"> 
+                    <meta http-equiv="refresh" content="3;url=index.php"> 
                     <?php
                 }
             }
@@ -147,7 +147,7 @@ class Reg{
         {
             $this->HandleError("err-registration");
             ?>
-            <meta http-equiv="refresh" content="4;url=registracia.php"> 
+            <meta http-equiv="refresh" content="3;url=registracia.php"> 
             <?php
         }
     }
