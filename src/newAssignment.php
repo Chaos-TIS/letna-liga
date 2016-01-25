@@ -46,7 +46,6 @@ if ($conn = db_connect()) {
 			?> <meta http-equiv="refresh" content="0;url=assignment.php?id=<?php echo $assignment->getId(); ?>"><?php
 		}
 		else if ($action == 2) {
-			echo "preco to nejde";
 			?> <meta http-equiv="refresh" content="0;url=prehladZadani.php"><?php
 		}
 	}
