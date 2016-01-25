@@ -524,90 +524,109 @@ function sprava_uctov_jury() {
     }
 }
 
-
-function prehlad_zadani_nezverejnene($typ) {
-    if ($link = db_connect()) {
-        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > CURDATE() OR begin is NULL"; // definuj dopyt
-    $result = mysqli_query($link, $sql); // vykonaj dopyt
-    if ($result) {
-            // dopyt sa podarilo vykonať
-            echo '<p>';
-        ?>
-            <form method="post">
-                <h2 data-trans-key="unpublished-assignments"></h2>
-            <?php
-            echo "<table text-align = 'center' border = '0'>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                $eng = is_null($row['eng']) ? $row['sk'] : $row['eng'];
-                echo "<tr>";
-                echo "<td data-trans-lang='".SK."'><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
-                echo "<td data-trans-lang='".ENG."'><a href='assignment.php?id={$row['context_id']}'>{$eng}</a></td>";
-                if ($typ == "admin"){
-                echo "<td><input type='radio' name='datum' value='{$row['context_id']}'><br></td>\n";}
-                echo "</tr>";
-            }
-            if ($typ == "admin"){
-            echo "<tr>";
-            echo "<td><input type='date' name='start' min='2015-01-01'><br><br></td>";
-            echo "<td><input type='date' name='stop' min='2015-01-01'><br><br></td>";
-            echo "<td><input type='submit' name='send' value='Zverejni'><br><br></td>\n";
-            echo "</tr>";}
-            echo "</table>";
-            ?>
-</form>
-<?php
-            echo '</p>';
-            mysqli_free_result($result);
-    } else {
-            // NEpodarilo sa vykonať dopyt!
-        echoError('err-db-query-fail');
-    }
-        mysqli_close($link);
-    } else {
-        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('err-db-connection-fail');
-    }
+function isUserTypeLogged($type) {
+	if (isset($_SESSION["loggedUser"]) && get_class($_SESSION["loggedUser"]) == $type) {
+		return true;
+	}
+	return false;
 }
 
-function prehlad_zadani_zverejnene() {
+function prehlad_zadani($zverejnene) {
     if ($link = db_connect()) {
-        $sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= CURDATE() && year = YEAR(CURDATE()) "; // definuj dopyt
-    $result = mysqli_query($link, $sql); // vykonaj dopyt
-    if ($result) {
-            // dopyt sa podarilo vykonať
-            echo '<p>';
-        ?>
-            <form method="post">
-            <h2 data-trans-key="published-assignments"></h2>
-            <?php
-            echo "<table text-align = 'center' border = '0'>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                $eng = is_null($row['eng']) ? $row['sk'] : $row['eng'];
-                echo "<tr>";
-                echo "<td data-trans-lang='".SK."'><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
-                echo "<td data-trans-lang='".ENG."'><a href='assignment.php?id={$row['context_id']}'>{$eng}</a></td>";
-                //echo "<td><button type='submit' name='zrus' value='{$row['user_id']}'><span data-trans='delete'></span></button><br></td>\n";
-                echo "</tr>";
-            }
-            echo "</table>";
-            ?>
-</form>
-<?php
-            echo '</p>';
-            mysqli_free_result($result);
-    } else {
-            // NEpodarilo sa vykonať dopyt!
-        echoError('err-db-query-fail');
-    }
-        mysqli_close($link);
-    } else {
-        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
-        echoError('err-db-connection-fail');
-    }
+		if ($zverejnene) {
+			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= CURDATE() AND end > CURDATE()";
+			$nadpis = "published-assignments";
+		}
+		else {
+			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > CURDATE() OR begin is NULL";
+			$nadpis = "unpublished-assignments";
+		}
+        $result = mysqli_query($link, $sql);
+		if ($result) {
+			?>
+			<p>
+			<form method="post">
+				<h2 data-trans-key="<?php echo $nadpis; ?>"></h2>
+				<table>
+				<?php
+				while ($row = mysqli_fetch_assoc($result)) {
+					$eng = is_null($row['eng']) ? $row['sk'] : $row['eng'];
+					echo "<tr>";
+						if (isUserTypeLogged("Administrator") || (isUserTypeLogged("Jury") && $zverejnene == false)) {
+							echo "<td><input type='radio' name='id' value='{$row['context_id']}'><br></td>\n";
+						}
+						echo "<td data-trans-lang='".SK."'><a href='assignment.php?id={$row['context_id']}'>{$row['sk']}</a></td>";
+						echo "<td data-trans-lang='".ENG."'><a href='assignment.php?id={$row['context_id']}'>{$eng}</a></td>";
+						?>
+						<td> <?php
+							if ($row['begin'] == "") {
+								echo "---";
+							}
+							else {
+								echo $row['begin'];
+							}
+							?>
+						</td>
+						<td> <?php
+							if ($row['end'] == "") {
+								echo "---";
+							}
+							else {
+								echo $row['end'];
+							}
+							?>
+						</td>
+						<?php
+					echo "</tr>";
+				}
+				if (isUserTypeLogged("Administrator")){
+					?>
+					<tr>
+						<td> </td>
+						<td data-trans-key="publish-date"> </td>
+						<td> <input type='datetime-local' name='start' value="<?php echo Date("Y-m-d")."T".Date("H:i"); ?>"> </td>
+					</tr>
+					<tr>
+						<td> </td>
+						<td data-trans-key="deadline-date"> </td>
+						<td> <input type='datetime-local' name='stop' value="<?php echo date('Y-m-d', strtotime(Date("Y-m-d"). ' + 14 days'))."T23:59"; ?>"> </td>
+						<td> <button type="submit" formaction="prehladZadani.php?action=1" data-trans-key="publish-selected-assignment" id="publishAssignment" /> </td>
+						
+					 </tr>
+					 <?php
+					 if (!$zverejnene) {
+						 ?>
+						 <tr>
+							<td> </td><td> </td><td> </td>
+							<td> <button type="submit" formaction="prehladZadani.php?action=2" data-trans-key="delete-selected-assignment" id="deleteAssignment" /> </td>
+						 </tr>
+						 <?php
+					 }
+				}
+				if (isUserTypeLogged("Administrator") || (isUserTypeLogged("Jury") && $zverejnene == false)) {
+					?>
+					<tr>
+						<td> </td><td> </td><td> </td>
+						<td> <button type="submit" formaction="prehladZadani.php?action=3" data-trans-key="edit-selected-assignment" id="editAssignment" /> </td>
+					 </tr>
+					<?php
+				}
+				?>
+				</table>
+			</form>
+			</p>
+			<?php
+			mysqli_free_result($result);
+		}
+		else {
+			echoError('err-db-query-fail');
+		}
+		mysqli_close($link);
+	}
+	else {
+		echoError('err-db-connection-fail');
+	}
 }
-
-
-
 
 
 ?>

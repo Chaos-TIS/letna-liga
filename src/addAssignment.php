@@ -15,7 +15,7 @@ if(isset($_GET["id"]) && !empty($_GET["id"])) {
 	$result = mysqli_query($conn,$sql_get_assignment); 
 	if ($result == true && mysqli_num_rows($result) != 0) {
 		$assignment = new Assignment($conn, $_GET["id"]);
-		if (!$_SESSION["loggedUser"]->isAdmin() && $_SESSION["loggedUser"]->getId() != $assignment->getId()) {
+		if (!isUserTypeLogged("Administrator") && $_SESSION["loggedUser"]->getId() != $assignment->getAuthor()->getId()) {
 			dieWithError("err-edit-assignment-rights");
 		}
 	}

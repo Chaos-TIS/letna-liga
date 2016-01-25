@@ -35,6 +35,10 @@ abstract class Context{
 		return $this->id;
 	}
 	
+	public function getAuthor() {
+		return $this->author;
+	}
+	
 	public function getAttachmentsTableHtml($att_folder) {
 		?>
 		<table cellpadding="3">
