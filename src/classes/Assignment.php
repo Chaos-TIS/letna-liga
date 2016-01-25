@@ -189,7 +189,9 @@ class Assignment extends Context {
 				$sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 AND o.validated = 1 ORDER BY s.user_id";
 				$result = mysqli_query($link,$sql);
 				?>
+				<br>
 				<a href="bestSolution.php?id=<?php echo $this->id ?>" >select best solution</a> 
+				<br><br><br>
 				<?php
 				if($result!=false){
 					$pocet=1;
@@ -202,7 +204,6 @@ class Assignment extends Context {
 						$pocet++;
 					} 
 				}
-				
 				?> </tr> <?php
 				for($i=0;$i<count($this->solutions);$i++){
 				?>
@@ -210,14 +211,18 @@ class Assignment extends Context {
 					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
 					<?php
 					for($j=0;$j<count($rozhodcovia);$j++){
-						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
+					  
+						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." AND c.user_id=".$rozhodcovia[$j];
 						$result = mysqli_query($link,$sql);
 						if($result!=false){
-							?> <td data-trans-key="finished"></td> <?php
-						}
-						else {
-							?> <td data-trans-key="not-rated"></td> <?php
-						}
+						$arrayResult = mysqli_fetch_array($result);
+						if($arrayResult!=null && $arrayResult['text']!=null && $arrayResult['points']!=null ){
+  							?> <td data-trans-key="finished"></td> <?php
+  						}
+  						else {
+  							?> <td data-trans-key="not-rated"></td> <?php
+  						}
+  					}
 					}
 			
 				?> </tr> <?php              
