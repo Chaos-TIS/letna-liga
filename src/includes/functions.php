@@ -24,6 +24,7 @@ function page_head($title)
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link type="text/css" href="css/styles.css" rel="stylesheet">
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
+		<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="max-width:530px">
         <script type="text/javascript" src="js/dropdownmenu.js" ></script>
         <script type="text/javascript" src="js/translator.js" ></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

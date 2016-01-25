@@ -1,0 +1,13 @@
+#content {
+	position: relative;
+	float: left;
+	padding-left: 0;	
+	width:100%;
+	margin-top: 20px;
+}
+#login-form, #logout-form {
+	float: right;
+	margin-right: 20px;
+	margin-top: 10px;
+	padding-right: 0;	
+}
