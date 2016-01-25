@@ -114,11 +114,13 @@ function page_nav()
 
 					<?php
 					if ($link = db_connect()) {
-            $sql =  "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) WHERE a.year = (SELECT max(year) FROM assignments) ORDER BY begin ASC";
+            $sql =  "SELECT a.context_id AS id FROM assignments a WHERE a.year = (SELECT max(year) FROM assignments) AND a.begin <= CURDATE() ORDER BY begin ASC;";
             $result = mysqli_query($link,$sql);
             $i=1;
             while ($row = mysqli_fetch_assoc($result)) {
-              ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>  <?php
+              ?>
+                <li><a href="assignment.php?id=<?php echo $row["id"] ?>"> <?php echo $i ?>. <span data-trans-key="assignment"></span></a></li>
+                <?php
               $i++;
             }
           }
@@ -133,7 +135,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) ORDER BY end ASC";
+                $sql = "SELECT * FROM contexts c INNER JOIN assignments a ON (a.context_id = c.context_id) ORDER BY begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;
@@ -149,20 +151,22 @@ function page_nav()
                       ?>
                       <li class="submenu">
                         <span><?php echo $row["year"] ?></span> <ul>
-								        <li class="noborder"><a href="results.php?year=<?php echo $row["year"] ?>""><span data-trans-key="results"></span></a></li>
-								        <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>
-								       <?php
-								       $poc++;
+                        <li class="noborder"><a href="results.php?year=<?php echo $row["year"] ?>""><span data-trans-key="results"></span></a></li>
+                    <?php
                     }
-                    else{
-                       ?> <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>  <?php
-                        $poc++;
-                    }
+                   ?>
+                        <li><a href="assignment.php?id=<?php echo $row["context_id"] ?>"> <?php echo $poc ?>. <span data-trans-key="assignment"></span></a></li>
+                    <?php
+                    $poc++;
                 }
+                    if ($poc != 1) {
+                    ?>
+                    </ul>
+                    <?php
+                    }
                }
 					   ?>
-					
-					</ul>
+
 					</ul>
 				</li>
                 <?php 
@@ -227,9 +231,9 @@ function echoMessage($key, $info = null){
 }
 
 function db_connect() {
-    if ($link = mysqli_connect('localhost', 'letnaliga', '12345')) {
-        if (mysqli_select_db($link, 'letnaliga')) {
-            mysqli_query($link, "SET CHARACTER SET 'utf8'");
+    if ($link = @mysqli_connect('localhost', 'letnaliga', '12345')) {
+        if (@mysqli_select_db($link, 'letnaliga')) {
+            @mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
         } else {
             echoError('err-db-choice-fail');
