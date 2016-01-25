@@ -9,14 +9,7 @@ get_topright_form();
 
             <script>
                 $(document).ready(function(){
-                    var results = $("#results");
-                    results.load("includes/show_result_tables.php",
-                        function () {
-                            if (results.html() == ""){
-                                results.html("<span data-trans-key='results-not-available'></span>");
-                                dict.translateElement(null, "#results");
-                            }
-                        });
+                    $("#results").load("includes/show_result_tables.php");
                 });
             </script>
 
