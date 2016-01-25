@@ -3,7 +3,6 @@ include 'includes/functions_editAcc.php';
 page_head("Úprava účtu");
 page_nav();
 get_topright_form();
-session_unset();
 $val = new Validate();
 $edit = new Edit();
 $udaje=daj_udaje_uctu($_GET['id']);
@@ -14,8 +13,6 @@ $_SESSION['liga']  = $udaje["sk_league"];
 
 if( isset($_POST["uname"])&& $val->validate_name($_POST["uname"]) &&
       isset($_POST["email"])&& $val->validate_mail($_POST["email"]) &&
-      isset($_POST["pass"])&&  $val->required_pass($_POST["pass"]) &&
-      isset($_POST["pass2"])&& $val->required_pass($_POST["pass2"]) &&
       isset($_POST["os"])&&
       isset($_POST["liga"])) {
         if($_SESSION['uname']!=$_POST["uname"]) {

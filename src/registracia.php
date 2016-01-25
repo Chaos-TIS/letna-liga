@@ -2,7 +2,6 @@
 include 'includes/functions_reg.php';
 page_head("Registrácia");
 page_nav();
-get_topright_form();
 session_unset();
 $val = new Validate();
 $reg = new Reg();

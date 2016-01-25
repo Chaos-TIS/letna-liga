@@ -63,16 +63,26 @@ class Edit{
     var $message;
     function edituj($email,$pas,$name="",$os="",$liga="") 
     {
+        echo $pas;
         $pass = md5($pas);
       if ($link = db_connect())
-      { 
+      {
+      if ($pas==""){
+        $sql =  "UPDATE users AS u,
+teams AS t SET u.mail =  '".$email."',
+t.name =  '".$name."',
+t.sk_league ='".$liga."',
+t.description='".$os."'
+ WHERE u.user_id ='".$_GET['id']."' AND t.user_id ='".$_GET['id']."'";
+
+      }else{
         $sql =  "UPDATE users AS u,
 teams AS t SET u.mail =  '".$email."',
 u.password =  '".$pass."',
 t.name =  '".$name."',
 t.sk_league ='".$liga."',
 t.description='".$os."'
- WHERE u.user_id ='".$_GET['id']."' AND t.user_id ='".$_GET['id']."'";
+ WHERE u.user_id ='".$_GET['id']."' AND t.user_id ='".$_GET['id']."'";}
         $result = mysqli_query($link,$sql); 
         if ($result)
         {
@@ -152,9 +162,14 @@ class EditJury{
         $pass = md5($pas);
       if ($link = db_connect())
       { 
+        if($pas ==''){
+            $sql =  "UPDATE users AS u SET u.mail =  '".$email."'
+ WHERE u.user_id ='".$_GET['id']."'";
+
+        }else{
         $sql =  "UPDATE users AS u SET u.mail =  '".$email."',
 u.password =  '".$pass."'
- WHERE u.user_id ='".$_GET['id']."'";
+ WHERE u.user_id ='".$_GET['id']."'";}
         $result = mysqli_query($link,$sql); 
         if ($result)
         {
