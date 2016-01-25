@@ -127,7 +127,7 @@ abstract class Context{
 			if (checkUploadFile($ext,$files["size"][$i]))
 			{
 				$typ = "program";
-				if ($ext == "jpg" or $ext == "png" or $ext == "gif") {
+				if (isSupportedImageFormat($ext)) {
 					$typ = "image";
 				}
 				if (mysqli_query($conn,"INSERT INTO ".$typ."s (context_id, original_name) VALUES (".$this->id.",\"".$subor."\")")) {

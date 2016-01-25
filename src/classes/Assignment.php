@@ -71,10 +71,10 @@ class Assignment extends Context {
 	
 	public function getEditingHtml($new = false){
 	if ($new) {
-		$link = "newAssignment.php";
+		$link = "newAssignment.php?";
 	}
 	else {
-		$link = "addAssignment.php?cid=".$this->id;
+		$link = "addAssignment.php?id=".$this->id."&";
 	}
 	?>
 	<div id="content">
@@ -103,7 +103,9 @@ class Assignment extends Context {
 			<input type="file" name="uploadedFiles[]" multiple />
 			<br>
 			<br>
-			<input type="submit" id="upload" data-trans-key="save-changes"/>
+			<button type="submit" formaction="<?php echo $link; ?>" data-trans-key="save-changes" id="upload" />
+			<button type="submit" formaction="<?php echo $link; ?>action=1" data-trans-key="save-changes-view" id="uploadAndView" />
+			<button type="submit" formaction="<?php echo $link; ?>action=2" data-trans-key="save-changes-end" id="uploadAndEnd" />
 			
 		</form>
 
@@ -161,9 +163,21 @@ class Assignment extends Context {
 		<div data-trans-lang="<?php echo SK?>"> <?php echo $text_sk?> </div>
 		<div data-trans-lang="<?php echo ENG?>"> <?php echo $text_eng?> </div>
 		<br>
+		<br>
 		<?php
-		if(Date("Y-m-d H:i:s") < $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Team')){ 
-			?> <a href="addSolution.php" data-trans-key="add-solution"></a> <?php           
+		if(Date("Y-m-d H:i:s") < $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Team')){
+			$idecko = getSolutionId($_SESSION['loggedUser']->getId(), $this->id);
+			if ($idecko == 0) {
+				?> <a href="addSolution.php" data-trans-key="add-solution"></a> <?php           
+			}
+			else {
+				?>
+				<a href="addSolution.php" data-trans-key="edit-solution"></a>
+				<br>
+				<br>
+				<a href="solution.php?id=<?php echo $idecko; ?>" data-trans-key="view-solution"></a>
+				<?php           
+			}			
 		}
 		else if (Date("Y-m-d H:i:s") > $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Administrator')){
 			?> <table> <?php

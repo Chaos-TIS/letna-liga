@@ -210,10 +210,15 @@ function checkUploadFile($vel)
 	{
 		return True;
 	}
-	else
-	{
-		return False;
-	}
+	return False;
+}
+
+function isSupportedImageFormat($ext) {
+	$ext = strtolower($ext);
+	if ($ext == 'jpg' || $ext == 'jpeg' ||$ext == 'png' || $ext == 'gif') {
+		return true;
+	} 
+	return false;
 }
 
 function dieWithError($key){
@@ -267,6 +272,17 @@ function new_assignment($conn, $uid) {
 function new_comment($conn, $cid, $uid) {
 	mysqli_query($conn,"INSERT INTO comments (solution_id, user_id) VALUES (".$cid.",".$uid.")");
 	return mysqli_insert_id($conn);
+}
+
+function getSolutionId($uid, $aid) {
+	if ($conn = db_connect()) {
+		if ($result = mysqli_query($conn,"SELECT s.context_id AS 'context_id' FROM teams t, solutions s, contexts c WHERE t.user_id = ".$uid." AND c.user_id = t.user_id AND c.context_id = s.context_id AND s.assignment_id = ".$aid)) {
+			if (mysqli_num_rows($result) != 0) {
+				return mysqli_fetch_array($result)['context_id'];
+			}
+		}
+	}
+	return 0;
 }
 
 function pridaj_hodnotenie($comments, $id) {

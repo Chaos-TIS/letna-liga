@@ -43,6 +43,17 @@ if (isset($_FILES['uploadedFiles'])) {
 
 $solution->setAttachments($conn);
 mysqli_close($conn);
+
+if (isset($_GET['action'])) {
+	$action = (integer) $_GET['action'];
+	if ($action == 1) {
+		?> <meta http-equiv="refresh" content="0;url=solution.php?id=<?php echo $solution->getId(); ?>"><?php
+	}
+	else if ($action == 2) {
+		?> <meta http-equiv="refresh" content="0;url=assignment.php?id=<?php echo $_SESSION["assignment"]->getId(); ?>"><?php
+	}
+}
+
 $solution->getEditingHtml();
 
 page_footer();

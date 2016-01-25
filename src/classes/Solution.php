@@ -102,7 +102,7 @@ class Solution extends Context {
 	?>
 	<div id="content">
 		
-		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST" action="addSolution.php">
+		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST">
 			<h2 data-trans-key="solution-description"></h2>
 			<textarea name="textPopis" cols="80" rows="10" ><?php echo $this->getTxt() ?></textarea>
 	
@@ -120,7 +120,9 @@ class Solution extends Context {
 			<input type="file" name="uploadedFiles[]" multiple />
 			<br>
 			<br>
-			<input type="submit" data-trans-key="save-changes" id="upload" />
+			<button type="submit" formaction="addSolution.php" data-trans-key="save-changes" id="upload" />
+			<button type="submit" formaction="addSolution.php?action=1" data-trans-key="save-changes-view" id="uploadAndView" />
+			<button type="submit" formaction="addSolution.php?action=2" data-trans-key="save-changes-end" id="uploadAndEnd" />
 			
 		</form>
 

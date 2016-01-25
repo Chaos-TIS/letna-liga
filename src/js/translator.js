@@ -282,10 +282,14 @@ dict.set('finished', ['Ukončené', 'Finished']);
 dict.set('not-rated', ['Neohodnotené', 'Not rated']);
 dict.set('add-rating', ['Pridať hodnotenie', 'Add rating']);
 dict.set('add-solution', ['Pridať riešenie', 'Add solution']);
+dict.set('edit-solution', ['Uprav riešenie', 'Edit solution']);
 dict.set('solutions', ['Riešenia', 'Solutions']);
 dict.set('assignment-name', ['Názov zadania', 'Assignment name']);
 dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
 dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
+dict.set('save-changes-view', ['Zobraz', 'View']);
+dict.set('save-changes-end', ['Hotovo', 'Done']);
+dict.set('view-solution', ['Zobraz riešenie', 'View solution']);
 
 dict.set('delete-acc-prompt', ['Určite chcete zmazať používateľský účet', 'Are you sure you want to delete user account']);
 dict.set('solution', ['Riešenie', 'Solution']);
