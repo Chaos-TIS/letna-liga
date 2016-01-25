@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 define("SK", 0);
 define("ENG", 1);
@@ -22,9 +22,9 @@ function page_head($title)
         <meta data-trans-title="<?php echo $title ?>">
         <title><?php echo $title ?></title>
         <link rel="icon" href="favicon.ico" type="image/x-icon">
-        <link type="text/css" href="css/styles.css" rel="stylesheet">
+        <link type="text/css" href="css/styles.css" rel="stylesheet"> 
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
-		<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="max-width:530px">
+		<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="(max-width:530px)"> 
         <script type="text/javascript" src="js/dropdownmenu.js" ></script>
         <script type="text/javascript" src="js/translator.js" ></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -136,7 +136,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() ORDER BY a.begin ASC";
+                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() AND a.end IS NOT NULL ORDER BY a.begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;
@@ -210,10 +210,15 @@ function checkUploadFile($vel)
 	{
 		return True;
 	}
-	else
-	{
-		return False;
-	}
+	return False;
+}
+
+function isSupportedImageFormat($ext) {
+	$ext = strtolower($ext);
+	if ($ext == 'jpg' || $ext == 'jpeg' ||$ext == 'png' || $ext == 'gif') {
+		return true;
+	} 
+	return false;
 }
 
 function dieWithError($key){
@@ -267,6 +272,17 @@ function new_assignment($conn, $uid) {
 function new_comment($conn, $cid, $uid) {
 	mysqli_query($conn,"INSERT INTO comments (solution_id, user_id) VALUES (".$cid.",".$uid.")");
 	return mysqli_insert_id($conn);
+}
+
+function getSolutionId($uid, $aid) {
+	if ($conn = db_connect()) {
+		if ($result = mysqli_query($conn,"SELECT s.context_id AS 'context_id' FROM teams t, solutions s, contexts c WHERE t.user_id = ".$uid." AND c.user_id = t.user_id AND c.context_id = s.context_id AND s.assignment_id = ".$aid)) {
+			if (mysqli_num_rows($result) != 0) {
+				return mysqli_fetch_array($result)['context_id'];
+			}
+		}
+	}
+	return 0;
 }
 
 function pridaj_hodnotenie($comments, $id) {
@@ -518,7 +534,7 @@ function prehlad_zadani_nezverejnene($typ) {
             echo '<p>';
         ?>
             <form method="post">
-                <h1 data-trans-key="unpublished-assignments"></h1>
+                <h2 data-trans-key="unpublished-assignments"></h2>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {
@@ -562,7 +578,7 @@ function prehlad_zadani_zverejnene() {
             echo '<p>';
         ?>
             <form method="post">
-            <h1 data-trans-key="published-assignments"></h1>
+            <h2 data-trans-key="published-assignments"></h2>
             <?php
             echo "<table text-align = 'center' border = '0'>";
             while ($row = mysqli_fetch_assoc($result)) {

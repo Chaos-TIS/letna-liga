@@ -35,7 +35,7 @@ abstract class Context{
 		return $this->id;
 	}
 	
-	public function getAttachmentsTableHtml() {
+	public function getAttachmentsTableHtml($att_folder) {
 		?>
 		<table cellpadding="3">
 		  <caption><h2 data-trans-key="context-edit-page"></h2></caption>
@@ -52,12 +52,12 @@ abstract class Context{
 				$ikona = "";
 				$checkbox = "";
 				if ($attachment instanceof Image) {
-					$odkaz = "attachments/solutions/".$attachment->getContext_id()."/images/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
+					$odkaz = "attachments/$att_folder/".$attachment->getContext_id()."/images/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
 					$ikona = Image::getIcon();
 					$checkbox = "image;".$attachment->getId();
 				}				
 				else if ($attachment instanceof Program) {
-					$odkaz = "attachments/solutions/".$attachment->getContext_id()."/programs/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
+					$odkaz = "attachments/$att_folder/".$attachment->getContext_id()."/programs/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
 					$ikona = Program::getIcon();
 					$checkbox = "program;".$attachment->getId();
 				}
@@ -66,7 +66,7 @@ abstract class Context{
 					$ikona = Video::getIcon();
 					$checkbox = "video;".$attachment->getId();
 				}
-				$odkaz = "<a href=".$odkaz.">".$odkaz;
+				$odkaz = "<a href=".$odkaz.' target="_blank">'.$odkaz;
 				echo "<tr>";
 				echo "<td width=\"5%\" align=\"center\"> <img src=".$ikona."></td>";
 				echo "<td width=\"30%\">".$attachment->getName()."</td>";
@@ -127,7 +127,7 @@ abstract class Context{
 			if (checkUploadFile($ext,$files["size"][$i]))
 			{
 				$typ = "program";
-				if ($ext == "jpg" or $ext == "png" or $ext == "gif") {
+				if (isSupportedImageFormat($ext)) {
 					$typ = "image";
 				}
 				if (mysqli_query($conn,"INSERT INTO ".$typ."s (context_id, original_name) VALUES (".$this->id.",\"".$subor."\")")) {

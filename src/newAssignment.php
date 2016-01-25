@@ -40,7 +40,20 @@ if ($conn = db_connect()) {
 	}
 	
 	mysqli_close($conn);
-	?> <meta http-equiv="refresh" content="1;url=addAssignment.php?cid=<?php echo $id; ?>"><?php
+	if (isset($_GET['action'])) {
+		$action = (integer) $_GET['action'];
+		if ($action == 1) {
+			?> <meta http-equiv="refresh" content="0;url=assignment.php?id=<?php echo $assignment->getId(); ?>"><?php
+		}
+		else if ($action == 2) {
+			echo "preco to nejde";
+			?> <meta http-equiv="refresh" content="0;url=prehladZadani.php"><?php
+		}
+	}
+	else {
+		?> <meta http-equiv="refresh" content="0;url=addAssignment.php?id=<?php echo $id; ?>"><?php
+	}
+	
 }
 
 page_footer();

@@ -71,10 +71,10 @@ class Assignment extends Context {
 	
 	public function getEditingHtml($new = false){
 	if ($new) {
-		$link = "newAssignment.php";
+		$link = "newAssignment.php?";
 	}
 	else {
-		$link = "addAssignment.php?cid=".$this->id;
+		$link = "addAssignment.php?id=".$this->id."&";
 	}
 	?>
 	<div id="content">
@@ -91,7 +91,7 @@ class Assignment extends Context {
 	
 			<br>			
 			<?php
-			$this->getAttachmentsTableHtml();
+			$this->getAttachmentsTableHtml('assignments');
 			?>
 			
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
@@ -103,7 +103,9 @@ class Assignment extends Context {
 			<input type="file" name="uploadedFiles[]" multiple />
 			<br>
 			<br>
-			<input type="submit" id="upload" data-trans-key="save-changes"/>
+			<button type="submit" formaction="<?php echo $link; ?>" data-trans-key="save-changes" id="upload" />
+			<button type="submit" formaction="<?php echo $link; ?>action=1" data-trans-key="save-changes-view" id="uploadAndView" />
+			<button type="submit" formaction="<?php echo $link; ?>action=2" data-trans-key="save-changes-end" id="uploadAndEnd" />
 			
 		</form>
 
@@ -161,11 +163,23 @@ class Assignment extends Context {
 		<div data-trans-lang="<?php echo SK?>"> <?php echo $text_sk?> </div>
 		<div data-trans-lang="<?php echo ENG?>"> <?php echo $text_eng?> </div>
 		<br>
+		<br>
 		<?php
-		if(Date("Y-m-d H:i:s") < $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Team')){ 
-			?> <a href="addSolution.php" data-trans-key="add-solution"></a> <?php           
+		if(Date("Y-m-d H:i:s") < $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Team')){
+			$idecko = getSolutionId($_SESSION['loggedUser']->getId(), $this->id);
+			if ($idecko == 0) {
+				?> <a href="addSolution.php" data-trans-key="add-solution"></a> <?php           
+			}
+			else {
+				?>
+				<a href="addSolution.php" data-trans-key="edit-solution"></a>
+				<br>
+				<br>
+				<a href="solution.php?id=<?php echo $idecko; ?>" data-trans-key="view-solution"></a>
+				<?php           
+			}			
 		}
-		else if (Date("Y-m-d H:i:s") > $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Administrator')){
+		else if (isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Administrator')){
 			?> <table> <?php
 			if($link = db_connect()){
 				?>
@@ -192,7 +206,7 @@ class Assignment extends Context {
 				for($i=0;$i<count($this->solutions);$i++){
 				?>
 				<tr>
-					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
+					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
 					<?php
 					for($j=0;$j<count($rozhodcovia);$j++){
 						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
@@ -232,6 +246,8 @@ class Assignment extends Context {
 	public function getBestSolution(){
 		if (Date("Y-m-d H:i:s") > $this->deadline) {
 			?>
+			<h2 data-trans-lang="<?php echo SK?>"> <?php echo $name_sk?> </h2>
+		  <h2 data-trans-lang="<?php echo ENG?>"> <?php echo $name_eng?> </h2>
 			<h3><span data-trans-key="solutions"></span>:</h3>
 			<form id="form1" name="form1" method="post" action="">
 			<table>
@@ -249,7 +265,7 @@ class Assignment extends Context {
 
 				?>
 				<tr>
-				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getTeam()->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
+				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
 				<?php
 				if ($best == '1'){
 					?><td><input type='radio' name='best' value="<?php echo $this->solutions[$i]->getTeam()->getId(); ?>" checked></td></tr><?php

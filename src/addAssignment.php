@@ -9,14 +9,12 @@ if (get_class($_SESSION["loggedUser"]) == "Team") dieWithError("err-add-assignme
 
 $conn = db_connect();
 
-//$_SESSION["loggedUser"] = new Administrator(1, "pavel.petrovic@gmail.com");
-
-if(isset($_GET["cid"]) && !empty($_GET["cid"])) {
-	$sql_get_assignment = "SELECT * FROM assignments a, contexts c WHERE c.context_id = a.context_id AND c.context_id = ".$_GET["cid"];
+if(isset($_GET["id"]) && !empty($_GET["id"])) {
+	$sql_get_assignment = "SELECT * FROM assignments a, contexts c WHERE c.context_id = a.context_id AND c.context_id = ".$_GET["id"];
 	$flag = false;
 	$result = mysqli_query($conn,$sql_get_assignment); 
 	if ($result == true && mysqli_num_rows($result) != 0) {
-		$assignment = new Assignment($conn, $_GET["cid"]);
+		$assignment = new Assignment($conn, $_GET["id"]);
 		if (!$_SESSION["loggedUser"]->isAdmin() && $_SESSION["loggedUser"]->getId() != $assignment->getId()) {
 			dieWithError("err-edit-assignment-rights");
 		}
@@ -56,6 +54,15 @@ if(isset($_GET["cid"]) && !empty($_GET["cid"])) {
 		}
 	}
 	$assignment->setAttachments($conn);
+	if (isset($_GET['action'])) {
+		$action = (integer) $_GET['action'];
+		if ($action == 1) {
+			?> <meta http-equiv="refresh" content="0;url=assignment.php?id=<?php echo $assignment->getId(); ?>"><?php
+		}
+		else if ($action == 2) {
+			?> <meta http-equiv="refresh" content="0;url=prehladZadani.php"><?php
+		}
+	}
 	$assignment->getEditingHtml($flag);
 }
 else {
