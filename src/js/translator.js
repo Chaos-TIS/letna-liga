@@ -250,6 +250,13 @@ dict.set('assignment-page', [
 dict.set('published-assignments', ['Zverejnené zadania', 'Published assignments']);
 dict.set('unpublished-assignments', ['Nezverejnené zadania', 'Unpublished assignments']);
 
+dict.set('publish-date', ['Dátum zverejnenia', 'Publishing date']);
+dict.set('deadline-date', ['Deadline', 'Deadline date']);
+
+dict.set('publish-selected-assignment', ['Zverejni vybrané zadanie', 'Publish selected assignment']);
+dict.set('delete-selected-assignment', ['Zmaž vybrané zadanie', 'Delete selected assignment']);
+dict.set('edit-selected-assignment', ['Edituj vybrané zadanie', 'Edit selected assignment']);
+
 dict.set('m-date-changed', ['Dátum bol úspešne zmenený.', 'The date has been succesfully changed.']);
 
 dict.set('err-date-changing', ['Dátum sa nepodarilo zmeniť.', 'An error has occured during changing the date.']);
@@ -257,6 +264,13 @@ dict.set('err-add-assignment-rights', ['Iba administrátor alebo rozhodca môže
 dict.set('err-assignment-not-exists', ['Toto zadanie neexistuje!', 'This assignments does not exists!']);
 dict.set('err-edit-assignment-rights', ['Nemáš práva k editovaniu tohto riešenia!', 'You have insufficient rights to edit this assignment!']);
 dict.set('err-no-assignment-chosen', ['Nie je vybrane zadanie!', 'No assignment has been chosen!']);
+
+dict.set('err-no-start-date', ['Nie je vybraný dátum zverejnenia!', 'No release date chosen!']);
+dict.set('err-no-end-date', ['Nie je vybraný deadline!', 'No deadline date chosen!']);
+dict.set('err-time-logic', ['Dátum zverejnenia nemôže byť väčší ako dátum ukončenia riešenia!', 'Date of publishing can not be greater then deadline!']);
+dict.set('err-assignment-deleting', ['Zadanie sa nepodarilo zmazať!', 'An error has occured during deleting the assignment!']);
+dict.set('err-assignment-editing', ['Zadanie sa nepodarilo editovať!', 'An error has occured during editing the assignment!']);
+dict.set('assignment-deleted', ['Zadanie bolo zmazané.', 'Assignment deleted.']);
 
 /*--------------------------------------MESSAGES------------------------------------------*/
 dict.set('m-changes-saved', ['Zmeny boli ulozené do databázy.', 'The changes have been saved to the database.']);

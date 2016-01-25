@@ -544,6 +544,7 @@ function prehlad_zadani($zverejnene) {
         $result = mysqli_query($link, $sql);
 		if ($result) {
 			?>
+			<div id="prehlad_zadani">
 			<p>
 			<form method="post">
 				<h2 data-trans-key="<?php echo $nadpis; ?>"></h2>
@@ -590,7 +591,7 @@ function prehlad_zadani($zverejnene) {
 						<td> </td>
 						<td data-trans-key="deadline-date"> </td>
 						<td> <input type='datetime-local' name='stop' value="<?php echo date('Y-m-d', strtotime(Date("Y-m-d"). ' + 14 days'))."T23:59"; ?>"> </td>
-						<td> <button type="submit" formaction="prehladZadani.php?action=1" data-trans-key="publish-selected-assignment" id="publishAssignment" /> </td>
+						<td> <button type="submit" style="width:200px" formaction="prehladZadani.php?action=1" data-trans-key="publish-selected-assignment" id="publishAssignment" /> </td>
 						
 					 </tr>
 					 <?php
@@ -598,7 +599,7 @@ function prehlad_zadani($zverejnene) {
 						 ?>
 						 <tr>
 							<td> </td><td> </td><td> </td>
-							<td> <button type="submit" formaction="prehladZadani.php?action=2" data-trans-key="delete-selected-assignment" id="deleteAssignment" /> </td>
+							<td> <button type="submit" style="width:200px" formaction="prehladZadani.php?action=2" data-trans-key="delete-selected-assignment" id="deleteAssignment" /> </td>
 						 </tr>
 						 <?php
 					 }
@@ -607,7 +608,7 @@ function prehlad_zadani($zverejnene) {
 					?>
 					<tr>
 						<td> </td><td> </td><td> </td>
-						<td> <button type="submit" formaction="prehladZadani.php?action=3" data-trans-key="edit-selected-assignment" id="editAssignment" /> </td>
+						<td> <button type="submit" style="width:200px" formaction="prehladZadani.php?action=3" data-trans-key="edit-selected-assignment" id="editAssignment" /> </td>
 					 </tr>
 					<?php
 				}
@@ -615,6 +616,7 @@ function prehlad_zadani($zverejnene) {
 				</table>
 			</form>
 			</p>
+			</div>
 			<?php
 			mysqli_free_result($result);
 		}
