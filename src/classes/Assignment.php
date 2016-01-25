@@ -202,6 +202,7 @@ class Assignment extends Context {
 						$pocet++;
 					} 
 				}
+				
 				?> </tr> <?php
 				for($i=0;$i<count($this->solutions);$i++){
 				?>
@@ -239,7 +240,7 @@ class Assignment extends Context {
 				<?php                  
 			}
 			?> </ul> <?php
-		}
+		}  
 	}
 
 

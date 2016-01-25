@@ -72,6 +72,19 @@ if(isset($_SESSION['solution'])){
         
         }
       }
+      $sql_get_prilohy = "SELECT * FROM programs p WHERE p.context_id = ".$id;
+      $prilohy = mysqli_query($link,$sql_get_prilohy);
+      if ($prilohy != false) {
+        ?>
+        <h3>Prílohy:</h3>
+        <?php
+        while ($prilohy_row = mysqli_fetch_assoc($prilohy)) { 
+          $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/programs/".$prilohy_row['program_id'].".zip";
+          ?>
+          <a href="<?php echo $subor; ?>"><?php echo $prilohy_row['original_name']; ?></a>
+          <?php
+        }
+      }
   }
   ?>
   <h3><span data-trans-key="rating"></span>:</h3>

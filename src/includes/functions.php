@@ -412,7 +412,7 @@ function get_result_table($sk_league, $year) {
                          <th><span data-trans-key="team-name"></span></th>';
 
         for ($i = 1; $i < sizeof($aid_array)+1; $i++){
-            $href = 'assignment.php?id='.$aid_array[$i];
+            $href = 'assignment.php?id='.$aid_array[$i-1];
             $result_table .= '<th><a href="'.$href.'">'.$i.'</a></th>';
         }
         $result_table .= '<th><span data-trans-key="sum-points"></span></th></tr>';
