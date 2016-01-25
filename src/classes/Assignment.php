@@ -179,7 +179,7 @@ class Assignment extends Context {
 				<?php           
 			}			
 		}
-		else if (Date("Y-m-d H:i:s") > $this->deadline && isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Administrator')){
+		else if (isset($_SESSION['loggedUser']) && is_a($_SESSION['loggedUser'], 'Administrator')){
 			?> <table> <?php
 			if($link = db_connect()){
 				?>
@@ -246,6 +246,8 @@ class Assignment extends Context {
 	public function getBestSolution(){
 		if (Date("Y-m-d H:i:s") > $this->deadline) {
 			?>
+			<h2 data-trans-lang="<?php echo SK?>"> <?php echo $name_sk?> </h2>
+		  <h2 data-trans-lang="<?php echo ENG?>"> <?php echo $name_eng?> </h2>
 			<h3><span data-trans-key="solutions"></span>:</h3>
 			<form id="form1" name="form1" method="post" action="">
 			<table>

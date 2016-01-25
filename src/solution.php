@@ -40,13 +40,14 @@ if(isset($_SESSION['solution'])){
       if ($images != false) {  
           $pocet=0;
           while ($images_row = mysqli_fetch_assoc($images)) {  
-            
-            $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/images/".$images_row['image_id'].substr($images_row['original_name'],-4); 
-            ?>
-              <td><a class="fancybox" rel="group" href="<?php echo $subor; ?>"><img src="<?php echo $subor ?>" width="100", width="100") ?> </a></td>
+            $pripona = split("[.]",$images_row['original_name']);
+            $suborB = "attachments/solutions/".$_SESSION['solution']->getId()."/images/big/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
+            $suborS = "attachments/solutions/".$_SESSION['solution']->getId()."/images/small/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
+           ?>
+              <td><a class="fancybox" rel="group" href="<?php echo $suborB; ?>"><img src="<?php echo $suborS ?>" width="250", width="250") ?> </a></td>
             <?php
             $pocet++;
-            if($pocet%4==0){
+            if($pocet%2==0){
               ?>
               </tr>
               <tr>
