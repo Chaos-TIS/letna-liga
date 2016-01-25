@@ -159,8 +159,8 @@ abstract class Context{
 		$pattern = '/[;," "\n]/';
 		$pole = preg_split($pattern, $videa);
 		for ($i = 0; $i < count($pole); $i++) {
-			if (strlen($pole[$i]) > 11) {
-				$video = substr(trim($pole[$i]), -11);
+			if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $pole[$i], $match)) {
+				$video = $match[1];
 				if (mysqli_query($conn,"INSERT INTO videos (context_id,link) VALUES (".$this->id.",\"".$video."\")")) {
 					echoMessage("m-video-uploaded", $video);
 				} else {
