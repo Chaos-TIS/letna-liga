@@ -137,7 +137,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() AND a.end IS NOT NULL ORDER BY a.begin ASC";
+                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() ORDER BY a.begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;

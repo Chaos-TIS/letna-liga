@@ -18,6 +18,12 @@ TINY.dropdown=function(){
 	};
 	init.prototype.show=function(x,d){
 		var c=this.c[x], h=this.h[x];
+		var nM = 0;
+		var ch = c.children;
+		for (var i = 0; i < ch.length; i++){
+			nM += ch[i].offsetHeight;
+		}
+		c.m = nM;
 		clearInterval(c.t); clearInterval(c.i); c.style.overflow='hidden';
 		if(d){
 			if(p.active&&h.className.indexOf(p.active)==-1){h.className+=' '+p.active}
