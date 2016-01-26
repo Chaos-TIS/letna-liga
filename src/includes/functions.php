@@ -116,7 +116,7 @@ function page_nav()
 
 					<?php
 					if ($link = db_connect()) {
-            $sql =  "SELECT a.context_id AS id FROM assignments a WHERE a.year = (SELECT max(year) FROM assignments) AND a.begin <= CURDATE() ORDER BY begin ASC;";
+            $sql =  "SELECT a.context_id AS id FROM assignments a WHERE a.year = (SELECT max(year) FROM assignments) AND a.begin <= NOW() ORDER BY begin ASC;";
             $result = mysqli_query($link,$sql);
             $i=1;
             while ($row = mysqli_fetch_assoc($result)) {
@@ -137,7 +137,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() AND a.end IS NOT NULL ORDER BY a.begin ASC";
+                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= NOW() AND a.end IS NOT NULL ORDER BY a.begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;
@@ -352,7 +352,7 @@ function get_result_table($sk_league, $year) {
                    	WHERE t.sk_league IN (1, $sk_league)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
-                WHERE a.year = $year AND a.begin <= CURDATE()
+                WHERE a.year = $year AND a.begin <= NOW()
                 ORDER BY a.begin ASC;
                 ";
 
@@ -536,11 +536,11 @@ function isUserTypeLogged($type) {
 function prehlad_zadani($zverejnene) {
     if ($link = db_connect()) {
 		if ($zverejnene) {
-			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= CURDATE() AND end > CURDATE()";
+			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= NOW() AND end > NOW()";
 			$nadpis = "published-assignments";
 		}
 		else {
-			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > CURDATE() OR begin is NULL";
+			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > NOW() OR begin is NULL";
 			$nadpis = "unpublished-assignments";
 		}
         $result = mysqli_query($link, $sql);
