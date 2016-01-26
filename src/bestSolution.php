@@ -4,6 +4,8 @@ require_once(dirname(__FILE__)."/includes/functions.php");
 page_head("Letná liga FLL");
 page_nav();
 get_topright_form();
+if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
+if (get_class($_SESSION["loggedUser"]) != "Administrator") dieWithError("err-add-assignment-rights");
 ?>
 <div id="content">
 <?php

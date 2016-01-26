@@ -3,6 +3,8 @@ include 'includes/functions_editAcc.php';
 page_head("Úprava účtu");
 page_nav();
 get_topright_form();
+if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
+if (get_class($_SESSION["loggedUser"]) != "Administrator") dieWithError("err-add-assignment-rights");
 $val = new Validate();
 $edit = new Edit();
 $udaje=daj_udaje_uctu($_GET['id']);

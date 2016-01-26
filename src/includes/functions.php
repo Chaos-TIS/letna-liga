@@ -440,7 +440,7 @@ function get_result_table($sk_league, $year) {
     }
 
 
-}
+} 
 
 
 
