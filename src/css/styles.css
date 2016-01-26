@@ -99,8 +99,10 @@ input, button, textarea {
 }
 
 #wrapper {
-	position: relative;
+	position: absolute;
 	float: left;
+	left: 0;
+	right: 0;
 }
 
 #logout_butt, #pridaj_zadanie {
