@@ -56,7 +56,7 @@ abstract class Context{
 				$ikona = "";
 				$checkbox = "";
 				if ($attachment instanceof Image) {
-					$odkaz = "attachments/$att_folder/".$attachment->getContext_id()."/images/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
+					$odkaz = "attachments/$att_folder/".$attachment->getContext_id()."/images/big/".$attachment->getId().".".pathinfo($attachment->getName(), PATHINFO_EXTENSION);
 					$ikona = Image::getIcon();
 					$checkbox = "image;".$attachment->getId();
 				}				
@@ -135,16 +135,32 @@ abstract class Context{
 					$typ = "image";
 				}
 				if (mysqli_query($conn,"INSERT INTO ".$typ."s (context_id, original_name) VALUES (".$this->id.",\"".$subor."\")")) {
-					$target_file = $kde.$typ."s/".mysqli_insert_id($conn).".".$ext;
-					if (!file_exists($kde.$typ."s")) {
-						mkdir($kde.$typ."s", 0777, true);
+					$new_name = mysqli_insert_id($conn).".".$ext;
+					if ($typ == "image") {
+						$target_file = $kde.$typ."s/big/".$new_name;
+						$target_file2 = $kde.$typ."s/small/".$new_name;
+						if (!file_exists($kde.$typ."s/big")) {
+							mkdir($kde.$typ."s/big", 0777, true);
+						}
+						if (!file_exists($kde.$typ."s/small")) {
+							mkdir($kde.$typ."s/small", 0777, true);
+						}
 					}
+					else {
+						$target_file = $kde.$typ."s/".$new_name;
+						if (!file_exists($kde.$typ."s")) {
+							mkdir($kde.$typ."s", 0777, true);
+						}
+					}					
 					if (move_uploaded_file($files["tmp_name"][$i], $target_file)) {
+						if ($typ == "image") {
+							echo createThumbnail($new_name, 250, 250, $kde.$typ."s/big", $kde.$typ."s/small/");
+						}
 						echoMessage("m-file-uploaded", $subor);
 					} else {
 						mysqli_query($conn,"DELETE FROM ".$typ."s WHERE ".$typ."_id = ".mysqli_insert_id($conn));
 						echoError("err-file-upload", $subor);
-					}
+					}				
 				} else {
 					echoError("err-file-upload-db", $subor.": ".mysqli_error($conn));
 				}		
@@ -171,7 +187,7 @@ abstract class Context{
 	}
 	
 	public function deleteAttachments1($conn, $prilohy, $kde) {
-		foreach($prilohy as $value){
+		foreach($prilohy as $value) {
 			$pole = explode(";", $value);
 			$sql = "SELECT * FROM ".$pole[0]."s WHERE ".$pole[0]."_id='".$pole[1]."'";
 			$result = mysqli_query($conn, $sql);
@@ -184,12 +200,23 @@ abstract class Context{
 				$result = mysqli_query($conn, $sql);
 				if ($result) {
 					if ($pole[0] != "video") {
-						if (unlink($kde.$pole[0]."s/".$pole[1].".".$ext)) {
-							echoMessage("m-attachment-deleted");
-					}
-					else {
-						echoError("err-attachment-deletion");
-					}
+						if ($pole[0] == "image") {
+							if (unlink($kde.$pole[0]."s/big/".$pole[1].".".$ext) && unlink($kde.$pole[0]."s/small/".$pole[1].".".$ext)) {
+								echoMessage("m-attachment-deleted");
+							}
+							else {
+								echoError("err-attachment-deletion");
+							}
+						}
+						else {
+							if (unlink($kde.$pole[0]."s/".$pole[1].".".$ext)) {
+								echoMessage("m-attachment-deleted");
+							}
+							else {
+								echoError("err-attachment-deletion");
+							}
+						}
+					}					
 				}
 				else {
 					echoMessage("m-attachment-deleted");
@@ -199,10 +226,10 @@ abstract class Context{
 				echoError("err-attachment-db-deletion", mysqli_error($conn));
 			}
 		}
-		else {
+		/*else {
 			echoError("err-attachment-not-in-db");
 			}
-		}
+		}*/
 		
 	}
 
