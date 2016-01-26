@@ -95,7 +95,7 @@ class Comment {
 	public function getPreviewHtml() {
 		?>
 		<?php echo $this->text; ?><br><br>
-		<span data-trans-key="rating"></span>: <strong><?php echo $this->points; ?><span data-trans-key="points-abb"></span></strong>
+		<span data-trans-key="points"></span>: <strong><?php echo $this->points; ?></strong>
 		<?php
 	}
 

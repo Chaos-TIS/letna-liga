@@ -264,7 +264,7 @@ dict.set('add-rating', ['Pridať hodnotenie', 'Add rating']);
 dict.set('add-solution', ['Pridať riešenie', 'Add solution']);
 dict.set('edit-solution', ['Uprav riešenie', 'Edit solution']);
 dict.set('solutions', ['Riešenia', 'Solutions']);
-dict.set('points-abb', ['b', ' pts']);
+dict.set('points', ['Body', 'Points']);
 
 dict.set('solution', ['Riešenie', 'Solution']);
 dict.set('rating', ['Hodnotenie', 'Rating']);
