@@ -189,9 +189,7 @@ class Assignment extends Context {
 				$sql = "SELECT * FROM users as s INNER JOIN organisators as o on (o.user_id=s.user_id) WHERE o.admin=0 AND o.validated = 1 ORDER BY s.user_id";
 				$result = mysqli_query($link,$sql);
 				?>
-				<br>
 				<a href="bestSolution.php?id=<?php echo $this->id ?>" >select best solution</a> 
-				<br><br><br>
 				<?php
 				if($result!=false){
 					$pocet=1;
@@ -204,6 +202,7 @@ class Assignment extends Context {
 						$pocet++;
 					} 
 				}
+				
 				?> </tr> <?php
 				for($i=0;$i<count($this->solutions);$i++){
 				?>
@@ -211,18 +210,14 @@ class Assignment extends Context {
 					<th><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $this->solutions[$i]->getTeam()->getName(); ?> </a></th>
 					<?php
 					for($j=0;$j<count($rozhodcovia);$j++){
-					  
-						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." AND c.user_id=".$rozhodcovia[$j];
+						$sql = "SELECT * FROM comments c WHERE c.solution_id=".$this->solutions[$i]->getId()." WHERE user_id=".$rozhodcovia[$j];
 						$result = mysqli_query($link,$sql);
 						if($result!=false){
-						$arrayResult = mysqli_fetch_array($result);
-						if($arrayResult!=null && $arrayResult['text']!=null && $arrayResult['points']!=null ){
-  							?> <td data-trans-key="finished"></td> <?php
-  						}
-  						else {
-  							?> <td data-trans-key="not-rated"></td> <?php
-  						}
-  					}
+							?> <td data-trans-key="finished"></td> <?php
+						}
+						else {
+							?> <td data-trans-key="not-rated"></td> <?php
+						}
 					}
 			
 				?> </tr> <?php              
@@ -249,7 +244,7 @@ class Assignment extends Context {
 	}
 
 
-	public function getBestSolution(){
+	public function getBestSolutionSlovak(){
 		if (Date("Y-m-d H:i:s") > $this->deadline) {
 			?>
 			<h2 data-trans-lang="<?php echo SK?>"> <?php echo $name_sk?> </h2>
@@ -259,44 +254,116 @@ class Assignment extends Context {
 			<table>
 			<?php
 			if($link = db_connect()){
-			$sql = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best'  FROM solutions s, contexts c WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+			$sql = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best',  t.sk_league AS  'liga'  FROM solutions s, contexts c,  teams t WHERE c.context_id = s.context_id AND c.user_id = t.user_id  AND  s.assignment_id = ".$this->id;
 			$result = mysqli_query($link,$sql);
 			}
+			?><h3>Slovak League</h3><?php
 			for($i=0;$i<count($this->solutions);$i++){ 
 				$best = mysqli_fetch_assoc($result);
 				$team = $this->solutions[$i];
 				$team2= $team->getTeam();
 				$team3 = $team2->getName();
+				$liga = "{$best['liga']}";
 				$best = "{$best['best']}";
-
+				
+				if($liga =='1'){
 				?>
 				<tr>
 				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
 				<?php
+				
 				if ($best == '1'){
-					?><td><input type='radio' name='best' value="<?php echo $this->solutions[$i]->getTeam()->getId(); ?>" checked></td></tr><?php
+					?><td><input type='radio' name='bestSlovak' value="<?php echo $this->solutions[$i]->getTeam()->getId(); ?>" checked></td></tr><?php
 				}else{
 					
 				?>	
-				<td><input type='radio' name='best' value='<?php echo $this->solutions[$i]->getTeam()->getId(); ?>'></td>
+				<td><input type='radio' name='bestSlovak' value='<?php echo $this->solutions[$i]->getTeam()->getId(); ?>'></td>
 				</tr>
 				<?php 
-			}                 
 			}
+			}                 
+		}
 			?></table>  <?php
 		}
 		?>
 		
-		<input type="submit" name="save" id="save" value="Save" />
+		<input type="submit" name="saveSlovak" id="save" value="Save" />
 		</form>
 		<?php
 
 	
 	}
 
-	public function addBestSolution($pom){
+	public function getBestSolutionOpen(){
+		if (Date("Y-m-d H:i:s") > $this->deadline) {
+			?>
+			<h2 data-trans-lang="<?php echo SK?>"> <?php echo $name_sk?> </h2>
+		  <h2 data-trans-lang="<?php echo ENG?>"> <?php echo $name_eng?> </h2>
+			<h3><span data-trans-key="solutions"></span>:</h3>
+			<form id="form1" name="form1" method="post" action="">
+			<table>
+			<?php
+			if($link = db_connect()){
+			$sql = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best',  t.sk_league AS  'liga'  FROM solutions s, contexts c,  teams t WHERE c.context_id = s.context_id AND c.user_id = t.user_id  AND s.assignment_id = ".$this->id;
+			$result = mysqli_query($link,$sql);
+			}
+			?><h3>Open League</h3><?php
+			for($i=0;$i<count($this->solutions);$i++){ 
+				$best = mysqli_fetch_assoc($result);
+				$team = $this->solutions[$i];
+				$team2= $team->getTeam();
+				$team3 = $team2->getName();
+				$liga = "{$best['liga']}";
+				$best = "{$best['best']}";
+				if($liga =='0'){
+				?>
+				<tr>
+				<td><a href="solution.php?id=<?php echo $this->solutions[$i]->getId(); ?>"> <?php echo $team3; ?> </a> </td> 
+				<?php
+				
+				if ($best == '1'){
+					?><td><input type='radio' name='bestOpen' value="<?php echo $this->solutions[$i]->getTeam()->getId(); ?>" checked></td></tr><?php
+				}else{
+					
+				?>	
+				<td><input type='radio' name='bestOpen' value='<?php echo $this->solutions[$i]->getTeam()->getId(); ?>'></td>
+				</tr>
+				<?php 
+				}
+			}                 
+		}
+			?></table>  <?php
+		}
+		?>
+		
+		<input type="submit" name="saveOpen" id="save" value="Save" />
+		</form>
+		<?php
+
+	
+	}
+
+	public function addBestSolutionSlovak($pom){
 		if($link = db_connect()){
-			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 0 WHERE c.context_id = s.context_id AND s.assignment_id = ".$this->id;
+			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 0 WHERE c.context_id = s.context_id AND t.sk_league =1
+AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
+			$result = mysqli_query($link,$sql);
+			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
+			$result = mysqli_query($link,$sql);
+			if($result){
+				echoMessage('Add best solution');
+				?>
+				<meta http-equiv="refresh" content="0;url=bestSolution.php?id=<?php echo $this->id ?>">
+				<?php 
+			}
+		}
+
+	}
+
+	public function addBestSolutionOpen($pom){
+		if($link = db_connect()){
+			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 0 WHERE c.context_id = s.context_id AND t.sk_league =0
+AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 			$result = mysqli_query($link,$sql);
 			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
 			$result = mysqli_query($link,$sql);

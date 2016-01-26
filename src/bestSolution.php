@@ -13,11 +13,16 @@ if($link = db_connect()){
   $_SESSION['assignment'] = new Assignment($link,$id);
 }
 if (isset($_SESSION['assignment'])){
-  $_SESSION['assignment']->getBestSolution();
+  $_SESSION['assignment']->getBestSolutionSlovak();
+  $_SESSION['assignment']->getBestSolutionOpen();
 }
-if (isset($_POST["save"])){
-	if (isset($_POST['best'])){
-     $_SESSION['assignment']->addBestSolution($_POST['best']); }}
+if (isset($_POST["saveOpen"])){
+	if (isset($_POST['bestOpen'])){
+     $_SESSION['assignment']->addBestSolutionOpen($_POST['bestOpen']); }}
+
+if (isset($_POST["saveSlovak"])){
+	if (isset($_POST['bestSlovak'])){
+     $_SESSION['assignment']->addBestSolutionSlovak($_POST['bestSlovak']); }}
 
 
 page_footer()
