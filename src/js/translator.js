@@ -183,7 +183,7 @@ dict.set('err-acc-validation', ['Účet sa nepodarilo potvrdiť.', 'It was not p
 dict.set('err-manage-acc-only-Administrator', ['Iba administrátor môže spravovať účty!', 'Only administrator can manage accounts!']);
 
 
-/*----------------------------------EDIT TEAM ACCOUNT-------------------------------------*/
+/*----------------------------------EDIT ACCOUNT-------------------------------------*/
 dict.set('edit-team-form', [
     ['Meno tímu:', 'Team name:'],
     ['Meno tímu', 'Team name'],
@@ -198,9 +198,7 @@ dict.set('edit-team-form', [
     ['Open liga', 'Open league'],
     ['Uložiť', 'Save']
 ]);
-dict.set('err-only-admin-edit-team', ['Iba administrátor môže editovať účet!', 'Only the administrator can edit accounts!']);
 
-/*----------------------------------EDIT JURY ACCOUNT-------------------------------------*/
 dict.set('edit-jury-form', [
     ['Email:', 'Email:'],
     ['Email', 'Email'],
@@ -210,8 +208,10 @@ dict.set('edit-jury-form', [
     ['Zopakuj heslo', 'Repeat password'],
     ['Uložiť', 'Save']
 ]);
-dict.set('err-only-admin-edit-jury', ['Iba administrátor môže editovať účet!', 'Only the administrator can edit accounts!']);
 
+dict.set('delete-acc-prompt', ['Určite chcete zmazať používateľský účet', 'Are you sure you want to delete user account']);
+dict.set('jury', ['Rozhodca', 'Jury']);
+dict.set('err-edit-accounts-rights', ['Iba administrátor môže editovať účet!', 'Only the administrator can edit accounts!']);
 
 /*--------------------------------------NAVIGATION----------------------------------------*/
 dict.set('assignment', ['Zadanie', 'Assignment']);
@@ -224,13 +224,15 @@ dict.set('teams', ['Tímy', 'Teams']);
 dict.set('jury-pl', ['Rozhodcovia', 'Jury']);
 dict.set('language', ['Jazyk', 'Language']);
 
-
 /*-------------------------------------RESULT TABLE---------------------------------------*/
 dict.set('table-loading', ['Tabuľka sa načítava', 'The table is loading']);
 dict.set('sk-league', ['Slovenská liga', 'Slovak league']);
 dict.set('open-league', ['Open liga', 'Open league']);
 dict.set('team-name', ['Názov tímu', 'Team name']);
 dict.set('sum-points', ['Spolu', 'Sum']);
+
+dict.set('results-of-league', ['Výsledky letnej ligy', 'Results of summer league']);
+dict.set('results-not-available', ['Aktuálne výsledky ešte nie sú k dispozícii.', 'Acutal results are not available yet.']);
 
 /*-------------------------------------CONTEXT-----------------------------------------*/
 dict.set('context-edit-page', [['Prílohy:', 'Attachments:'],
@@ -252,31 +254,56 @@ dict.set('err-file-upload-db', ['Do databázy as nepodarilo vložiť súbor', 'A
 dict.set('err-file-too-big', ['Limit 10 MB na prílohu bol prekročený súborom', 'The following file has exceeded the maximum filesize of 10 MB']);
 dict.set('err-video-upload', ['Do databázy sa nepodarilo vložiť video', 'An error has occured during the database insertion of video']);
 
-
 /*-------------------------------------SOLUTION-----------------------------------------*/
- dict.set('solution-edit-page', [['Pridaj videá k riešeniu zo serveru Youtube (Každé video vlož do nového riadku.)', 'Attach videos to your solution from Youtube (Insert every video to a new line.)'],
+dict.set('solution-edit-page', [['Pridaj videá k riešeniu zo serveru Youtube (Každé video vlož do nového riadku.)', 'Attach videos to your solution from Youtube (Insert every video to a new line.)'],
     ['Nahraj súbory (Veľkosť súboru nemôže presiahnúť 10 MB)', 'Upload files (Maximum filesize is 10 MB)']]);
+
+dict.set('finished', ['Ukončené', 'Finished']);
+dict.set('not-rated', ['Neohodnotené', 'Not rated']);
+dict.set('add-rating', ['Pridať hodnotenie', 'Add rating']);
+dict.set('add-solution', ['Pridať riešenie', 'Add solution']);
+dict.set('edit-solution', ['Uprav riešenie', 'Edit solution']);
+dict.set('solutions', ['Riešenia', 'Solutions']);
+dict.set('points-abb', ['b', ' pts']);
+
+dict.set('solution', ['Riešenie', 'Solution']);
+dict.set('rating', ['Hodnotenie', 'Rating']);
+dict.set('solution-of', ['Riešenie úlohy', 'Solution of']);
+dict.set('solution-description', ['Popis riešenia', 'Solution description']);
+
+dict.set('save-changes-view', ['Zobraz', 'View']);
+dict.set('save-changes-end', ['Hotovo', 'Done']);
+dict.set('view-solution', ['Zobraz riešenie', 'View solution']);
+
+dict.set('m-best-solution-selected', ['Bolo vybrané najlepšie riešenie.', 'Best solution has been selected.']);
 
 dict.set('err-assignment-deadline', ['Zadanie je po deadline!', 'The submission deadline is over!']);
 dict.set('err-add-solution-rights', ['Iba súťažiaci môžu pridávať zadania!', 'Only the competitors can submit solutions!']);
-dict.set('new-assignment', ['Nové zadanie', 'New assignment']);
+dict.set('err-select-best-solution', ['Iba administrátor môže vybrať najlepšie riešenie!', 'Only administrator can select best solution!']);
 
 /*------------------------------------ASSIGNMENT----------------------------------------*/
 dict.set('assignment-page', [
     ['Riešenie možno odovzdávať do:', 'Deadline of this assignment is set to:'],
     ['Riešenia:', 'Solutions:']]);
 
+dict.set('assignment-name', ['Názov zadania', 'Assignment name']);
+dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
+
+dict.set('new-assignment', ['Nové zadanie', 'New assignment']);
+
 dict.set('published-assignments', ['Zverejnené zadania', 'Published assignments']);
 dict.set('unpublished-assignments', ['Nezverejnené zadania', 'Unpublished assignments']);
 
-dict.set('publish-date', ['Dátum zverejnenia', 'Publishing date']);
+dict.set('publish-date', ['Dátum zverejnenia', 'Publish date']);
 dict.set('deadline-date', ['Deadline', 'Deadline date']);
 
 dict.set('publish-selected-assignment', ['Zverejni vybrané zadanie', 'Publish selected assignment']);
 dict.set('delete-selected-assignment', ['Zmaž vybrané zadanie', 'Delete selected assignment']);
 dict.set('edit-selected-assignment', ['Edituj vybrané zadanie', 'Edit selected assignment']);
+dict.set('select-best-solution', ['Vyber najlepšie zadanie', 'Select best solution']);
 
 dict.set('m-date-changed', ['Dátum bol úspešne zmenený.', 'The date has been succesfully changed.']);
+dict.set('m-assignment-deleted', ['Zadanie bolo zmazané.', 'Assignment deleted.']);
 
 dict.set('err-date-changing', ['Dátum sa nepodarilo zmeniť.', 'An error has occured during changing the date.']);
 dict.set('err-add-assignment-rights', ['Iba administrátor alebo rozhodca môže pridávať zadania!', 'Only the administrator and jury members can create assignments!']);
@@ -284,14 +311,11 @@ dict.set('err-assignment-not-exists', ['Toto zadanie neexistuje!', 'This assignm
 dict.set('err-edit-assignment-rights', ['Nemáš práva k editovaniu tohto riešenia!', 'You have insufficient rights to edit this assignment!']);
 dict.set('err-no-assignment-chosen', ['Nie je vybrane zadanie!', 'No assignment has been chosen!']);
 
-dict.set('err-no-start-date', ['Nie je vybraný dátum zverejnenia!', 'No release date chosen!']);
-dict.set('err-no-end-date', ['Nie je vybraný deadline!', 'No deadline date chosen!']);
-dict.set('err-time-logic', ['Dátum zverejnenia nemôže byť väčší ako dátum ukončenia riešenia!', 'Date of publishing can not be greater then deadline!']);
+dict.set('err-no-start-date', ['Nie je vybraný dátum zverejnenia!', 'Date of publish was not set!']);
+dict.set('err-no-end-date', ['Nie je vybraný deadline!', 'Deadline was not set!']);
+dict.set('err-time-logic', ['Dátum zverejnenia nemôže byť väčší ako dátum ukončenia riešenia!', 'Date of publishing can not be greater than deadline!']);
 dict.set('err-assignment-deleting', ['Zadanie sa nepodarilo zmazať!', 'An error has occured during deleting the assignment!']);
 dict.set('err-assignment-editing', ['Zadanie sa nepodarilo editovať!', 'An error has occured during editing the assignment!']);
-dict.set('assignment-deleted', ['Zadanie bolo zmazané.', 'Assignment deleted.']);
-dict.set('err-select-best-solution', ['Iba administrátor môže vybrať najlepšie riešenie!', 'Only administrator can select best solution!']);
-dict.set('select-best-solution', ['Vyber najlepšie zadanie', 'Select best solution']);
 
 /*--------------------------------------MESSAGES------------------------------------------*/
 dict.set('m-changes-saved', ['Zmeny boli ulozené do databázy.', 'The changes have been saved to the database.']);
@@ -311,33 +335,8 @@ dict.set('Registrácia', ['Registration']);
 dict.set('Správa účtov', ['Accounts management']);
 dict.set('Prehľad zadaní', ['Assignments overview']);
 
-dict.set('results-of-league', ['Výsledky letnej ligy', 'Results of summer league']);
-
-dict.set('finished', ['Ukončené', 'Finished']);
-dict.set('not-rated', ['Neohodnotené', 'Not rated']);
-dict.set('add-rating', ['Pridať hodnotenie', 'Add rating']);
-dict.set('add-solution', ['Pridať riešenie', 'Add solution']);
-dict.set('edit-solution', ['Uprav riešenie', 'Edit solution']);
-dict.set('solutions', ['Riešenia', 'Solutions']);
-dict.set('assignment-name', ['Názov zadania', 'Assignment name']);
-dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
-dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
-dict.set('save-changes-view', ['Zobraz', 'View']);
-dict.set('save-changes-end', ['Hotovo', 'Done']);
-dict.set('view-solution', ['Zobraz riešenie', 'View solution']);
-
-dict.set('delete-acc-prompt', ['Určite chcete zmazať používateľský účet', 'Are you sure you want to delete user account']);
-dict.set('solution', ['Riešenie', 'Solution']);
-dict.set('rating', ['Hodnotenie', 'Rating']);
-dict.set('solution-of', ['Riešenie úlohy', 'Solution of']);
-dict.set('jury', ['Rozhodca', 'Jury']);
 dict.set('save-changes', ['Ulož zmeny', 'Save changes']);
 dict.set('m-text-saved', ['Text uložený.', 'Text saved.']);
 dict.set('err-text-saving', ['Chyba pri ukladaní textu do databázy.', 'An error has occured during saving the text to the database.']);
 
-dict.set('solution-description', ['Popis riešenia', 'Solution description']);
-
-dict.set('results-not-available', ['Aktuálne výsledky ešte nie sú k dispozícii.', 'Acutal results are not available yet.']);
-/*--------------------------------------BestSolution------------------------------------------*/
 dict.set('save', ['Ulož', 'Save']);
-dict.set('add-best-solution', ['Bolo vybrané najlepšie riešenie', 'Selected best solution']);

@@ -82,8 +82,8 @@ class Comment {
 		</tr>
 		<?php
 	}
-	
-	public function getPreviewHtml() {
+
+	public function getTableHtml() {
 		?>
 		<tr>
 			<td> <?php echo $this->text; ?> </td>
@@ -91,7 +91,14 @@ class Comment {
 		</tr>
 		<?php
 	}
-	
+
+	public function getPreviewHtml() {
+		?>
+		<?php echo $this->text; ?><br><br>
+		<span data-trans-key="rating"></span>: <strong><?php echo $this->points; ?><span data-trans-key="points-abb"></span></strong>
+		<?php
+	}
+
 	public function save(){
 	
 	}

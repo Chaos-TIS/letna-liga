@@ -294,7 +294,7 @@ function pridaj_hodnotenie($comments, $id) {
 			<?php
 			if (is_a($_SESSION['loggedUser'], 'Administrator')) {
 				for ($i = 0 ; $i < count($comments) ; $i++) {
-					if ($i != $id) $comments[$i]->getPreviewHtml();
+					if ($i != $id) $comments[$i]->getTableHtml();
 				}
 			}
 			$comments[$id]->getEditingHtml();
@@ -718,7 +718,7 @@ function delete_assignment($id) {
 				echoError('err-assignment-deleting');
 				return;
 			}
-			echoMessage('assignment-deleted');
+			echoMessage('m-assignment-deleted');
 		}
 		else {
 			echoError('err-assignment-deleting');

@@ -4,7 +4,7 @@ page_head("Úprava účtu");
 page_nav();
 get_topright_form();
 if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
-if (get_class($_SESSION["loggedUser"]) != "Administrator") dieWithError("err-only-admin-edit-jury");
+if (get_class($_SESSION["loggedUser"]) != "Administrator") dieWithError("err-edit-accounts-rights");
 $val = new Validate();
 $edit = new EditJury();
 $udaje=daj_udaje_rozhodcu($_GET['id']);

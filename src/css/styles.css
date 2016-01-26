@@ -151,6 +151,9 @@ table {
 
 .result-table th a, .result-table th span {
 	color: black;
+}
+
+.result-table th a, .result-table th span , .result-table td a, .result-table td span {
 	display: block;
 	margin: -5px;
 	padding: 5px;

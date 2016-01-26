@@ -356,7 +356,7 @@ AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
 			$result = mysqli_query($link,$sql);
 			if($result){
-				echoMessage('add-best-solution');
+				echoMessage('m-best-solution-selected');
 				?>
 				<meta http-equiv="refresh" content="1;url=bestSolution.php?id=<?php echo $this->id ?>">
 				<?php 
@@ -373,7 +373,7 @@ AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
 			$result = mysqli_query($link,$sql);
 			if($result){
-				echoMessage('add-best-solution');
+				echoMessage('m-best-solution-selected');
 				?>
 				<meta http-equiv="refresh" content="1;url=bestSolution.php?id=<?php echo $this->id ?>">
 				<?php 
