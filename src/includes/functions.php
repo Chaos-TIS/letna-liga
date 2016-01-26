@@ -353,12 +353,8 @@ function get_result_table($sk_league, $year) {
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
                 WHERE a.year = $year AND a.begin <= NOW()
-                ORDER BY a.begin ASC;
+                ORDER BY a.begin ASC, a.context_id ASC;
                 ";
-
-
-
-
 
         if (!$result = mysqli_query($link, $sql))
             return "";
