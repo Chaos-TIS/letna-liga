@@ -275,7 +275,7 @@ function new_comment($conn, $cid, $uid) {
 	mysqli_query($conn,"INSERT INTO comments (solution_id, user_id) VALUES (".$cid.",".$uid.")");
 	return mysqli_insert_id($conn);
 }
-
+/*
 function getSolutionId($uid, $aid) {
 	if ($conn = db_connect()) {
 		if ($result = mysqli_query($conn,"SELECT s.context_id AS 'context_id' FROM teams t, solutions s, contexts c WHERE t.user_id = ".$uid." AND c.user_id = t.user_id AND c.context_id = s.context_id AND s.assignment_id = ".$aid)) {
@@ -286,7 +286,7 @@ function getSolutionId($uid, $aid) {
 	}
 	return 0;
 }
-
+*/
 function pridaj_hodnotenie($comments, $id) {
 	?>
 	<form accept-charset="utf-8" name="form1" enctype="multipart/form-data" method="POST" action="<?php echo "solution.php?id=".$comments[$id]->getSolution()."&comment=".$id; ?>" >
@@ -326,7 +326,7 @@ function get_max_year(){
     }
     return Date("Y");
 }
-
+/*
 function get_result_table($sk_league, $year) {
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
     if ($link = db_connect()) {
@@ -440,7 +440,7 @@ function get_result_table($sk_league, $year) {
     }
 
 
-} 
+} */
 
 
 

@@ -4,7 +4,7 @@ page_head("Správa účtov");
 page_nav();
 get_topright_form();
 if (!isset($_SESSION["loggedUser"]) || $_SESSION["loggedUser"] == null) dieWithError("err-not-logged-in");
-if (get_class($_SESSION["loggedUser"]) != "Administrator") dieWithError("err-add-assignment-rights");
+if (get_class($_SESSION["loggedUser"]) != "Administrator") dieWithError("err-manage-acc-only-Administrator");
 
   if (isset($_POST["zrus"])){
       zmaz_acc($_POST['zrus']);}

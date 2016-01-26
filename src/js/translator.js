@@ -180,6 +180,8 @@ dict.set('m-acc-validated', ['Účet bol potvrdený.', 'Account has been validat
 
 dict.set('err-acc-deletion', ['Účet sa NEpodarilo zmazať z databázy.', 'It was not possible to delete the account.']);
 dict.set('err-acc-validation', ['Účet sa nepodarilo potvrdiť.', 'It was not possible to validate the account.']);
+dict.set('err-manage-acc-only-Administrator', ['Iba administrátor môže spravovať účty!', 'Only administrator can manage accounts!']);
+
 
 /*----------------------------------EDIT TEAM ACCOUNT-------------------------------------*/
 dict.set('edit-team-form', [
@@ -196,6 +198,7 @@ dict.set('edit-team-form', [
     ['Open liga', 'Open league'],
     ['Uložiť', 'Save']
 ]);
+dict.set('err-only-admin-edit-team', ['Iba administrátor môže editovať účet!', 'Only the administrator can edit accounts!']);
 
 /*----------------------------------EDIT JURY ACCOUNT-------------------------------------*/
 dict.set('edit-jury-form', [
@@ -207,6 +210,7 @@ dict.set('edit-jury-form', [
     ['Zopakuj heslo', 'Repeat password'],
     ['Uložiť', 'Save']
 ]);
+dict.set('err-only-admin-edit-jury', ['Iba administrátor môže editovať účet!', 'Only the administrator can edit accounts!']);
 
 
 /*--------------------------------------NAVIGATION----------------------------------------*/
@@ -286,6 +290,8 @@ dict.set('err-time-logic', ['Dátum zverejnenia nemôže byť väčší ako dát
 dict.set('err-assignment-deleting', ['Zadanie sa nepodarilo zmazať!', 'An error has occured during deleting the assignment!']);
 dict.set('err-assignment-editing', ['Zadanie sa nepodarilo editovať!', 'An error has occured during editing the assignment!']);
 dict.set('assignment-deleted', ['Zadanie bolo zmazané.', 'Assignment deleted.']);
+dict.set('err-select-best-solution', ['Iba administrátor môže vybrať najlepšie riešenie!', 'Only administrator can select best solution!']);
+dict.set('select-best-solution', ['Vyber najlepšie zadanie', 'Select best solution']);
 
 /*--------------------------------------MESSAGES------------------------------------------*/
 dict.set('m-changes-saved', ['Zmeny boli ulozené do databázy.', 'The changes have been saved to the database.']);
@@ -332,3 +338,6 @@ dict.set('err-text-saving', ['Chyba pri ukladaní textu do databázy.', 'An erro
 dict.set('solution-description', ['Popis riešenia', 'Solution description']);
 
 dict.set('results-not-available', ['Aktuálne výsledky ešte nie sú k dispozícii.', 'Acutal results are not available yet.']);
+/*--------------------------------------BestSolution------------------------------------------*/
+dict.set('save', ['Ulož', 'Save']);
+dict.set('add-best-solution', ['Bolo vybrané najlepšie riešenie', 'Selected best solution']);

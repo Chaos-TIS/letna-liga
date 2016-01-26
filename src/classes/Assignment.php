@@ -190,7 +190,7 @@ class Assignment extends Context {
 				$result = mysqli_query($link,$sql);
 				?>
 				<br>
-				<a href="bestSolution.php?id=<?php echo $this->id ?>" >select best solution</a>
+				<a href="bestSolution.php?id=<?php echo $this->id ?>" data-trans-key="select-best-solution"></a>
         <br><br> 
 				<?php
 				if($result!=false){
@@ -262,7 +262,7 @@ class Assignment extends Context {
 			$sql = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best',  t.sk_league AS  'liga'  FROM solutions s, contexts c,  teams t WHERE c.context_id = s.context_id AND c.user_id = t.user_id  AND  s.assignment_id = ".$this->id;
 			$result = mysqli_query($link,$sql);
 			}
-			?><h3>Slovak League</h3><?php
+			?><h3><span data-trans-key="sk-league"></span></h3><?php
 			for($i=0;$i<count($this->solutions);$i++){ 
 				$best = mysqli_fetch_assoc($result);
 				$team = $this->solutions[$i];
@@ -292,7 +292,7 @@ class Assignment extends Context {
 		}
 		?>
 		
-		<input type="submit" name="saveSlovak" id="save" value="Save" />
+		<input type="submit" name="saveSlovak" id="save" value="Save" data-trans-key="save">
 		</form>
 		<?php
 
@@ -312,7 +312,7 @@ class Assignment extends Context {
 			$sql = "SELECT c.user_id as 'user_id', c.context_id as 'context_id', s.best as 'best',  t.sk_league AS  'liga'  FROM solutions s, contexts c,  teams t WHERE c.context_id = s.context_id AND c.user_id = t.user_id  AND s.assignment_id = ".$this->id;
 			$result = mysqli_query($link,$sql);
 			}
-			?><h3>Open League</h3><?php
+			?><h3><span data-trans-key="open-league"></h3><?php
 			for($i=0;$i<count($this->solutions);$i++){ 
 				$best = mysqli_fetch_assoc($result);
 				$team = $this->solutions[$i];
@@ -341,7 +341,7 @@ class Assignment extends Context {
 		}
 		?>
 		
-		<input type="submit" name="saveOpen" id="save" value="Save" />
+		<input type="submit" name="saveOpen" id="save" value="Save" data-trans-key="save">
 		</form>
 		<?php
 
@@ -356,9 +356,9 @@ AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
 			$result = mysqli_query($link,$sql);
 			if($result){
-				echoMessage('Add best solution');
+				echoMessage('add-best-solution');
 				?>
-				<meta http-equiv="refresh" content="0;url=bestSolution.php?id=<?php echo $this->id ?>">
+				<meta http-equiv="refresh" content="1;url=bestSolution.php?id=<?php echo $this->id ?>">
 				<?php 
 			}
 		}
@@ -373,9 +373,9 @@ AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 			$sql = "UPDATE solutions as s , contexts c, teams t SET best = 1 WHERE c.context_id = s.context_id AND s.assignment_id = '".$this->id."' AND t.user_id =c.user_id AND c.user_id =".$pom; 
 			$result = mysqli_query($link,$sql);
 			if($result){
-				echoMessage('Add best solution');
+				echoMessage('add-best-solution');
 				?>
-				<meta http-equiv="refresh" content="0;url=bestSolution.php?id=<?php echo $this->id ?>">
+				<meta http-equiv="refresh" content="1;url=bestSolution.php?id=<?php echo $this->id ?>">
 				<?php 
 			}
 		}
