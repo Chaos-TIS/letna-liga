@@ -44,20 +44,7 @@ if (isset($_GET["action"]) && !empty($_GET["action"])) {
 		if (!isset($_POST["id"]) || empty($_POST["id"])) {
 			echoError("err-no-assignment-chosen");
 		}
-		else if ($link = db_connect()) {
-			$sql = "DELETE FROM assignments WHERE context_id='".$_POST["id"]."'";
-			$result = mysqli_query($link,$sql);
-			if ($result) {
-				echoMessage('assignment-deleted');
-			}
-			else {
-				echoError('err-assignment-deleting');
-			}
-			mysqli_close($link);
-		}
-		else {
-			echoError('err-db-connection-fail');
-		}
+		delete_assignment($_POST["id"]);
 	}
 	else if ($action == 3 && (isUserTypeLogged("Administrator") || isUserTypeLogged("Jury"))) {
 		if (!isset($_POST["id"]) || empty($_POST["id"])) {

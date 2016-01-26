@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 define("SK", 0);
 define("ENG", 1);
@@ -116,7 +116,7 @@ function page_nav()
 
 					<?php
 					if ($link = db_connect()) {
-            $sql =  "SELECT a.context_id AS id FROM assignments a WHERE a.year = (SELECT max(year) FROM assignments) AND a.begin <= CURDATE() ORDER BY begin ASC;";
+            $sql =  "SELECT a.context_id AS id FROM assignments a WHERE a.year = (SELECT max(year) FROM assignments) AND a.begin <= NOW() ORDER BY begin ASC;";
             $result = mysqli_query($link,$sql);
             $i=1;
             while ($row = mysqli_fetch_assoc($result)) {
@@ -137,7 +137,7 @@ function page_nav()
 					      <ul>
 					   <?php
 					     if($link = db_connect()){
-                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= CURDATE() ORDER BY a.begin ASC";
+                $sql = "SELECT a.context_id, a.year FROM assignments a WHERE a.begin <= NOW() ORDER BY a.begin ASC";
                 $result = mysqli_query($link,$sql);
                 $rok = 0;
                 $poc = 1;
@@ -352,7 +352,7 @@ function get_result_table($sk_league, $year) {
                    	WHERE t.sk_league IN (1, $sk_league)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
-                WHERE a.year = $year AND a.begin <= CURDATE()
+                WHERE a.year = $year AND a.begin <= NOW()
                 ORDER BY a.begin ASC;
                 ";
 
@@ -536,11 +536,11 @@ function isUserTypeLogged($type) {
 function prehlad_zadani($zverejnene) {
     if ($link = db_connect()) {
 		if ($zverejnene) {
-			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= CURDATE() AND end > CURDATE()";
+			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin <= NOW() AND end > NOW()";
 			$nadpis = "published-assignments";
 		}
 		else {
-			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > CURDATE() OR begin is NULL";
+			$sql="SELECT * FROM assignments a INNER JOIN texts t ON a.text_id_name = t.text_id WHERE begin > NOW() OR begin is NULL";
 			$nadpis = "unpublished-assignments";
 		}
         $result = mysqli_query($link, $sql);
@@ -630,6 +630,122 @@ function prehlad_zadani($zverejnene) {
 	else {
 		echoError('err-db-connection-fail');
 	}
+}
+
+function createThumbnail($image_name,$new_width,$new_height,$uploadDir,$moveToDir)
+{
+    $path = $uploadDir . '/' . $image_name;
+
+    $mime = getimagesize($path);
+
+	if($mime['mime']=='image/gif'){ $src_img = imagecreatefromgif($path); }
+    if($mime['mime']=='image/png'){ $src_img = imagecreatefrompng($path); }
+    if($mime['mime']=='image/jpg'){ $src_img = imagecreatefromjpeg($path); }
+    if($mime['mime']=='image/jpeg'){ $src_img = imagecreatefromjpeg($path); }
+    if($mime['mime']=='image/pjpeg'){ $src_img = imagecreatefromjpeg($path); }
+
+    $old_x          =   imageSX($src_img);
+    $old_y          =   imageSY($src_img);
+
+    if($old_x > $old_y) 
+    {
+        $thumb_w    =   $new_width;
+        $thumb_h    =   $old_y*($new_height/$old_x);
+    }
+
+    if($old_x < $old_y) 
+    {
+        $thumb_w    =   $old_x*($new_width/$old_y);
+        $thumb_h    =   $new_height;
+    }
+
+    if($old_x == $old_y) 
+    {
+        $thumb_w    =   $new_width;
+        $thumb_h    =   $new_height;
+    }
+
+    $dst_img        =   ImageCreateTrueColor($thumb_w,$thumb_h);
+
+    imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y); 
+
+    $new_thumb_loc = $moveToDir . $image_name;
+	
+	if($mime['mime']=='image/gif'){ $result = imagegif($dst_img,$new_thumb_loc,8); }
+    if($mime['mime']=='image/png'){ $result = imagepng($dst_img,$new_thumb_loc,8); }
+    if($mime['mime']=='image/jpg'){ $result = imagejpeg($dst_img,$new_thumb_loc,80); }
+    if($mime['mime']=='image/jpeg'){ $result = imagejpeg($dst_img,$new_thumb_loc,80); }
+    if($mime['mime']=='image/pjpeg'){ $result = imagejpeg($dst_img,$new_thumb_loc,80); }
+
+    imagedestroy($dst_img); 
+    imagedestroy($src_img);
+
+    return $result;
+}
+
+function delete_assignment($id) {
+	if ($link = db_connect()) {
+		$sql = "SELECT context_id, text_id_name, text_id_description FROM assignments WHERE context_id = ".$id;
+		$result = mysqli_query($link, $sql);
+		if ($result && mysqli_num_rows($result) != 0) {
+			$assignment = mysqli_fetch_array($result);
+			$sql = "DELETE FROM texts WHERE text_id = ".$assignment['text_id_name']." OR text_id = ".$assignment['text_id_description'];
+			if (!mysqli_query($link, $sql)) {
+				echoError('err-assignment-deleting');
+				return;
+			}
+			$sql = "DELETE FROM videos WHERE context_id = ".$assignment['context_id'];
+			if (!mysqli_query($link, $sql)) {
+				echoError('err-assignment-deleting');
+				return;
+			}
+			$sql = "DELETE FROM images WHERE context_id = ".$assignment['context_id'];
+			if (!mysqli_query($link, $sql)) {
+				echoError('err-assignment-deleting');
+				return;
+			}
+			$sql = "DELETE FROM programs WHERE context_id = ".$assignment['context_id'];
+			if (!mysqli_query($link, $sql)) {
+				echoError('err-assignment-deleting');
+				return;
+			}
+			$sql = "DELETE FROM assignments WHERE context_id = ".$assignment['context_id'];
+			if (!mysqli_query($link, $sql)) {
+				echoError('err-assignment-deleting');
+				return;
+			}
+			if (!deleteDir(dirname(__FILE__)."/../attachments/assignments/".$assignment['context_id'])) {
+				echoError('err-assignment-deleting');
+				return;
+			}
+			echoMessage('assignment-deleted');
+		}
+		else {
+			echoError('err-assignment-deleting');
+		}
+	}
+	else {
+		echoError('err-db-connection-fail');
+	}
+}
+
+function deleteDir($dirPath) {
+    if (! is_dir($dirPath)) {
+		return false;
+    }
+    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            deleteDir($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($dirPath);
+	return true;
 }
 
 
