@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 define("SK", 0);
 define("ENG", 1);
@@ -342,13 +342,13 @@ function get_result_table($sk_league, $year) {
 
         $sql = "SELECT q.name, q.solution_id, q.best, a.context_id assignment_id, q.points, q.sk_league AS league
                 FROM assignments a
-                LEFT OUTER JOIN (
+                INNER JOIN (
                     SELECT t.name, t.sk_league, s.context_id solution_id, s.best, s.assignment_id, comm.points
                     FROM solutions s
                     LEFT OUTER JOIN contexts c ON (c.context_id = s.context_id)
                     LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
                     LEFT OUTER JOIN teams t ON (t.user_id = u.user_id)
-                    LEFT OUTER JOIN comments comm ON (comm.solution_id = c.context_id AND comm.user_id = 1)
+                    INNER JOIN comments comm ON (comm.solution_id = c.context_id AND comm.user_id = 1)
                    	WHERE t.sk_league IN (1, $sk_league)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
