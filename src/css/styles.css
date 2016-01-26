@@ -93,11 +93,14 @@ input, button, textarea {
 #content {
 	position: relative;
 	float: left;
-	padding-left: 10%;	
-/*	padding-left: 0%;	*/
-/*	width: 100%; */
+	padding-left: 10%;
 	width: 80%; 
 	margin-top: 20px;
+}
+
+#wrapper {
+	position: relative;
+	float: left;
 }
 
 #logout_butt, #pridaj_zadanie {

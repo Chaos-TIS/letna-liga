@@ -37,6 +37,7 @@ function page_head($title)
     </script>
 
     <body>
+    <div id="wrapper">
     <a href="."><h1 data-trans-key="main-header"></h1></a>
 <?php
 Image::setIcon("images/image.png");
@@ -199,6 +200,7 @@ function page_nav()
 function page_footer()
 {
     ?>
+    </div>
     </body>
 	</html>
     <?php
