@@ -37,10 +37,6 @@ class Team extends User {
 		}
 		return $this;
 	}
-
-    public function getSolutionOf($assignment) {
-		//TODO
-	}
 	
 	public function getId() {
 		return $this->id;

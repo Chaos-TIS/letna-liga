@@ -22,10 +22,5 @@ abstract class Attachment {
 	public function getName() {
 		return $this->name;
 	}
-	
-    public function del(){
-        //TODO
-    }
-
 }
 ?>

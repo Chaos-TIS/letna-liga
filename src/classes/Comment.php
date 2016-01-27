@@ -98,9 +98,5 @@ class Comment {
 		<span data-trans-key="points"></span>: <strong><?php echo $this->points; ?></strong>
 		<?php
 	}
-
-	public function save(){
-	
-	}
 }
 ?>

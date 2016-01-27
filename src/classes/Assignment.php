@@ -382,10 +382,6 @@ AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 
 	}
 	
-	public function getResultTableRowHTML(){
-	
-	}
-	
 	public function getSolutions(){
 		return $this->solutions;
 	}
@@ -407,12 +403,5 @@ AND t.user_id = c.user_id AND s.assignment_id = ".$this->id;
 		$cur_time = strtotime(date("c"));
 		return $deadline < $cur_time;
 	}
-	
-	public function save(){
-	
-	}
-	
-	
-	
 }
 ?>

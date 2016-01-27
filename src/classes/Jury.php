@@ -7,9 +7,5 @@ class Jury extends Organisator {
         $this->validated = $validated;
     }
 
-    public function validate(){
-        //TODO
-    }
-
 }
 ?>

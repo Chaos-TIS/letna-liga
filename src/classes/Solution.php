@@ -3,7 +3,6 @@ require_once(dirname(__FILE__)."/../includes/functions.php");
 
 class Solution extends Context {
     private $text;
-
     private $best;
 	private $points;
 	private $comments;
@@ -175,11 +174,7 @@ class Solution extends Context {
 	public function getComments(){
 		return $this->comments;
 	}
-	
-	public function save(){
-	
-	}
-	
+
 	public function getTeam(){
    return $this->author;
   }

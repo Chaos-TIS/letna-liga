@@ -232,7 +232,5 @@ abstract class Context{
 		}*/
 		
 	}
-
-    
 }
 ?>

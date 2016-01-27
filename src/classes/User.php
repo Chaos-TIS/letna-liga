@@ -49,10 +49,6 @@ abstract class User
         return null;
     }
 
-    public static function getAllUsers() {
-        return null;
-    }
-
 }
 
 ?>
