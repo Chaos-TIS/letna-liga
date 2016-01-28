@@ -73,7 +73,7 @@ if (isset($_POST["type"]) && $_POST["type"] == 0){
   </tr>
   <tr>
   <td data-trans-key="reg-form"></td>
-  <td><textarea cols="25" rows="3" name="os" id="os" placeholder="Táto informácia sa bude zobrazovat pri kazdom riešení" ><?php if (isset($_POST["os"])) echo $_POST["os"];?></textarea></td>
+  <td><textarea cols="25" rows="3" name="os" id="os" data-trans-key='inf' ><?php if (isset($_POST["os"])) echo $_POST["os"];?></textarea></td>
   </tr>
   <tr>
   <td><input type="radio" checked name="liga" value=1<?php if (isset($_POST['liga']) && $_POST["liga"]==1) echo ' checked'; ?> ><span data-trans-key="reg-form"></span></td>

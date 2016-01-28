@@ -148,6 +148,8 @@ dict.set('reg-form', [
 ]);
 
 dict.set('m-registration-success', ['Boli ste úspešne zaregistrovaný.', 'Your account has been succesfully registered.']);
+dict.set('inf', ['Táto informácia sa bude zobrazovat pri každom riešení.', 'This information will be visible to others at your solutions´ page']);
+
 
 dict.set('err-name-duplicate', ['Zadané meno sa nachádza v databáze!', 'The entered name is already taken!']);
 dict.set('err-email-duplicate', ['Zadaný email sa nachádza v databáze!', 'The entered email is already taken!']);
