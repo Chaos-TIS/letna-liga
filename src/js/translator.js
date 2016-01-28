@@ -73,7 +73,7 @@ var dict = {
                 translated.push(tag);
                 $(scope).find("[data-trans-key="+tag+"]").html(function(index, originalText){
                     var translation = dict.get(tag, toLanguageCode, index);
-                    if ($(this).prop("tagName") === "INPUT"){
+                    if ($(this).prop("tagName") === "INPUT" || $(this).prop("tagName") === "TEXTAREA"){
                         if ($(this).attr("type") === "submit") {
                             $(this).val(translation);
                             return originalText;
@@ -142,14 +142,13 @@ dict.set('reg-form', [
     ['Zopakuj heslo:', 'Repeat password:'],
     ['Zopakuj heslo', 'Repeat password'],
     ['Napíš nám niečo o sebe:', 'Write us something about yourself:'],
+    ['Táto informácia sa bude zobrazovat pri každom riešení.', 'This information will be visible to others at your solutions\' page'],
     ['Slovenská liga', 'Slovak league'],
     ['Open liga', 'Open league'],
     ['Registrovať', 'Register']
 ]);
 
 dict.set('m-registration-success', ['Boli ste úspešne zaregistrovaný.', 'Your account has been succesfully registered.']);
-dict.set('inf', ['Táto informácia sa bude zobrazovat pri každom riešení.', 'This information will be visible to others at your solutions´ page']);
-
 
 dict.set('err-name-duplicate', ['Zadané meno sa nachádza v databáze!', 'The entered name is already taken!']);
 dict.set('err-email-duplicate', ['Zadaný email sa nachádza v databáze!', 'The entered email is already taken!']);
