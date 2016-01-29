@@ -103,7 +103,7 @@ class Solution extends Context {
 		
 		<form name="form1" accept-charset="utf-8" enctype="multipart/form-data" method="POST">
 			<h2 data-trans-key="solution-description"></h2>
-			<textarea name="textPopis" cols="80" rows="10" ><?php echo $this->getTxt() ?></textarea>
+			<textarea name="textPopis" cols="60" rows="10" ><?php echo $this->getTxt() ?></textarea>
 	
 			<br>			
 			<?php
@@ -113,7 +113,7 @@ class Solution extends Context {
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
-			<textarea name="textVideo" cols="80" rows="3" ></textarea>
+			<textarea name="textVideo" cols="60" rows="3" ></textarea>
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
 			<input type="file" name="uploadedFiles[]" multiple />

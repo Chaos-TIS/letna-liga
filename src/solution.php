@@ -79,9 +79,12 @@ if(isset($_SESSION['solution'])){
         <h3>Prílohy:</h3>
         <?php
         while ($prilohy_row = mysqli_fetch_assoc($prilohy)) { 
-          $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/programs/".$prilohy_row['program_id'].".zip";
+          $pripona = split("[.]",$prilohy_row['original_name']);
+	  if (count($pripona) == 1) $priponoviny = '';
+	  else $priponoviny = ".".$pripona[count($pripona)-1]; 
+          $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/programs/".$prilohy_row['program_id'].$priponoviny;
           ?>
-          <a href="<?php echo $subor; ?>"><?php echo $prilohy_row['original_name']; ?></a>
+          <a href="<?php echo $subor; ?>" target="_blank"><?php echo $prilohy_row['original_name']; ?></a>
           <?php
         }
       }

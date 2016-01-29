@@ -154,7 +154,7 @@ abstract class Context{
 					}					
 					if (move_uploaded_file($files["tmp_name"][$i], $target_file)) {
 						if ($typ == "image") {
-							echo createThumbnail($new_name, 250, 250, $kde.$typ."s/big", $kde.$typ."s/small/");
+							createThumbnail($new_name, 250, 250, $kde.$typ."s/big", $kde.$typ."s/small/");
 						}
 						echoMessage("m-file-uploaded", $subor);
 					} else {

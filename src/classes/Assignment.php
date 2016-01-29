@@ -85,9 +85,9 @@ class Assignment extends Context {
 			<h2><span data-trans-key="assignment-name"></span> (ENG) </h2>
 			<input type="text" name="engName" value="<?php echo $this->getEngName() ?>">
 			<h2><span data-trans-key="assignment-description"></span> (SK)</h2>
-			<textarea name="skTextPopis" cols="80" rows="10" ><?php echo $this->getSkTxt() ?></textarea>
+			<textarea name="skTextPopis" cols="60" rows="10" ><?php echo $this->getSkTxt() ?></textarea>
 			<h2><span data-trans-key="assignment-description"></span> (ENG)</h2>
-			<textarea name="engTextPopis" cols="80" rows="10" ><?php echo $this->getEngTxt() ?></textarea>
+			<textarea name="engTextPopis" cols="60" rows="10" ><?php echo $this->getEngTxt() ?></textarea>
 	
 			<br>			
 			<?php
@@ -97,7 +97,7 @@ class Assignment extends Context {
 			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
-			<textarea name="textVideo" cols="80" rows="3" ></textarea>
+			<textarea name="textVideo" cols="60" rows="3" ></textarea>
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
 			<input type="file" name="uploadedFiles[]" multiple />

@@ -24,8 +24,8 @@ function page_head($title)
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <link type="text/css" href="css/styles.css" rel="stylesheet"> 
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
-		<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="(max-width:530px)">
-        <script type="text/javascript" src="js/iframeresize.js" ></script>
+	<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="(max-width:530px)"> 
+	<script type="text/javascript" src="js/iframeresize.js" ></script>
         <script type="text/javascript" src="js/dropdownmenu.js" ></script>
         <script type="text/javascript" src="js/translator.js" ></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -35,8 +35,8 @@ function page_head($title)
         $(document).ready(function(){
             dict.translateElement();
         });
-
-        window.onload =  function() {
+	
+	window.onload =  function() {
             sendResizeRequest();
         };
     </script>
@@ -244,8 +244,8 @@ function echoMessage($key, $info = null){
 }
 
 function db_connect() {
-    if ($link = @mysqli_connect('localhost', 'letnaliga', '12345')) {
-        if (@mysqli_select_db($link, 'letnaliga')) {
+    if ($link = @mysqli_connect('localhost', 'letnaliga', 'nedavajteheslodosvn')) {
+        if (@mysqli_select_db($link, 'll')) {
             @mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;
         } else {
@@ -360,6 +360,10 @@ function get_result_table($sk_league, $year) {
                 WHERE a.year = $year AND a.begin <= NOW()
                 ORDER BY a.begin ASC, a.context_id ASC;
                 ";
+
+
+
+
 
         if (!$result = mysqli_query($link, $sql))
             return "";
