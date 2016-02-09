@@ -273,6 +273,7 @@ dict.set('err-select-best-solution', ['Iba administrátor môže vybrať najlep�
 dict.set('assignment-page', [
     ['Riešenie možno odovzdávať do:', 'Deadline of this assignment is set to:'],
     ['Riešenia:', 'Solutions:']]);
+dict.set('upload-by', ['Odovzdať do:', 'Upload by:']);
 
 dict.set('assignment-name', ['Názov zadania', 'Assignment name']);
 dict.set('assignment-description', ['Popis zadania', 'Assignment description']);
