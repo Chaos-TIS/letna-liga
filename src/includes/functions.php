@@ -353,7 +353,7 @@ function get_result_table($sk_league, $year) {
                     LEFT OUTER JOIN contexts c ON (c.context_id = s.context_id)
                     LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
                     LEFT OUTER JOIN teams t ON (t.user_id = u.user_id)
-                    INNER JOIN comments comm ON (comm.solution_id = c.context_id AND comm.user_id = 1)
+                    INNER JOIN comments comm ON (comm.solution_id = c.context_id AND comm.user_id = 1 AND comm.text IS NOT null)
                    	WHERE t.sk_league IN (1, $sk_league)
                 	GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
@@ -567,12 +567,16 @@ function prehlad_zadani($zverejnene) {
 						echo "<td data-trans-lang='".ENG."'><a href='assignment.php?id={$row['context_id']}'>{$eng}</a></td>";
 						?>
 						<td> <?php
-							if ($row['begin'] == "") {
-								echo "---";
+							if (isUserTypeLogged("Administrator") || (isUserTypeLogged("Jury") && $zverejnene == false)) 
+							{
+								if ($row['begin'] == "") {
+									echo "---";
+								}
+								else {
+									echo $row['begin'];
+								}
 							}
-							else {
-								echo $row['begin'];
-							}
+							else echo '<span data-trans-key="upload-by"></span>';
 							?>
 						</td>
 						<td> <?php

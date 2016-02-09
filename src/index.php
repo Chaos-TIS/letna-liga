@@ -90,12 +90,12 @@ get_topright_form();
             <?php ob_start(); ?>
             <!-----------------------------------------INDEX PAGE JURY IMAGES----------------------------------------------------->
             <div class="jury-img">
-                <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/lubos_miklosovic.jpg"><p>Luboš Miklošovič</p>
-                <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michal_fikar.jpg"><p>Michal Fikar</p>
+                <img src="hodnot/lubos_miklosovic.jpg"><p>Luboš Miklošovič</p>
+                <img src="hodnot/michal_fikar.jpg"><p>Michal Fikar</p>
             </div>
             <div class="jury-img">
-                <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/michaela_veselovska.jpg"><p>Michaela Veselovská</p>
-                <img src="http://kempelen.ii.fmph.uniba.sk/letnaliga/hodnot/richard_balogh.jpg"><p>Richard Balogh</p>
+                <img src="hodnot/michaela_veselovska.jpg"><p>Michaela Veselovská</p>
+                <img src="hodnot/richard_balogh.jpg"><p>Richard Balogh</p>
             </div>
             <?php $juryImages = ob_get_contents();
             ob_end_clean(); ?>
