@@ -312,7 +312,7 @@ function pridaj_hodnotenie($comments, $id) {
 }
 
 function updateData($conn, $kde, $co, $zaco, $idName, $id) {
-	$sql_update = "UPDATE ".$kde." SET ".$co." = '".$zaco."' WHERE ".$idName." = ".$id;
+	$sql_update = "UPDATE ".$kde." SET ".$co." = '".addslashes($zaco)."' WHERE ".$idName." = ".$id;
 	if (mysqli_query($conn,$sql_update)) {
 		echoMessage("m-text-saved");
 	}
