@@ -76,7 +76,7 @@ class Comment {
 				?> <td> <?php echo $this->points; ?> </td> <?php
 			}
 			else {
-				?> <td> <input type="number" name="commentPoints" min="0" max="3", value="<?php echo $this->points ?>"> </td> <?php
+				?> <td> <input type="number" name="commentPoints" min="0" max="3" step="0.1" value="<?php echo $this->points ?>"> </td> <?php
 			}
 			?>
 		</tr>

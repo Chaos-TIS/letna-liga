@@ -210,7 +210,7 @@ dict.set('archive', ['Archív', 'Archive']);
 dict.set('users', ['Používatelia', 'Users']);
 dict.set('teams', ['Tímy', 'Teams']);
 dict.set('jury-pl', ['Rozhodcovia', 'Jury']);
-dict.set('language', ['Jazyk', 'Language']);
+dict.set('language', ['English', 'Slovensky']);
 
 /*-------------------------------------RESULT TABLE---------------------------------------*/
 dict.set('table-loading', ['Tabuľka sa načítava', 'The table is loading']);
