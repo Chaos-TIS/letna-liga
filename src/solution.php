@@ -44,7 +44,7 @@ if(isset($_SESSION['solution'])){
             $suborB = "attachments/solutions/".$_SESSION['solution']->getId()."/images/big/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
             $suborS = "attachments/solutions/".$_SESSION['solution']->getId()."/images/small/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
            ?>
-              <td><a class="fancybox" rel="group" href="<?php echo $suborB; ?>"><img src="<?php echo $suborS ?>" width="250", width="250") ?> </a></td>
+              <td><a class="fancybox" rel="group" target="_top" href="<?php echo $suborB; ?>"><img src="<?php echo $suborS ?>" width="250", width="250") ?> </a></td>
             <?php
             $pocet++;
             if($pocet%2==0){
