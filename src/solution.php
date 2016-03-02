@@ -118,7 +118,7 @@ if(isset($_SESSION['solution'])){
 <script type="text/javascript" src="js/source/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $(".fancybox").fancybox();
+    parent.$(".fancybox").fancybox();
   });
 </script>
 <?php
