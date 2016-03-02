@@ -19,13 +19,14 @@ get_topright_form();
                 <a href="prehladZadani.php">Zadania a riešenia letnej ligy</a>
                 <h2>Oznamy:</h2>
                 <ul>
-                    <li><i>Letná liga FLL 2015 beží, pridajte sa! Hrá sa o stavebnicu LEGO MINDSTORMS Education EV3!</i></li>
+		    <li><b>Termín 1. kola sme na žiadosť presunuli na pondelok 29.2.!</b></li>
+                    <li><i>Letná liga FLL 2016 beží, pridajte sa! Aj tento rok sa hrá o stavebnicu LEGO MINDSTORMS Education EV3!</i></li>
                     <li>V prípade ťažkostí s nahrávaním riešenia ho môžete poslať aj mailom na <i>pavel.petrovic@gmail.com</i></li>
                 </ul>
 
                 <h2>Chcete uspieť v tohtoročnom ročníku FLL? Ak áno, riešte letnú ligu!</h2>
                 <ul>
-                    <li>štartujeme 12. februára</li>
+                    <li>štartujeme 9. februára</li>
                     <li>bude 10 kôl, ale zapojíť sa môžete do všetkých alebo hoci len do jedného z nich</li>
                     <li>pre viacčlenné tímy vo veku 10-16 rokov (nemusíte byť registrovaní na FLL)</li>
                     <li>každé dva týždne nové zadanie, na riešenie máte 3 týždne</li>
@@ -37,7 +38,7 @@ get_topright_form();
                 <h2>Pravidlá</h2>
                 <ul>
                     <li>Na krúžku, v klube alebo doma tím samostatne a načas vyrieši úlohu a odovzdá svoje riešenie na týchto stránkach.</li>
-                    <li>Riešenie obsahuje: spoločné foto vášho tímu, foto robota, program a video ako robot vyrieši úlohu. (<i>Tip: svoje video na YouTube označte ako &quot;unlisted&quot;
+                    <li>Riešenie obsahuje: popis riešenia, spoločné foto vášho tímu, foto robota, program a video ako robot vyrieši úlohu. (<i>Tip: svoje video na YouTube označte ako &quot;unlisted&quot;
                             a nik ho pred termínom odoslania nenájde, aj keď ho tam už budete mať</i>)
                     </li>
                     <li>Môžete použiť iba robotické stavebnice LEGO MINDSTORMS (RCX, NXT, EV3) so základnými senzormi a štandardný programovací jazyk NXT-G, EV3, alebo Robolab.</li>
@@ -55,31 +56,31 @@ get_topright_form();
                 <a href="prehladZadani.php">Assignments and solutions of the summer league</a>
                 <h2>Announcements:</h2>
                 <ul>
-                    <li><i>The summer league 2015 is on, join us! The main prize is a LEGO MINDSTORMS Education EV3 kit !</i></li>
+		    <li><b>The first round deadline has been moved by popular request to Monday, February 29th!</b></li>
+                    <li><i>The summer league 2016 is on, join us! Participants from all over the World are invited to join the Open League - we will not send you prizes, but you will earn the presitige, and most importantly - learn together with all of us! </i></li>
                     <li>In case of any difficulties with uploading a solution, you can send it via e-mail to the following address: <i>pavel.petrovic@gmail.com</i></li>
                 </ul>
 
                 <h2>Would you like to be successful in this year's FLL? Join the summer league!</h2>
                 <ul>
-                    <li>we are starting on 12th February</li>
-                    <li>the will be 10 rounds, but you can try to compete in any number of them</li>
+                    <li>we are starting on February 9th</li>
+                    <li>there will be 10 rounds, but you can try to compete in any number of them</li>
                     <li>for teams with multiple members of the ages 10-16 (you don't have to be registered in FLL)</li>
-                    <li>a new assignment every 2 weeks with a 2 week deadline</li>
-                    <li>material prizes</li>
+                    <li>a new assignment every 2 weeks with a 3 week deadline</li>
                     <li>fair play and a healthy competitive spirit</li>
-                    <li>not even you can miss this out!</li>
+                    <li>you can't miss this!</li>
                 </ul>
 
                 <h2>Rules</h2>
                 <ul>
                     <li>A team solves an assignment in the club or at home and uploads their solution on this website.</li>
-                    <li>A solution should contain: a photo of the team, a photo of the robot, the program and a video of the robot solving the problem. (<i>Hint: Nobody will find
+                    <li>A solution should contain: description of the solution, a photo of the team, a photo of the robot, the program and a video of the robot solving the problem. (<i>Hint: Nobody will find
                             your video on YouTube if you mark it as &quot;unlisted&quot;, even if you upload it before the current deadline</i>)
                     </li>
                     <li>You can use only LEGO MINDSTORMS (RCX, NXT, EV3) robotic kits with the basic sensors and a standard programing language NXT-G, EV3, or Robolab </li>
                     <li>Your solution will be rated with 0-3 points, which will be added to your current year's progress in the summer league</li>
                     <li>An independent jury is in charge of rating your solutions</li>
-                    <li>If you find an assignment too difficult, simplify it according to your needs!</li>
+                    <li>If you find an assignment too difficult, simplify it according to your needs! (And explain it in the solution)</li>
                 </ul>
 
                 <h2>Complete results</h2>
@@ -94,7 +95,7 @@ get_topright_form();
                 <img src="hodnot/michal_fikar.jpg"><p>Michal Fikar</p>
             </div>
             <div class="jury-img">
-                <img src="hodnot/michaela_veselovska.jpg"><p>Michaela Veselovská</p>
+                <img src="hodnot/michaela_axamitova.jpg"><p>Michaela Axamitová</p>
                 <img src="hodnot/richard_balogh.jpg"><p>Richard Balogh</p>
             </div>
             <?php $juryImages = ob_get_contents();
@@ -104,7 +105,7 @@ get_topright_form();
             <div data-trans-lang="<?php echo SK?>">
                 <h2>Ako hodnotíme?</h2>
                 <p>
-                    Vaše riešenia si dôkladne prezrú títo štyria ľudia: Mišo a Ľubo - študenti informatiky FMFI UK, Miška - doktorandka didaktiky informatiky na FMFI UK a Rišo - líder Robotika.SK:
+                    Vaše riešenia si dôkladne prezrú títo štyria ľudia: Mišo a Ľubo - študenti informatiky FMFI UK, Miška z Nexterie, ktorá organizuje FLL a Rišo - líder Robotika.SK:
                 </p>
                 <?php echo $juryImages?>
                 <p>
@@ -125,7 +126,7 @@ get_topright_form();
             <div data-trans-lang="<?php echo ENG?>">
                 <h2>How do we rate?</h2>
                 <p>
-                    Your solutions will be precisely analysed by these 4 people: Mišo and Ľubo - IT students of FMFI IK, Miška - PhD of IT didactics FMFI UK and Rišo - leader of Robotika.SK:
+                    Your solutions will be precisely analysed by these 4 people: Mišo and Ľubo - IT students of FMFI IK, Miška from Nexteria, which is organizing FLL, and Rišo - leader of Robotika.SK:
                 </p>
                 <?php echo $juryImages?>
                 <p>
