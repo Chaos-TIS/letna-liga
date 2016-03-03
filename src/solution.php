@@ -39,6 +39,7 @@ if(isset($_SESSION['solution'])){
       $images = mysqli_query($link,$sql_get_images);
       if ($images != false) {  
           $pocet=0;
+		  $pole_obrazkov = array();
           while ($images_row = mysqli_fetch_assoc($images)) {  
             $pripona = split("[.]",$images_row['original_name']);
             $suborB = "attachments/solutions/".$_SESSION['solution']->getId()."/images/big/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
@@ -46,6 +47,7 @@ if(isset($_SESSION['solution'])){
            ?>
               <td><a class="fancybox" rel="group" href="<?php echo $suborB; ?>"><img src="<?php echo $suborS ?>" width="250", width="250") ?> </a></td>
             <?php
+			$pole_obrazkov[] = array("href" => $suborB);
             $pocet++;
             if($pocet%2==0){
               ?>
@@ -54,6 +56,12 @@ if(isset($_SESSION['solution'])){
               <?php
             }
         }
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.fancybox').click(function(e){
+					e.preventDefault();
+			parent.$.fancybox(<?php echo json_encode($pole_obrazkov) ?>)});});
+		</script>
       }
       
       $sql_get_video = "SELECT * FROM videos v WHERE v.context_id = ".$id;
@@ -116,11 +124,7 @@ if(isset($_SESSION['solution'])){
 <!-- Add fancyBox -->
 <link rel="stylesheet" href="js/source/jquery.fancybox.css" type="text/css" media="screen" />
 <script type="text/javascript" src="js/source/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-    parent.$(".fancybox").fancybox();
-  });
-</script>
+
 <?php
 page_footer()
 ?>
