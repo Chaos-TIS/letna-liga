@@ -56,7 +56,14 @@ if(isset($_SESSION['solution'])){
               <?php
             }
         }
-
+		?>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.fancybox').click(function(e){
+					e.preventDefault();
+			parent.$.fancybox(<?php echo json_encode($pole_obrazkov) ?>)});});
+		</script>
+		<?php
       }
       
       $sql_get_video = "SELECT * FROM videos v WHERE v.context_id = ".$id;
