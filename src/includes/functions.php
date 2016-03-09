@@ -25,13 +25,12 @@ function page_head($title)
         <link type="text/css" href="css/styles.css" rel="stylesheet"> 
         <link type="text/css" href="css/dropdownmenu.css" rel="stylesheet">
 	<link type="text/css" href="css/stylesMin.css" rel="stylesheet" media="(max-width:530px)"> 
-	<link type="text/css" href="js/source/jquery.fancybox.css" rel="stylesheet">
+
 	<script type="text/javascript" src="js/iframeresize.js" ></script>
         <script type="text/javascript" src="js/dropdownmenu.js" ></script>
         <script type="text/javascript" src="js/translator.js" ></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script type="text/javascript" src="js/source/jquery.fancybox.pack.js"></script>
+
     </head>
 
     <script>
@@ -247,7 +246,7 @@ function echoMessage($key, $info = null){
 }
 
 function db_connect() {
-    if ($link = @mysqli_connect('localhost', 'letnaliga', 'nedavajteheslodosvn')) {
+    if ($link = @mysqli_connect('localhost', 'letnaliga', '******')) {
         if (@mysqli_select_db($link, 'll')) {
             @mysqli_query($link, "SET CHARACTER SET 'utf8'");
             return $link;

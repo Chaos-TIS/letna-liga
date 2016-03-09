@@ -39,15 +39,15 @@ if(isset($_SESSION['solution'])){
       $images = mysqli_query($link,$sql_get_images);
       if ($images != false) {  
           $pocet=0;
-		  $pole_obrazkov = array();
+
           while ($images_row = mysqli_fetch_assoc($images)) {  
             $pripona = split("[.]",$images_row['original_name']);
             $suborB = "attachments/solutions/".$_SESSION['solution']->getId()."/images/big/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
             $suborS = "attachments/solutions/".$_SESSION['solution']->getId()."/images/small/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
            ?>
-              <td><a class="fancybox" rel="group" href="<?php echo $suborB; ?>"><img src="<?php echo $suborS ?>" width="250", width="250") ?> </a></td>
+              <td><a class="fancybox" data-url="kempelen.ii.fmph.uniba.sk/ll/<?php echo $suborB; ?>" rel="group" href="<?php echo $suborB; ?>"><img src="<?php echo $suborS ?>" width="250", width="250") ?> </a></td>
             <?php
-			$pole_obrazkov[] = array("href" => $suborB);
+
             $pocet++;
             if($pocet%2==0){
               ?>
@@ -56,18 +56,13 @@ if(isset($_SESSION['solution'])){
               <?php
             }
         }
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('.fancybox').click(function(e){
-					e.preventDefault();
-			parent.$.fancybox(<?php echo json_encode($pole_obrazkov) ?>)});});
-		</script>
+
       }
       
       $sql_get_video = "SELECT * FROM videos v WHERE v.context_id = ".$id;
       $videos = mysqli_query($link,$sql_get_video);
       if ($videos != false) { 
-        ?>
+?>
       </tr>
       </table>
       <?php
@@ -123,8 +118,17 @@ if(isset($_SESSION['solution'])){
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!-- Add fancyBox -->
 <link rel="stylesheet" href="js/source/jquery.fancybox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/jquery.fancybox.custom.css" type="text/css" media="screen" />
 <script type="text/javascript" src="js/source/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(".fancybox").fancybox({
+    afterShow: function () {
+        var url = "http://" + $(this.element).data("url");
+        $(".fancybox-image").wrap("<a href='"+url+"' target='_blank' />");
+    }
+});
 
+</script>
 <?php
 page_footer()
 ?>
