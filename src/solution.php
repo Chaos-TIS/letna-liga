@@ -74,7 +74,7 @@ if(isset($_SESSION['solution'])){
       </table>
       <?php
         while ($videos_row = mysqli_fetch_assoc($videos)) { 
-          $linka = "http://www.youtube.com/embed/".$videos_row['link'];
+          $linka = "http://www.youtube.com/embed/".$videos_row['link'] . "?rel=0&loop=1";
           
         ?>
           <iframe width="500" height="375" src="<?php echo $linka; ?>" frameborder="0" allowfullscreen></iframe> <br>
