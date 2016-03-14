@@ -198,8 +198,9 @@ class Assignment extends Context {
 					$rozhodcovia = array();
 					while ($row = mysqli_fetch_assoc($result)) { 
 						?>            
-						<th><span data-trans-key="jury"></span> <?php echo $pocet;?></th>
+						<th><span data-trans-key="jury"></span> 
 						<?php
+						echo " " . $pocet . "<br>" . substr($row['mail'],0,10) . "</th>";
 						array_push($rozhodcovia, $row['user_id']);
 						$pocet++;
 					} 
