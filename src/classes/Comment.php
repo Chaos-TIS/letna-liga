@@ -87,10 +87,34 @@ class Comment {
 		?>
 		<tr>
 			<td> <?php echo $this->text; ?> </td>
-			<td> <?php echo $this->points; ?> </td>
+			<td> <?php echo $this->points . '&nbsp;(' . $this->author->id . ')'; ?> </td>
 		</tr>
 		<?php
 	}
+  
+  // Nova funkcia ktora rata priemer bodov 
+	/*public function ResultPoints()
+	{
+		$point = 0;
+		$pom = 0;
+		if ($link = db_connect()) {
+        	$sql="SELECT * FROM comments WHERE solution_id = ".$_GET['id']; // definuj dopyt
+    		$result = mysqli_query($link, $sql); // vykonaj dopyt
+    		if ($result) 
+    		{
+    			while ($row = mysqli_fetch_assoc($result)) 
+    			{
+    				if($row['user_id'] != 1 && $row['points'] != null)
+    				{
+    					$point += $row['points'];
+    					$pom++;    					
+    				}
+    			}
+    		}
+    	}
+    	return round ($point/$pom, 3);
+	}   */
+	/* Koniec funkcie. problem je ale pri tejto funkcii ten ze musi hodnotit kazdy rozhodca pretoze ak rohodca nehodnoti neberie sa v uvahu null a tym padom sa rata priemer len z tych bodov co maju cize ak hodnoti jeden rozhodca tak je to aj finalne hodnotenie.*/
 
 	public function getPreviewHtml() {
 		?>
@@ -98,5 +122,6 @@ class Comment {
 		<span data-trans-key="points"></span>: <strong><?php echo $this->points; ?></strong>
 		<?php
 	}
+  // zmena oproti originalu   $this->points   som nahradil    $this->ResultPoints()
 }
 ?>
