@@ -94,7 +94,7 @@ if(isset($_SESSION['solution'])){
 	  else $priponoviny = ".".$pripona[count($pripona)-1]; 
           $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/programs/".$prilohy_row['program_id'].$priponoviny;
           ?>
-          <a href="<?php echo $subor; ?>" target="_blank"><?php echo $prilohy_row['original_name']; ?></a>
+          <a href="<?php echo $subor; ?>" target="_blank"><?php echo $prilohy_row['original_name']; ?></a><br>
           <?php
         }
       }
