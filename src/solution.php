@@ -109,8 +109,10 @@ if(isset($_SESSION['solution'])){
   else {
     for ($i = 0 ; $i < count($_SESSION['solution']->comments) ; $i++) {
       if ($_SESSION['solution']->comments[$i]->getAuthor() instanceof Administrator) {
+        if(zobrazHodnotenie($_GET["id"])){
         $_SESSION['solution']->comments[$i]->getPreviewHtml();
-        break;
+        break;}
+        
       }
     }
   }

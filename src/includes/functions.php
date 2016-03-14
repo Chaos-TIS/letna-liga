@@ -104,6 +104,30 @@ function get_login_form(){
 <?php
 }
 
+function zobrazHodnotenie($ries){
+    if ($link = db_connect()) {
+        $sql="SELECT * FROM `comments` WHERE `solution_id` = '".$ries."' and `user_id` = 1"; // definuj dopyt
+    $result = mysqli_query($link, $sql); // vykonaj dopyt
+    if ($result) {
+        $result_pole = mysqli_fetch_array($result);
+        if ($result_pole['text'] == null or $result_pole['text'] == '') {
+            return false;
+        }else{
+            return true;
+        }
+            
+    } else {
+            // NEpodarilo sa vykonať dopyt!
+        echoError('err-db-query-fail');
+    }
+    mysqli_close($link);
+    } else {
+        // NEpodarilo sa spojiť s databázovým serverom alebo vybrať databázu!
+        echoError('err-db-connection-fail');
+    }
+
+}
+
 function get_logout_button(){
     ?>
     <form id="logout-form" action="includes/logout.php">
