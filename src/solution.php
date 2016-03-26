@@ -86,7 +86,7 @@ if(isset($_SESSION['solution'])){
       $prilohy = mysqli_query($link,$sql_get_prilohy);
       if ($prilohy != false) {
         ?>
-        <h3>Prílohy:</h3>
+        <h3><span data-trans-key='attachments'></span>:</h3>
         <?php
         while ($prilohy_row = mysqli_fetch_assoc($prilohy)) { 
           $pripona = split("[.]",$prilohy_row['original_name']);

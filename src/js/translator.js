@@ -256,6 +256,7 @@ dict.set('points', ['Body', 'Points']);
 
 dict.set('solution', ['Riešenie', 'Solution']);
 dict.set('rating', ['Hodnotenie', 'Rating']);
+dict.set('attachments', ['Prílohy', 'Attachments']);
 dict.set('solution-of', ['Riešenie úlohy', 'Solution of']);
 dict.set('solution-description', ['Popis riešenia', 'Solution description']);
 
