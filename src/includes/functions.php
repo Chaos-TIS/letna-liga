@@ -361,7 +361,7 @@ function get_max_year(){
 function get_result_table($sk_league, $year) {
     error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
     if ($link = db_connect()) {
-        if (!isset($year)){
+        if (!isset($year) || ($year == NULL)){
             $maxYearQuery = "SELECT MAX(year) AS year FROM assignments";
             if ($result = mysqli_query($link, $maxYearQuery))
                 if ($row = mysqli_fetch_array($result))
@@ -372,6 +372,22 @@ function get_result_table($sk_league, $year) {
         }
 
         $sql = "SELECT q.name, q.solution_id, q.best, a.context_id assignment_id, q.points, q.sk_league AS league
+                FROM assignments a
+                INNER JOIN (
+                    SELECT ANY_VALUE(t.name) as name, ANY_VALUE(t.sk_league) as sk_league, s.context_id solution_id, s.best, s.assignment_id, ANY_VALUE(comm.points) as points
+                    FROM solutions s
+                    LEFT OUTER JOIN contexts c ON (c.context_id = s.context_id)
+                    LEFT OUTER JOIN users u ON (u.user_id = c.user_id)
+                    LEFT OUTER JOIN teams t ON (t.user_id = u.user_id)
+                    INNER JOIN comments comm ON (comm.solution_id = c.context_id AND comm.user_id = 1 AND comm.text IS NOT null)
+                        WHERE t.sk_league IN (1, 1)
+                        GROUP BY t.user_id, s.context_id) q
+                ON (q.assignment_id = a.context_id)
+                WHERE a.year = 2016 AND a.begin <= NOW()
+                ORDER BY a.begin ASC, a.context_id ASC;";
+
+/*
+"SELECT q.name, q.solution_id, q.best, a.context_id assignment_id, q.points, q.sk_league AS league
                 FROM assignments a
                 INNER JOIN (
                     SELECT t.name, t.sk_league, s.context_id solution_id, s.best, s.assignment_id, comm.points
@@ -387,9 +403,7 @@ function get_result_table($sk_league, $year) {
                 ORDER BY a.begin ASC, a.context_id ASC;
                 ";
 
-
-
-
+*/
 
         if (!$result = mysqli_query($link, $sql))
             return "";
@@ -459,10 +473,10 @@ function get_result_table($sk_league, $year) {
                 }
                 else {
                     $result_table .= '<td style="font-weight: bold; '.($teamPointsMap[$user][$i][2]?"background-color: $best_color;":"").'"><a
-                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'">'.$teamPointsMap[$user][$i][0].'</a></td>';
+                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'">'.round($teamPointsMap[$user][$i][0],3).'</a></td>';
                 };
             }
-            $result_table .= '<td style="border-left: 1px solid black;"><strong>'.$sum_array[$user].'</strong></td>';
+            $result_table .= '<td style="border-left: 1px solid black;"><strong>'.round($sum_array[$user],3).'</strong></td>';
             $result_table .= "</tr>";
         }
         $result_table .= "</table>";

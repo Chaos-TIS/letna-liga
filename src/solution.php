@@ -41,7 +41,7 @@ if(isset($_SESSION['solution'])){
           $pocet=0;
 
           while ($images_row = mysqli_fetch_assoc($images)) {  
-            $pripona = split("[.]",$images_row['original_name']);
+            $pripona = explode(".",$images_row['original_name']);
             $suborB = "attachments/solutions/".$_SESSION['solution']->getId()."/images/big/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
             $suborS = "attachments/solutions/".$_SESSION['solution']->getId()."/images/small/".$images_row['image_id'].".".$pripona[count($pripona)-1]; 
            ?>
@@ -56,14 +56,6 @@ if(isset($_SESSION['solution'])){
               <?php
             }
         }
-		?>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('.fancybox').click(function(e){
-					e.preventDefault();
-			parent.$.fancybox(<?php echo json_encode($pole_obrazkov) ?>)});});
-		</script>
-		<?php
       }
       
       $sql_get_video = "SELECT * FROM videos v WHERE v.context_id = ".$id;
@@ -89,7 +81,7 @@ if(isset($_SESSION['solution'])){
         <h3><span data-trans-key='attachments'></span>:</h3>
         <?php
         while ($prilohy_row = mysqli_fetch_assoc($prilohy)) { 
-          $pripona = split("[.]",$prilohy_row['original_name']);
+          $pripona = explode(".",$prilohy_row['original_name']);
 	  if (count($pripona) == 1) $priponoviny = '';
 	  else $priponoviny = ".".$pripona[count($pripona)-1]; 
           $subor = "attachments/solutions/".$_SESSION['solution']->getId()."/programs/".$prilohy_row['program_id'].$priponoviny;
