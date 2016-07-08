@@ -110,7 +110,7 @@ class Solution extends Context {
 			$this->getAttachmentsTableHtml('solutions');
 			?>
 			
-			<input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
+			<input type="hidden" name="MAX_FILE_SIZE" value="20000000" />
 			
 			<h2 data-trans-key="solution-edit-page"></h2>
 			<textarea name="textVideo" cols="60" rows="3" ></textarea>
