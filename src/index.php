@@ -19,8 +19,7 @@ get_topright_form();
                 <a href="prehladZadani.php">Zadania a riešenia letnej ligy</a>
                 <h2>Oznamy:</h2>
                 <ul>
-		    <li><b>Termín 1. kola sme na žiadosť presunuli na pondelok 29.2.!</b></li>
-                    <li><i>Letná liga FLL 2016 beží, pridajte sa! Aj tento rok sa hrá o stavebnicu LEGO MINDSTORMS Education EV3!</i></li>
+                    <li><i>Letná liga FLL 2016 beží, pridajte sa! Aj tento rok sa hrá o stavebnicu LEGO MINDSTORMS Education EV3! (slovenská liga)</i></li>
                     <li>V prípade ťažkostí s nahrávaním riešenia ho môžete poslať aj mailom na <i>pavel.petrovic@gmail.com</i></li>
                 </ul>
 
@@ -56,7 +55,6 @@ get_topright_form();
                 <a href="prehladZadani.php">Assignments and solutions of the summer league</a>
                 <h2>Announcements:</h2>
                 <ul>
-		    <li><b>The first round deadline has been moved by popular request to Monday, February 29th!</b></li>
                     <li><i>The summer league 2016 is on, join us! Participants from all over the World are invited to join the Open League - we will not send you prizes, but you will earn the presitige, and most importantly - learn together with all of us! </i></li>
                     <li>In case of any difficulties with uploading a solution, you can send it via e-mail to the following address: <i>pavel.petrovic@gmail.com</i></li>
                 </ul>
