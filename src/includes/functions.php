@@ -473,10 +473,10 @@ function get_result_table($sk_league, $year) {
                 }
                 else {
                     $result_table .= '<td style="font-weight: bold; '.($teamPointsMap[$user][$i][2]?"background-color: $best_color;":"").'"><a
-                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'">'.round($teamPointsMap[$user][$i][0],3).'</a></td>';
+                    href="solution.php?id='.$teamPointsMap[$user][$i][1].'">'.round($teamPointsMap[$user][$i][0],2).'</a></td>';
                 };
             }
-            $result_table .= '<td style="border-left: 1px solid black;"><strong>'.round($sum_array[$user],3).'</strong></td>';
+            $result_table .= '<td style="border-left: 1px solid black;"><strong>'.round($sum_array[$user],2).'</strong></td>';
             $result_table .= "</tr>";
         }
         $result_table .= "</table>";
