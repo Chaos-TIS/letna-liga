@@ -383,7 +383,7 @@ function get_result_table($sk_league, $year) {
                         WHERE sk_league IN (1, $sk_league)
                         GROUP BY t.user_id, s.context_id) q
                 ON (q.assignment_id = a.context_id)
-                WHERE a.year = 2016 AND a.begin <= NOW()
+                WHERE a.year = $year AND a.begin <= NOW()
                 ORDER BY a.begin ASC, a.context_id ASC;";
 
 /*
